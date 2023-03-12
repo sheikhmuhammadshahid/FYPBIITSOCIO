@@ -14,6 +14,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
 
 String ipp = '';
+
 User? loggedInUser;
 String ip = "http://192.168.145.231/BiitSocioApis/api/";
 String imageAddress = "http://192.168.145.231/BiitSocioApis/postImages/";
