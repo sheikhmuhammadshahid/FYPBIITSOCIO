@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "248476947094",
+    "project_id": "biitsocio",
+    "storage_bucket": "biitsocio.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:248476947094:android:9f93c24fbfca0da5aee8b7",
+        "android_client_info": {
+          "package_name": "com.example.biit_social"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "248476947094-h3pffdt6iinu471cblglpad3nr9j3est.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIVe9ds2FKVpllCmhuwyGBXs_f6jThQ5Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "248476947094-h3pffdt6iinu471cblglpad3nr9j3est.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
