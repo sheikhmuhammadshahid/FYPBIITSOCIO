@@ -14,12 +14,19 @@ import 'package:provider/provider.dart';
 
 class PostController with ChangeNotifier {
   List<Post> posts = [];
+  List<Post> pinedPosts = [];
+
   bool isLoading = false;
   bool isLazyLoading = false;
   int pageNumber = 0;
+  bool fromDiary = false;
   String selectedWall = loggedInUser!.userType!;
   setState() {
-    notifyListeners();
+    try {
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
   }
 
   addPost(Post post, context) async {
@@ -116,6 +123,31 @@ class PostController with ChangeNotifier {
     }
   }
 
+  getPinnedPosts() async {
+    try {
+      isLoading = true;
+      setState();
+      String url = "${ip}post/getPinnedPosts?user_id=${loggedInUser!.CNIC}";
+      var response = await Dio().get(url);
+      //body: post.toJson(), headers: headers);
+      if (response.statusCode == 200) {
+        var data = response.data;
+        pinedPosts.clear();
+        for (var element in data) {
+          Post p = Post.fromMap(element["post"]);
+          p.isFriend = element["isFriend"];
+          p.isLiked = element["isLiked"];
+          p.isPinned = element["isPinned"];
+          pinedPosts.add(p);
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+    isLoading = false;
+    setState();
+  }
+
   getPosts(context) async {
     try {
       // ip = await getIp() + ip;
@@ -135,7 +167,9 @@ class PostController with ChangeNotifier {
       String url =
           "${ip}post/getPosts?cnic='3230440894009'&&pageNumber=$pageNumber&&fromWall=${Provider.of<SettingController>(context, listen: false).selectedWall}";
       //var v = jsonEncode(post.toMap());
+
       print(url);
+
       var response = await Dio().get(url);
       //body: post.toJson(), headers: headers);
       if (response.statusCode == 200) {
