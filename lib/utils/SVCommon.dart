@@ -55,6 +55,7 @@ getSelector(context, lable, List<Items> items) async {
         searchHint: 'Search sections...',
         title: Text(lable),
         listType: MultiSelectListType.CHIP,
+
         items: items
             .map((animal) => MultiSelectItem<Items>(animal, animal.name!))
             .toList(),
