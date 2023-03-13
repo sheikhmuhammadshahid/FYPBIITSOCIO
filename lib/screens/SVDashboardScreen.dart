@@ -1,4 +1,3 @@
-import 'package:biit_social/Controllers/PostController.dart';
 import 'package:biit_social/Controllers/SettingController.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -18,50 +17,36 @@ class SVDashboardScreen extends StatefulWidget {
 class _SVDashboardScreenState extends State<SVDashboardScreen> {
   // int selectedIndex = 0;
 
-  Widget getFragment() {
-    // if (settingController.selectedIndex == 0) {
-    //   return SVHomeFragment(
-    //     selectedIndex: 0,
-    //   );
-    // } else if (settingController.selectedIndex == 1) {
-    //   return SVHomeFragment(
-    //     selectedIndex: 0,
-    //   );
-    //   //return SVSearchFragment();
-    // } else if (settingController.selectedIndex == 2) {
-    //   return SVHomeFragment(
-    //     selectedIndex: 2,
-    //   );
-    // } else if (settingController.selectedIndex == 3) {
-    //   return SVNotificationFragment();
-    // } else if (settingController.selectedIndex == 4) {
-    //   return const SVProfileFragment();
-    // }
-    return const SVHomeFragment();
-  }
-
   @override
   void initState() {
     setStatusBarColor(Colors.transparent);
+
     super.initState();
   }
 
-  late PostController postController;
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    settingController.dispose();
+    super.dispose();
+  }
+
   late SettingController settingController;
   @override
   Widget build(BuildContext context) {
     settingController = Provider.of<SettingController>(context);
-    postController = Provider.of<PostController>(context);
+
     return Scaffold(
         backgroundColor: svGetScaffoldColor(),
-        body: Consumer<SettingController>(
-          builder: (context, value, child) {
-            return const SVHomeFragment();
-          },
-        ),
+        body: const SVHomeFragment(),
         extendBody: true,
-        bottomNavigationBar: const Padding(
-            padding: EdgeInsets.only(bottom: 10), child: SvBottomNavigation()));
+        bottomNavigationBar: Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Consumer<SettingController>(
+              builder: (context, value, child) {
+                return const SvBottomNavigation();
+              },
+            )));
   }
 }
 

@@ -31,8 +31,11 @@ class _SVPostComponentState extends State<SVPostComponent> {
       if (postController.fromDiary) {
         postController.getPinnedPosts();
       } else {
-        postController.pageNumber = 0;
-        postController.getPosts(context);
+        if (!postController.isLoading) {
+          postController.pageNumber = 0;
+
+          postController.getPosts(context);
+        }
       }
     } catch (e) {
       print(e);

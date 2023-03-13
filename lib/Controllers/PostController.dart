@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:biit_social/Controllers/HandleNotification.dart';
 import 'package:biit_social/models/Post/PostModel.dart';
 import 'package:biit_social/models/Stories/Stories.dart';
-import 'package:cached_video_player/cached_video_player.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
 import '../utils/FilesPicker.dart';
 import '../utils/SVCommon.dart';
@@ -30,59 +30,73 @@ class PostController with ChangeNotifier {
   }
 
   addPost(Post post, context) async {
-    //ip = await getIp() + ip;
-    isImagePicked = 0;
-    var formData = FormData.fromMap({
-      'postedBy': post.postedBy,
-      'postFor': post.postFor,
-      'description': post.description,
-      'dateTime': post.dateTime,
-      'type': post.type,
-      'fromWall': post.fromWall,
-      'user': post.user,
-      'image': post.type == "image" || post.type == "video"
-          ? await MultipartFile.fromFile(post.text)
-          : null,
-    });
+    try {
+      EasyLoading.show(status: 'Please wait...', dismissOnTap: false);
 
-    String url = "${ip}Post/addPost";
-    var v = jsonEncode(post.toMap());
-    // post.user = "12";
-    var response = await Dio().post(url,
-        data: formData,
-        options: Options(headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        }));
+      //ip = await getIp() + ip;
+      isImagePicked = 0;
+      var formData = FormData.fromMap({
+        'postedBy': post.postedBy,
+        'postFor': post.postFor,
+        'description': post.description,
+        'dateTime': post.dateTime,
+        'type': post.type,
+        'fromWall': post.fromWall,
+        'user': post.user,
+        'image': post.type == "image" || post.type == "video"
+            ? await MultipartFile.fromFile(post.text)
+            : null,
+      });
 
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(response.data)));
+      String url = "${ip}Post/addPost";
+      var v = jsonEncode(post.toMap());
+      // post.user = "12";
+      var response = await Dio().post(url,
+          data: formData,
+          options: Options(headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          }));
+
+      EasyLoading.dismiss();
+      EasyLoading.showToast(response.data,
+          toastPosition: EasyLoadingToastPosition.bottom);
+    } catch (e) {
+      EasyLoading.dismiss();
+      EasyLoading.showToast('Something gone wrong!');
+    }
   }
 
   addStory(Stories post, context) async {
-    isImagePicked = 0;
-    var formData = FormData.fromMap({
-      'societyId': post.societyId,
-      'text': post.text,
-      'color': post.color,
-      'type': post.type,
-      'image': post.type == "image" || post.type == "video"
-          ? await MultipartFile.fromFile(path.path)
-          : null,
-    });
+    try {
+      EasyLoading.show(status: 'Please wait...', dismissOnTap: false);
+      isImagePicked = 0;
+      var formData = FormData.fromMap({
+        'societyId': post.societyId,
+        'text': post.text,
+        'color': post.color,
+        'type': post.type,
+        'image': post.type == "image" || post.type == "video"
+            ? await MultipartFile.fromFile(path.path)
+            : null,
+      });
 
-    String url = "${ip}Post/addStory";
-    var v = jsonEncode(post.toMap());
-    // post.user = "12";
-    var response = await Dio().post(url,
-        data: formData,
-        options: Options(headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        }));
-
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(response.data)));
+      String url = "${ip}Post/addStory";
+      var v = jsonEncode(post.toMap());
+      // post.user = "12";
+      var response = await Dio().post(url,
+          data: formData,
+          options: Options(headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          }));
+      EasyLoading.dismiss();
+      EasyLoading.showToast(response.data,
+          toastPosition: EasyLoadingToastPosition.bottom);
+    } catch (e) {
+      EasyLoading.dismiss();
+      EasyLoading.showToast('Something gone wrong!');
+    }
   }
 
   likeOrDislikePost(status, index) async {
@@ -106,12 +120,12 @@ class PostController with ChangeNotifier {
       }
       if (status) {
         posts[index].likesCount = posts[index].likesCount! + 1;
-        notifyListeners();
+        setState();
         response = await http.post(Uri.parse("${ip}Reacts/addReaction"),
             body: jsonEncode(data), headers: headers);
       } else {
         posts[index].likesCount = posts[index].likesCount! - 1;
-        notifyListeners();
+        setState();
         response = await http.post(Uri.parse("${ip}Reacts/deleteReact"),
             body: jsonEncode(data), headers: headers);
       }
@@ -150,19 +164,18 @@ class PostController with ChangeNotifier {
 
   getPosts(context) async {
     try {
-      // ip = await getIp() + ip;
-      if (pageNumber == 0) {
-        posts.clear();
-      }
-      pageNumber++;
       if (pageNumber > 1) {
         isLazyLoading = true;
       } else {
         isLoading = true;
       }
-      try {
-        notifyListeners();
-      } catch (e) {}
+      // ip = await getIp() + ip;
+      if (pageNumber == 0) {
+        posts.clear();
+      }
+      pageNumber++;
+
+      setState();
 
       String url =
           "${ip}post/getPosts?cnic='3230440894009'&&pageNumber=$pageNumber&&fromWall=${Provider.of<SettingController>(context, listen: false).selectedWall}";
@@ -194,11 +207,12 @@ class PostController with ChangeNotifier {
       print(e);
     }
     isLoading = false;
-    notifyListeners();
+    setState();
   }
 
   uploadFile(path, context) async {
     try {
+      EasyLoading.show(status: 'Please wait...', dismissOnTap: false);
       var formData = FormData.fromMap({
         'file': await MultipartFile.fromFile(path),
         'toUpload': 'timeTable'
@@ -209,12 +223,12 @@ class PostController with ChangeNotifier {
             "Content-Type": "application/json",
             "Accept": "application/json"
           }));
-      if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(response.data.toString())));
-      }
+      EasyLoading.dismiss();
+      EasyLoading.showToast(response.data,
+          toastPosition: EasyLoadingToastPosition.bottom);
     } catch (e) {
-      print(e);
+      EasyLoading.dismiss();
+      EasyLoading.showToast('Something gone wrong!');
     }
   }
 
@@ -228,7 +242,7 @@ class PostController with ChangeNotifier {
           data: data, options: Options(headers: headers));
       if (response.statusCode == 200) {
         posts[index].isPinned = true;
-        notifyListeners();
+        setState();
         // var p = posts.removeAt(index);
         // posts.insert(0, p);
       }
@@ -244,7 +258,7 @@ class PostController with ChangeNotifier {
       );
       if (response.statusCode == 200) {
         posts[index].isPinned = false;
-        notifyListeners();
+        setState();
         // var p = posts.removeAt(index);
         // posts.insert(0, p);
       }
@@ -253,10 +267,9 @@ class PostController with ChangeNotifier {
     }
   }
 
-  CachedVideoPlayerController? controller;
   svGetVideoPlayer(file, from, controller) async {
     await controller!.initialize().then((value) {
-      notifyListeners();
+      setState();
       controller!.play();
     });
     return controller;

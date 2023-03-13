@@ -36,12 +36,16 @@ class SettingController extends ChangeNotifier {
       selectedWall = "7";
     }
     PostController p = Provider.of<PostController>(context, listen: false);
-    p.posts.clear();
+
     p.pageNumber = 0;
     p.getPosts(context);
-    p.notifyListeners();
+    setState();
+  }
 
-    notifyListeners();
+  setState() {
+    try {
+      notifyListeners();
+    } catch (e) {}
   }
 
   final items = [
@@ -136,13 +140,13 @@ class SettingController extends ChangeNotifier {
       }
     } catch (e) {}
     isGettingUser = false;
-    notifyListeners();
+    setState();
   }
 
   changeNavBar(oldIndex, newIndex) {
     final tile = items.removeAt(oldIndex);
     items.insert(newIndex, tile);
-    notifyListeners();
+    setState();
   }
 }
 

@@ -5,6 +5,7 @@ import 'package:biit_social/screens/auth/components/SVLoginInComponent.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:nb_utils/nb_utils.dart';
 import '../screens/SVDashboardScreen.dart';
 import '../screens/auth/screens/SVSignInScreen.dart';
@@ -23,10 +24,10 @@ class AuthController extends ChangeNotifier {
               .toLowerCase()
               .contains(data.toString().toLowerCase()))
           .toList();
-      notifyListeners();
     } catch (e) {
       print(e);
     }
+    setState();
   }
 
   saveLoggedInUser() async {
@@ -65,7 +66,7 @@ class AuthController extends ChangeNotifier {
       print(e);
     }
     isLoading = false;
-    notifyListeners();
+    setState();
   }
 
   saveStatus(rem) async {
@@ -139,26 +140,43 @@ class AuthController extends ChangeNotifier {
 
   login(User u, context) async {
     try {
+      EasyLoading.show(status: 'Please wait...', dismissOnTap: false);
+      //EasyLoading.showInfo('', duration: const Duration(days: 2));
       String url = "${ip}User/LoginUser";
       var response = await Dio()
           .post(url, data: u.toJson(), options: Options(headers: headers));
+      EasyLoading.dismiss();
       if (response.statusCode == 200) {
-        print(response.data);
-        loggedInUser = User.fromMap(response.data["user"]);
-        loggedInUser!.countFriends = response.data["countFriends"];
-        loggedInUser!.postsCount = response.data["postsCount"];
+        if (response.data["statusCode"] == 200) {
+          print(response.data);
 
-        checkUserType(context);
-        await updateToken();
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const SVDashboardScreen(),
-            ));
+          loggedInUser = User.fromMap(response.data["user"]);
+          loggedInUser!.countFriends = response.data["countFriends"];
+          loggedInUser!.postsCount = response.data["postsCount"];
+
+          // checkUserType(context);
+          await updateToken();
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SVDashboardScreen(),
+              ));
+        } else {
+          EasyLoading.showToast(response.data['message']);
+        }
       }
     } catch (e) {
+      EasyLoading.dismiss();
+      EasyLoading.showToast('Something gone wrong!');
       print(e);
     }
+
     return false;
+  }
+
+  setState() {
+    try {
+      notifyListeners();
+    } catch (e) {}
   }
 }

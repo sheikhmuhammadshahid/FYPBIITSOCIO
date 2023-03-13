@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:biit_social/Controllers/SettingController.dart';
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +9,8 @@ import 'package:provider/provider.dart';
 
 class GetVideoItem extends StatefulWidget {
   String url;
-  GetVideoItem({required this.url, super.key});
+  bool fromNetwork;
+  GetVideoItem({required this.url, required this.fromNetwork, super.key});
 
   @override
   State<GetVideoItem> createState() => _GetVideoItemState();
@@ -25,10 +28,13 @@ class _GetVideoItemState extends State<GetVideoItem>
     animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 500));
     flickManager = FlickManager(
-      videoPlayerController: VideoPlayerController.network(
-        widget.url,
-        videoPlayerOptions: VideoPlayerOptions(mixWithOthers: false),
-      ),
+      videoPlayerController: widget.fromNetwork
+          ? VideoPlayerController.network(
+              widget.url,
+              videoPlayerOptions: VideoPlayerOptions(mixWithOthers: false),
+            )
+          : VideoPlayerController.file(File(widget.url),
+              videoPlayerOptions: VideoPlayerOptions(mixWithOthers: false)),
     );
     flickManager.onVideoEnd = () {
       // settingController.isPaused = true;

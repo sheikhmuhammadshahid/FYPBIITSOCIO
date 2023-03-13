@@ -4,7 +4,7 @@ import 'package:biit_social/Controllers/PostController.dart';
 import 'package:biit_social/models/Post/PostModel.dart';
 import 'package:biit_social/models/Stories/Stories.dart';
 import 'package:biit_social/screens/FileUpload/UploadFile.dart';
-import 'package:cached_video_player/cached_video_player.dart';
+import 'package:biit_social/utils/getVideoItem.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:biit_social/main.dart';
@@ -37,9 +37,6 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
 
   @override
   void dispose() {
-    if (postController.controller != null) {
-      postController.controller!.dispose();
-    }
     setStatusBarColor(
         appStore.isDarkMode ? appBackgroundColorDark : SVAppLayoutBackground);
     super.dispose();
@@ -138,10 +135,6 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
                         text: descriptionController.text,
                       ),
                       context);
-
-              if (postController.controller != null) {
-                postController.controller!.pause();
-              }
             },
             elevation: 0,
             color: SVAppColorPrimary,
@@ -179,37 +172,9 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
                                               File(path.path),
                                               fit: BoxFit.fill,
                                             )
-                                          : Consumer<PostController>(
-                                              builder: (context, value, child) {
-                                                if (value.controller == null) {
-                                                  value.controller =
-                                                      CachedVideoPlayerController
-                                                          .file(path);
-                                                  value.svGetVideoPlayer(
-                                                      path,
-                                                      false,
-                                                      postController
-                                                          .controller);
-                                                }
-                                                return value.controller!.value
-                                                        .isInitialized
-                                                    ? AspectRatio(
-                                                        aspectRatio: value
-                                                            .controller!
-                                                            .value
-                                                            .aspectRatio,
-                                                        child: CachedVideoPlayer(
-                                                            (value
-                                                                .controller!)))
-                                                    : const SizedBox(
-                                                        height: 40,
-                                                        width: 20,
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                          color: Colors.white,
-                                                        ));
-                                              },
-                                            )
+                                          : GetVideoItem(
+                                              url: path.path,
+                                              fromNetwork: false)
                                       : Image.asset(
                                           'images/socialv/posts/post_one.png');
                                 },
@@ -282,10 +247,9 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
               children: [
                 GestureDetector(
                   onTap: (() async {
-                    if (postController.controller != null) {
-                      postController.controller!.pause();
-                    }
-                    postController.controller = null;
+                    // postController
+                    //     .controller.flickVideoManager!.videoPlayerController!
+                    //     .pause();
                     await pickFile(context);
                     setState(() {});
                   }),
@@ -297,10 +261,9 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
                 ),
                 GestureDetector(
                   onTap: (() async {
-                    if (postController.controller != null) {
-                      postController.controller!.pause();
-                    }
-                    postController.controller = null;
+                    // postController
+                    //     .controller.flickVideoManager!.videoPlayerController!
+                    //     .pause();
                     await pickFile(context);
                     setState(() {});
                   }),
