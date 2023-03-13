@@ -24,12 +24,19 @@ class _SVPostComponentState extends State<SVPostComponent> {
   }
 
   ScrollController? controller;
-
+  late PostController postController;
   getPosts() async {
     try {
-      Provider.of<PostController>(context, listen: false).pageNumber = 0;
+      postController = Provider.of<PostController>(context, listen: false);
+      if (postController.fromDiary) {
+        postController.getPinnedPosts();
+      } else {
+        if (!postController.isLoading) {
+          postController.pageNumber = 0;
 
-      Provider.of<PostController>(context, listen: false).getPosts(context);
+          postController.getPosts(context);
+        }
+      }
     } catch (e) {
       print(e);
     }
@@ -47,17 +54,25 @@ class _SVPostComponentState extends State<SVPostComponent> {
             return postController.posts.isNotEmpty
                 ? LazyLoadScrollView(
                     onEndOfPage: () {
-                      postController.getPosts(context);
+                      postController.fromDiary
+                          ? {}
+                          : postController.getPosts(context);
                     },
                     child: RefreshIndicator(
                       color: context.iconColor,
                       onRefresh: () async {
-                        postController.pageNumber = 0;
-                        postController.getPosts(context);
+                        postController.fromDiary
+                            ? {}
+                            : {
+                                postController.pageNumber = 0,
+                                postController.getPosts(context)
+                              };
                       },
                       child: ListView.builder(
                         controller: controller,
-                        itemCount: postController.posts.length,
+                        itemCount: postController.fromDiary
+                            ? postController.pinedPosts.length
+                            : postController.posts.length,
                         itemBuilder: (context, index) {
                           return GestureDetector(
                               onTap: () {
@@ -77,8 +92,12 @@ class _SVPostComponentState extends State<SVPostComponent> {
                 : RefreshIndicator(
                     color: context.iconColor,
                     onRefresh: () async {
-                      postController.pageNumber = 0;
-                      postController.getPosts(context);
+                      postController.fromDiary
+                          ? {}
+                          : {
+                              postController.pageNumber = 0,
+                              postController.getPosts(context)
+                            };
                     },
                     child: const Center(
                       child: Text('No posts found!'),

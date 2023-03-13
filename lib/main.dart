@@ -16,6 +16,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'Controllers/AuthController.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 AppStore appStore = AppStore();
 late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
@@ -67,6 +68,24 @@ void main() async {
       create: (_) => AuthController(),
     )
   ], child: const MyApp()));
+  configLoading();
+}
+
+void configLoading() {
+  EasyLoading.instance
+    ..displayDuration = const Duration(seconds: 2)
+    ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+    ..loadingStyle = EasyLoadingStyle.dark
+    ..indicatorSize = 45.0
+    ..radius = 10.0
+    ..progressColor = Colors.yellow
+    ..backgroundColor = Colors.green
+    ..indicatorColor = Colors.yellow
+    ..textColor = Colors.yellow
+    ..maskColor = Colors.blue.withOpacity(0.5)
+    ..userInteractions = false
+    ..dismissOnTap = false;
+  // ..customAnimation = CustomAnimation();
 }
 
 class MyApp extends StatefulWidget {
@@ -187,6 +206,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return Observer(
       builder: (_) => MaterialApp(
+        builder: EasyLoading.init(),
         scrollBehavior: SBehavior(),
         navigatorKey: navigatorKey,
         title: 'BIIT SOCIO',

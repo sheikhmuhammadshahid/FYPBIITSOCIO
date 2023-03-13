@@ -114,7 +114,7 @@ class FriendsStoriesController extends ChangeNotifier {
     }
     isStoriesLoading = false;
 
-    notifyListeners();
+    setState();
   }
 
   String getDateStatus(String dateString) {
@@ -139,7 +139,7 @@ class FriendsStoriesController extends ChangeNotifier {
   getSocietiesDetail() async {
     try {
       isStoriesLoading = true;
-      notifyListeners();
+      setState();
 
       var response = await Dio().get('${ip}Post/getSocietiesDetail');
       if (response.statusCode == 200) {
@@ -150,6 +150,12 @@ class FriendsStoriesController extends ChangeNotifier {
       }
     } catch (e) {}
     isStoriesLoading = false;
-    notifyListeners();
+    setState();
+  }
+
+  setState() {
+    try {
+      notifyListeners();
+    } catch (e) {}
   }
 }

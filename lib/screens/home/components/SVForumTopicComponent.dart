@@ -7,7 +7,7 @@ import 'package:biit_social/utils/SVConstants.dart';
 class SVForumTopicComponent extends StatefulWidget {
   final bool isFavTab;
 
-  const SVForumTopicComponent({required this.isFavTab});
+  const SVForumTopicComponent({super.key, required this.isFavTab});
 
   @override
   State<SVForumTopicComponent> createState() => _SVForumTopicComponentState();

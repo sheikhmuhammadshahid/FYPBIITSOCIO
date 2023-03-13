@@ -35,6 +35,7 @@ Widget getTikTokItem(
                   : AspectRatio(
                       aspectRatio: 3 / 4,
                       child: GetVideoItem(
+                          fromNetwork: true,
                           url: imageAddress + postController.posts[index].text),
                     )),
         ),
