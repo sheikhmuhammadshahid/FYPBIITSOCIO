@@ -16,10 +16,10 @@ import 'package:shimmer/shimmer.dart';
 String ipp = '';
 
 User? loggedInUser;
-String ip = "http://192.168.145.231/BiitSocioApis/api/";
-String imageAddress = "http://192.168.145.231/BiitSocioApis/postImages/";
-String profileimageAddress = "http://192.168.145.231/BiitSocioApis/Images/";
-String storyAddress = 'http://192.168.145.231/BiitSocioApis/Status/';
+String ip = "http://192.168.184.231/BiitSocioApis/api/";
+String imageAddress = "http://192.168.184.231/BiitSocioApis/postImages/";
+String profileimageAddress = "http://192.168.184.231/BiitSocioApis/Images/";
+String storyAddress = 'http://192.168.184.231/BiitSocioApis/Status/';
 var headers = {"Content-Type": "application/json"};
 String selectedOptions = "";
 Future<String> getIp() async {
@@ -426,8 +426,7 @@ sVImageProvider(url, height, width, GFAvatarShape shape) {
             ? Image.network(
                 url,
                 filterQuality: FilterQuality.high,
-                fit: BoxFit.contain,
-              ).cornerRadiusWithClipRRect(SVAppCommonRadius).center()
+              ).center()
             : null,
         //size: 200,
       ),

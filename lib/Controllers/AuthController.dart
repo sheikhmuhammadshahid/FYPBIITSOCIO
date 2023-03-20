@@ -86,10 +86,11 @@ class AuthController extends ChangeNotifier {
         rememberMe = sharedPref!.getBool('rememberMe')!;
         loggedInUser =
             User.fromMap(json.decode(sharedPref!.getString('loggedInUser')!));
-        SVLoginInComponent.passwordController.text = loggedInUser!.password;
-        SVLoginInComponent.userController.text = loggedInUser!.CNIC;
+
         //notifyListeners();
         if (rememberMe) {
+          SVLoginInComponent.passwordController.text = loggedInUser!.password;
+          SVLoginInComponent.userController.text = loggedInUser!.CNIC;
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
