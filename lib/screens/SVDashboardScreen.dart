@@ -5,6 +5,7 @@ import 'package:biit_social/utils/SVCommon.dart';
 import 'package:provider/provider.dart';
 
 import '../BottomNavigation/SvBottomNavigationBar.dart';
+import '../Client.dart';
 import 'fragments/SVHomeFragment.dart';
 
 class SVDashboardScreen extends StatefulWidget {
@@ -20,14 +21,14 @@ class _SVDashboardScreenState extends State<SVDashboardScreen> {
   @override
   void initState() {
     setStatusBarColor(Colors.transparent);
-
+    ServerClient().connectWithServer();
     super.initState();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    settingController.dispose();
+    //settingController.dispose();
     super.dispose();
   }
 

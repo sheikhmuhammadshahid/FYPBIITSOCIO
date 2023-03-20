@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
+import '../TimeTable/TimeTableModel.dart';
 import '../utils/FilesPicker.dart';
 import '../utils/SVCommon.dart';
 import 'SettingController.dart';
@@ -15,7 +16,7 @@ import 'package:provider/provider.dart';
 class PostController with ChangeNotifier {
   List<Post> posts = [];
   List<Post> pinedPosts = [];
-
+  List<TimeTableModel> timeTable = [];
   bool isLoading = false;
   bool isLazyLoading = false;
   int pageNumber = 0;
@@ -24,9 +25,33 @@ class PostController with ChangeNotifier {
   setState() {
     try {
       notifyListeners();
+    } catch (e) {}
+  }
+
+  bool isTimeTableLoading = true;
+  List<int> order = [3, 4, 5, 0, 1, 2];
+  getTimeTable() async {
+    try {
+      isTimeTableLoading = true;
+      setState();
+      var response = await Dio().get('${ip}post/getTimeTable?section=cs-3a');
+      if (response.statusCode == 200) {
+        timeTable.clear();
+        var sortedItems = response.data.asMap().entries.toList()
+          ..sort((a, b) => order[a.key].compareTo(order[b.key]))
+          ..map((entry) => entry.value).toList();
+        for (var element in sortedItems) {
+          print('ss');
+          for (var element1 in element.value) {
+            timeTable.add(TimeTableModel.fromMap(element1));
+          }
+        }
+      }
     } catch (e) {
       print(e);
     }
+    isTimeTableLoading = false;
+    setState();
   }
 
   addPost(Post post, context) async {
@@ -164,7 +189,7 @@ class PostController with ChangeNotifier {
 
   getPosts(context) async {
     try {
-      if (pageNumber > 1) {
+      if (pageNumber >= 1) {
         isLazyLoading = true;
       } else {
         isLoading = true;
@@ -173,9 +198,8 @@ class PostController with ChangeNotifier {
       if (pageNumber == 0) {
         posts.clear();
       }
-      pageNumber++;
-
       setState();
+      pageNumber++;
 
       String url =
           "${ip}post/getPosts?cnic='3230440894009'&&pageNumber=$pageNumber&&fromWall=${Provider.of<SettingController>(context, listen: false).selectedWall}";
@@ -206,7 +230,11 @@ class PostController with ChangeNotifier {
     } catch (e) {
       print(e);
     }
-    isLoading = false;
+    if (isLoading) {
+      isLoading = false;
+    } else {
+      isLazyLoading = false;
+    }
     setState();
   }
 
@@ -257,7 +285,12 @@ class PostController with ChangeNotifier {
         "${ip}Post/unPinPosts?user_id=${loggedInUser!.CNIC}&&post_id=${posts[index].id}",
       );
       if (response.statusCode == 200) {
-        posts[index].isPinned = false;
+        pinedPosts[index].isPinned = false;
+        var p = pinedPosts.removeAt(index);
+        var res = posts.indexWhere((element) => element.id == p.id);
+        if (res != -1) {
+          posts[res].isPinned = false;
+        }
         setState();
         // var p = posts.removeAt(index);
         // posts.insert(0, p);

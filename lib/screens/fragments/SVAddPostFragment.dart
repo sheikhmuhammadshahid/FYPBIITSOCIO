@@ -100,7 +100,13 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
                     },
                   ));
                 },
-                child: const Text('+')),
+                child: Text(
+                  '+',
+                  style: TextStyle(
+                      color: context.iconColor,
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold),
+                )),
           AppButton(
             shapeBorder: RoundedRectangleBorder(borderRadius: radius(4)),
             text: 'Post',

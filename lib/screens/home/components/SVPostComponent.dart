@@ -1,4 +1,5 @@
 import 'package:biit_social/Controllers/PostController.dart';
+import 'package:biit_social/Controllers/SettingController.dart';
 import 'package:biit_social/screens/home/components/GetItem.dart';
 import 'package:biit_social/screens/home/components/TikTokView.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,8 @@ import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:biit_social/utils/SVCommon.dart';
 import 'package:provider/provider.dart';
+
+import '../../../TimeTable/TimeTableScreen.dart';
 
 class SVPostComponent extends StatefulWidget {
   const SVPostComponent({super.key});
@@ -33,7 +36,7 @@ class _SVPostComponentState extends State<SVPostComponent> {
       } else {
         if (!postController.isLoading) {
           postController.pageNumber = 0;
-
+          postController.getTimeTable();
           postController.getPosts(context);
         }
       }
@@ -44,6 +47,8 @@ class _SVPostComponentState extends State<SVPostComponent> {
 
   @override
   Widget build(BuildContext context) {
+    var settingController = context.read<SettingController>();
+    bool isAdmin = settingController.selectedWall == "3";
     // var postController = Provider.of<PostController>(context, listen: false);
     return SafeArea(
       child: Consumer<PostController>(
@@ -71,18 +76,31 @@ class _SVPostComponentState extends State<SVPostComponent> {
                       child: ListView.builder(
                         controller: controller,
                         itemCount: postController.fromDiary
-                            ? postController.pinedPosts.length
-                            : postController.posts.length,
+                            ? postController.pinedPosts.length + 1
+                            : isAdmin
+                                ? postController.posts.length + 1
+                                : postController.posts.length,
                         itemBuilder: (context, index) {
+                          if ((index == 0 && isAdmin) ||
+                              (postController.fromDiary) && index == 0) {
+                            return const TimeTableScreen();
+                          }
                           return GestureDetector(
                               onTap: () {
                                 Navigator.push(context, MaterialPageRoute(
                                   builder: (context) {
-                                    return TikTokView(index: index);
+                                    return TikTokView(index: index - 1);
                                   },
                                 ));
                               },
-                              child: getItem(postController, index, context));
+                              child: getItem(
+                                  postController.fromDiary
+                                      ? postController.pinedPosts[index - 1]
+                                      : postController
+                                          .posts[isAdmin ? index - 1 : index],
+                                  postController,
+                                  index - 1,
+                                  context));
                         },
                         shrinkWrap: true,
                         physics: const BouncingScrollPhysics(),
