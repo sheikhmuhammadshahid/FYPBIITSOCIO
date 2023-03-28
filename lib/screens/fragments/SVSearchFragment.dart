@@ -29,7 +29,7 @@ class _SVSearchFragmentState extends State<SVSearchFragment> {
 
   late AuthController authController;
   init() {
-    authController = Provider.of<AuthController>(context, listen: false);
+    authController = context.read<AuthController>();
     authController.getUsers();
   }
 

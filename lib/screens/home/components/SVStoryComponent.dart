@@ -30,8 +30,7 @@ class _SVStoryComponentState extends State<SVStoryComponent> {
   }
 
   getSocieties() {
-    Provider.of<FriendsStoriesController>(context, listen: false)
-        .getSocietiesDetail();
+    context.read<FriendsStoriesController>().getSocietiesDetail();
   }
 
   @override

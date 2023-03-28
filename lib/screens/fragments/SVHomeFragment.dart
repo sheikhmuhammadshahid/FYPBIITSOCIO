@@ -39,7 +39,7 @@ class _SVHomeFragmentState extends State<SVHomeFragment> {
   late SettingController settingController;
   @override
   Widget build(BuildContext context) {
-    settingController = Provider.of<SettingController>(context);
+    settingController = context.read<SettingController>();
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: svGetScaffoldColor(),
@@ -107,29 +107,36 @@ class _SVHomeFragmentState extends State<SVHomeFragment> {
           const SizedBox(
             width: 10,
           ),
-          if (settingController.selectedWall != loggedInUser!.userType)
-            GestureDetector(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (context) {
-                    return SVProfileFragment(
-                      id: loggedInUser!.CNIC,
-                      user: true,
-                    );
-                  },
-                ));
-              },
-              child: loggedInUser!.profileImage != ""
-                  ? CircleAvatar(
-                      radius: 15,
-                      backgroundImage: NetworkImage(
-                          profileimageAddress + loggedInUser!.profileImage))
-                  : const CircleAvatar(
-                      radius: 15,
-                      backgroundImage:
-                          AssetImage('images/socialv/faces/face_5.png'),
-                    ),
-            ),
+          Consumer<SettingController>(
+            builder: (context, value, child) {
+              return (settingController.selectedWall != loggedInUser!.userType)
+                  ? GestureDetector(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) {
+                            return SVProfileFragment(
+                              id: loggedInUser!.CNIC,
+                              user: true,
+                            );
+                          },
+                        ));
+                      },
+                      child: loggedInUser!.profileImage != ""
+                          ? CircleAvatar(
+                              radius: 15,
+                              backgroundImage: NetworkImage(
+                                  profileimageAddress +
+                                      loggedInUser!.profileImage))
+                          : const CircleAvatar(
+                              radius: 15,
+                              backgroundImage:
+                                  AssetImage('images/socialv/faces/face_5.png'),
+                            ),
+                    )
+                  : const SizedBox.shrink();
+            },
+          ),
+
           const SizedBox(
             width: 10,
           )
@@ -145,86 +152,98 @@ class _SVHomeFragmentState extends State<SVHomeFragment> {
             physics: const NeverScrollableScrollPhysics(),
             child: Column(
               children: [
-                if (settingController.selectedWall ==
-                    loggedInUser!.userType) ...{
-                  16.height,
-                  SizedBox(
-                    height: 50,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                Consumer<SettingController>(
+                  builder: (context, value, child) {
+                    return Column(
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(context, MaterialPageRoute(
-                              builder: (context) {
-                                return SVProfileFragment(
-                                  id: loggedInUser!.CNIC,
-                                  user: true,
-                                );
-                              },
-                            ));
-                          },
-                          child: loggedInUser!.profileImage != ""
-                              ? CircleAvatar(
-                                  radius: 30,
-                                  backgroundImage: NetworkImage(
-                                      profileimageAddress +
-                                          loggedInUser!.profileImage))
-                              : const CircleAvatar(
-                                  radius: 30,
-                                  backgroundImage: AssetImage(
-                                      'images/socialv/faces/face_5.png'),
+                        if (settingController.selectedWall ==
+                            loggedInUser!.userType) ...{
+                          16.height,
+                          SizedBox(
+                            height: 50,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(context, MaterialPageRoute(
+                                      builder: (context) {
+                                        return SVProfileFragment(
+                                          id: loggedInUser!.CNIC,
+                                          user: true,
+                                        );
+                                      },
+                                    ));
+                                  },
+                                  child: loggedInUser!.profileImage != ""
+                                      ? CircleAvatar(
+                                          radius: 30,
+                                          backgroundImage: NetworkImage(
+                                              profileimageAddress +
+                                                  loggedInUser!.profileImage))
+                                      : const CircleAvatar(
+                                          radius: 30,
+                                          backgroundImage: AssetImage(
+                                              'images/socialv/faces/face_5.png'),
+                                        ),
                                 ),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width / 2 + 50,
-                          height: 40,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                shape: StadiumBorder(
-                                    side: BorderSide(color: context.iconColor)),
-                                backgroundColor:
-                                    context.scaffoldBackgroundColor),
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        SVAddPostFragment(isStatus: false),
-                                  ));
-                            },
-                            child: Text("What's on your mind?",
-                                style: secondaryTextStyle(
-                                  size: 16,
-                                  color: context.iconColor,
-                                )),
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width / 2 +
+                                      50,
+                                  height: 40,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        shape: StadiumBorder(
+                                            side: BorderSide(
+                                                color: context.iconColor)),
+                                        backgroundColor:
+                                            context.scaffoldBackgroundColor),
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                SVAddPostFragment(
+                                                    isStatus: false),
+                                          ));
+                                    },
+                                    child: Text("What's on your mind?",
+                                        style: secondaryTextStyle(
+                                          size: 16,
+                                          color: context.iconColor,
+                                        )),
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: Image.asset(
+                                    'images/socialv/icons/ic_Camera.png',
+                                    width: 44,
+                                    height: 40,
+                                    fit: BoxFit.fill,
+                                    color: context.iconColor,
+                                  ),
+                                  onPressed: () async {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              SVAddPostFragment(
+                                                  isStatus: false),
+                                        ));
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        IconButton(
-                          icon: Image.asset(
-                            'images/socialv/icons/ic_Camera.png',
-                            width: 44,
-                            height: 40,
-                            fit: BoxFit.fill,
-                            color: context.iconColor,
-                          ),
-                          onPressed: () async {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      SVAddPostFragment(isStatus: false),
-                                ));
-                          },
-                        ),
+                        },
+                        if (settingController.selectedWall == "6") ...{
+                          5.height,
+                          const SVStoryComponent(),
+                        },
                       ],
-                    ),
-                  ),
-                },
-                if (settingController.selectedWall == "6") ...{
-                  5.height,
-                  const SVStoryComponent(),
-                },
+                    );
+                  },
+                ),
                 SizedBox(
                     height: settingController.selectedWall == "6"
                         ? MediaQuery.of(context).size.height * 0.77

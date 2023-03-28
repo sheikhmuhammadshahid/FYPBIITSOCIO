@@ -26,7 +26,7 @@ class _SVLoginInComponentState extends State<SVLoginInComponent> {
 
   @override
   Widget build(BuildContext context) {
-    var authController = Provider.of<AuthController>(context);
+    var authController = context.read<AuthController>();
     return Form(
       key: SVLoginInComponent.formKey,
       child: Container(
@@ -132,10 +132,6 @@ class _SVLoginInComponentState extends State<SVLoginInComponent> {
                       context: context,
                       text: 'LOGIN',
                       onTap: () async {
-                        try {
-                          SVLoginInComponent.loggedIn =
-                              int.parse(SVLoginInComponent.userController.text);
-                        } catch (ex) {}
                         if (SVLoginInComponent.formKey.currentState!
                             .validate()) {
                           User user = User(

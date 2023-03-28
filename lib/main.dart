@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:biit_social/Client.dart';
 import 'package:biit_social/Controllers/FriendsStoriesController.dart';
 import 'package:biit_social/Controllers/PostController.dart';
 import 'package:biit_social/Controllers/SettingController.dart';
@@ -17,6 +18,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'Controllers/AuthController.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 
 AppStore appStore = AppStore();
 late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
@@ -48,6 +50,26 @@ setBackground() async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  AwesomeNotifications().initialize(
+      null,
+      [
+        NotificationChannel(
+            importance: NotificationImportance.Max,
+            channelKey: 'high_importance_channel',
+            channelGroupKey: 'high_importance_channel',
+            onlyAlertOnce: true,
+            channelShowBadge: true,
+            criticalAlerts: true,
+            ledColor: Colors.white10,
+            channelName: 'Basic notifications',
+            channelDescription: 'Notification channel for basic test')
+      ],
+      channelGroups: [
+        NotificationChannelGroup(
+            channelGroupkey: 'high_importance_channel_group',
+            channelGroupName: 'Group 1')
+      ],
+      debug: true);
   await Firebase.initializeApp();
   print('initialized');
   await setBackground();
@@ -66,6 +88,9 @@ void main() async {
     ),
     ChangeNotifierProvider(
       create: (_) => AuthController(),
+    ),
+    ChangeNotifierProvider(
+      create: (_) => ServerClient(),
     )
   ], child: const MyApp()));
   configLoading();
@@ -90,7 +115,10 @@ void configLoading() {
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
 
+  static Color mainColor = const Color(0xFF9D50DD);
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -199,6 +227,13 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    AwesomeNotifications().isNotificationAllowed().then(
+      (value) {
+        if (!value) {
+          AwesomeNotifications().requestPermissionToSendNotifications();
+        }
+      },
+    );
     init();
   }
 
