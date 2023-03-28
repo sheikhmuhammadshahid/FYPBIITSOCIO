@@ -1,10 +1,13 @@
+import 'package:biit_social/Controllers/FriendsStoriesController.dart';
 import 'package:biit_social/screens/profile/screens/CreateGroup.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:biit_social/utils/SVCommon.dart';
-
+import 'package:provider/provider.dart';
+import '../../../models/User/UserModel.dart';
 import '../../Chat/ChatScreen.dart';
 import '../../fragments/SVProfileFragment.dart';
+import '../../fragments/SVSearchFragment.dart';
 import 'SVGroupProfileScreen.dart';
 
 class GroupsListScreen extends StatefulWidget {
@@ -57,6 +60,15 @@ class _GroupsListScreenState extends State<GroupsListScreen> {
   @override
   void initState() {
     super.initState();
+    init();
+  }
+
+  late FriendsStoriesController friendsStoriesController;
+  init() async {
+    try {
+      friendsStoriesController = context.read<FriendsStoriesController>();
+      friendsStoriesController.getFriends();
+    } catch (e) {}
   }
 
   @override
@@ -66,11 +78,9 @@ class _GroupsListScreenState extends State<GroupsListScreen> {
           ? FloatingActionButton(
               backgroundColor: context.primaryColor,
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (context) {
-                    return const SvCreateGroupScreen();
-                  },
-                ));
+                toShow == 'Friends'
+                    ? const SVSearchFragment().launch(context)
+                    : const SvCreateGroupScreen().launch(context);
               },
               child: Icon(
                 Icons.add,
@@ -148,62 +158,76 @@ class _GroupsListScreenState extends State<GroupsListScreen> {
               height: 20,
             )
           },
-          SizedBox(
-            // flex: 4,
-            height: !toShow!.toLowerCase().contains('add')
-                ? MediaQuery.of(context).size.height - 200
-                : MediaQuery.of(context).size.height,
-            child: ListView.builder(
-              physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ChatScreen(),
-                          ));
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 10),
-                      child: Card(
-                        child: ListTile(
-                          leading: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        widget.toShow == "Groups"
-                                            ? const SVGroupProfileScreen()
-                                            : SVProfileFragment(
-                                                user: false,
-                                                id: '',
-                                              ),
-                                  ));
-                            },
-                            child: Image.asset(
-                                    'images/socialv/faces/face_2.png',
-                                    height: 52,
-                                    width: 52,
-                                    fit: BoxFit.cover)
-                                .cornerRadiusWithClipRRect(100),
+          Consumer<FriendsStoriesController>(
+            builder: (context, value, child) {
+              return SizedBox(
+                // flex: 4,
+                height: !toShow!.toLowerCase().contains('add')
+                    ? MediaQuery.of(context).size.height - 200
+                    : MediaQuery.of(context).size.height,
+                child: ListView.builder(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemCount: value.friends.length,
+                  itemBuilder: (context, index) {
+                    User? user = value.friends[index];
+                    return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ChatScreen(),
+                              ));
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          child: Column(
+                            children: [
+                              ListTile(
+                                leading: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              widget.toShow == "Groups"
+                                                  ? const SVGroupProfileScreen()
+                                                  : SVProfileFragment(
+                                                      user: false,
+                                                      id: '',
+                                                    ),
+                                        ));
+                                  },
+                                  child: Image.asset(
+                                          'images/socialv/faces/face_2.png',
+                                          height: 52,
+                                          width: 52,
+                                          fit: BoxFit.cover)
+                                      .cornerRadiusWithClipRRect(100),
+                                ),
+                                title: widget.toShow == 'Groups'
+                                    ? const Text('Group Name')
+                                    : Text(value.friends[index].name ?? ''),
+                                subtitle: Text(user.userType == "2"
+                                    ? "Teacher"
+                                    : user.userType == "3"
+                                        ? user.section ?? '---'
+                                        : 'Admin'),
+                                trailing: toShow!.toLowerCase().contains('add')
+                                    ? Checkbox(
+                                        onChanged: (val) {},
+                                        value: index < 3 ? true : false)
+                                    : const SizedBox(),
+                              ),
+                              const Divider(
+                                thickness: 1,
+                              )
+                            ],
                           ),
-                          title: widget.toShow == 'Groups'
-                              ? const Text('Group Name')
-                              : const Text('Friend Name'),
-                          subtitle: const Text('CS7A'),
-                          trailing: toShow!.toLowerCase().contains('add')
-                              ? Checkbox(
-                                  onChanged: (val) {},
-                                  value: index < 3 ? true : false)
-                              : const SizedBox(),
-                        ),
-                      ),
-                    ));
-              },
-            ),
+                        ));
+                  },
+                ),
+              );
+            },
           ),
         ]),
       ),

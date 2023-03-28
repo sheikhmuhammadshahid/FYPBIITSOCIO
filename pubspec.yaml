@@ -68,8 +68,10 @@ dependencies:
   firebase_messaging: ^14.2.5
   cloud_functions: ^4.0.11
   flutter_easyloading: ^3.0.5
-  signalr_client: ^0.1.6
+
   pluto_grid: ^6.0.4
+  calendar_view: ^1.0.2
+  awesome_notifications: ^0.6.19
  
 dev_dependencies:
   flutter_test:

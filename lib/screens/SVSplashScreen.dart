@@ -24,8 +24,7 @@ class _SVSplashScreenState extends State<SVSplashScreen> {
     // ignore: use_build_context_synchronously
     finish(context);
     // ignore: use_build_context_synchronously
-    Provider.of<AuthController>(context, listen: false)
-        .checkisLoggedIn(context);
+    context.read<AuthController>().checkisLoggedIn(context);
   }
 
   @override

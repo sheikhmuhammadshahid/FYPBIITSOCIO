@@ -5,6 +5,7 @@ import 'package:biit_social/models/Stories/Stories.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import '../models/SVNotificationModel.dart';
+import '../models/User/UserModel.dart';
 import '../utils/SVCommon.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +14,7 @@ class FriendsStoriesController extends ChangeNotifier {
   bool isStoriesLoading = true;
   Duration duration = const Duration(seconds: 3);
   List<Society> societies = [];
+  List<User> friends = [];
   List<Stories> stories = [];
   int indexShownStory = -1;
   int index = 0;
@@ -157,5 +159,19 @@ class FriendsStoriesController extends ChangeNotifier {
     try {
       notifyListeners();
     } catch (e) {}
+  }
+
+  getFriends() async {
+    try {
+      var response = await Dio()
+          .get('${ip}Friends/getFriends?user_id=${loggedInUser!.CNIC}');
+      if (response.statusCode == 200) {
+        friends.clear();
+        for (var element in response.data) {
+          friends.add(User.fromMap(element));
+        }
+      }
+    } catch (e) {}
+    setState();
   }
 }

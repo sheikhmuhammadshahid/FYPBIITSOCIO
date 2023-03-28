@@ -89,10 +89,15 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
         backgroundColor: context.cardColor,
         title: Text('New Post', style: boldTextStyle(size: 20)),
         elevation: 0,
-        centerTitle: true,
+        centerTitle: false,
         actions: [
-          if (loggedInUser!.userType == "2" || loggedInUser!.userType == "3")
-            TextButton(
+          if (loggedInUser!.userType == "2" ||
+              loggedInUser!.userType == "3") ...{
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.supervised_user_circle_sharp),
+            ),
+            IconButton(
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(
                     builder: (context) {
@@ -100,13 +105,8 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
                     },
                   ));
                 },
-                child: Text(
-                  '+',
-                  style: TextStyle(
-                      color: context.iconColor,
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold),
-                )),
+                icon: const Icon(Icons.calendar_month)),
+          },
           AppButton(
             shapeBorder: RoundedRectangleBorder(borderRadius: radius(4)),
             text: 'Post',

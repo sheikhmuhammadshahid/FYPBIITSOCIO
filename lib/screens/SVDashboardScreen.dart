@@ -1,11 +1,12 @@
+import 'package:biit_social/Client.dart';
 import 'package:biit_social/Controllers/SettingController.dart';
+import 'package:biit_social/TimeTable/Calender/calenderScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:biit_social/utils/SVCommon.dart';
 import 'package:provider/provider.dart';
 
 import '../BottomNavigation/SvBottomNavigationBar.dart';
-import '../Client.dart';
 import 'fragments/SVHomeFragment.dart';
 
 class SVDashboardScreen extends StatefulWidget {
@@ -21,8 +22,13 @@ class _SVDashboardScreenState extends State<SVDashboardScreen> {
   @override
   void initState() {
     setStatusBarColor(Colors.transparent);
-    ServerClient().connectWithServer();
+    //ServerClient().connectWithServer();
     super.initState();
+    init();
+  }
+
+  init() async {
+    context.read<ServerClient>().connectWithServer();
   }
 
   @override
@@ -33,13 +39,16 @@ class _SVDashboardScreenState extends State<SVDashboardScreen> {
   }
 
   late SettingController settingController;
+
   @override
   Widget build(BuildContext context) {
-    settingController = Provider.of<SettingController>(context);
+    settingController = context.read<SettingController>();
 
     return Scaffold(
         backgroundColor: svGetScaffoldColor(),
-        body: const SVHomeFragment(),
+        body: settingController.selectedWall == '7'
+            ? const CalenderScreen()
+            : const SVHomeFragment(),
         extendBody: true,
         bottomNavigationBar: Padding(
             padding: const EdgeInsets.only(bottom: 10),

@@ -30,7 +30,7 @@ class _SVPostComponentState extends State<SVPostComponent> {
   late PostController postController;
   getPosts() async {
     try {
-      postController = Provider.of<PostController>(context, listen: false);
+      postController = context.read<PostController>();
       if (postController.fromDiary) {
         postController.getPinnedPosts();
       } else {

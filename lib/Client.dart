@@ -1,36 +1,47 @@
 import 'dart:io';
 
-import 'package:dio/dio.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:signalr_client/signalr_client.dart';
 
 import 'utils/SVCommon.dart';
 
 class ServerClient with ChangeNotifier {
   late Socket socket;
-  final hubConnection = HubConnectionBuilder()
-      .withUrl('http://192.168.145.231/DevicesHub')
-      .build();
+
   connectWithServer() async {
     try {
-      // String ipp = ip.toString().split('/')[2];
-      // socket = await Socket.connect(ipp, 5001);
-
-      // startListening();
-      var res = await Dio()
-          .get("${ip}User/RegisterDevice?deviceId=${loggedInUser!.CNIC}");
-      if (res.statusCode == 200) {
-        await hubConnection.start();
-        hubConnection.on('ReceiveMessage', (List<Object?> arguments) {
-          final message = arguments[0];
-          // Handle the message here
-          EasyLoading.showToast(message.toString());
-        });
-      }
+      // String ip = await getIp(context);
+      String ipp = ip.split('/')[2];
+      socket = await Socket.connect(ipp, 5000);
+      startListening();
     } catch (e) {
       print(e);
     }
+  }
+
+  sendMessage({message}) {
+    try {
+      socket.write(message);
+    } catch (e) {}
+  }
+
+  showNotification() {
+    try {
+      AwesomeNotifications().createNotification(
+          content: NotificationContent(
+              id: 10,
+              channelKey: 'basic_channel',
+              summary: 'Summary',
+              title: 'Title',
+              criticalAlert: true,
+              body:
+                  'bodysdffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffdsdfsd',
+              displayOnBackground: true,
+              displayOnForeground: true,
+              notificationLayout: NotificationLayout.MessagingGroup,
+              bigPicture:
+                  'https://cdn.pixabay.com/photo/2016/08/11/23/48/mountains-1587287__480.jpg'));
+    } catch (e) {}
   }
 
   startListening() async {
@@ -38,7 +49,7 @@ class ServerClient with ChangeNotifier {
       socket.write(loggedInUser!.CNIC);
       socket.listen((event) {
         var d = String.fromCharCodes(event);
-        EasyLoading.showToast(d);
+        showNotification();
       });
     } catch (e) {}
   }
