@@ -53,7 +53,7 @@ class ServerClient with ChangeNotifier {
 
   startListening() async {
     try {
-      socket.write(loggedInUser!.CNIC);
+      socket.write('${loggedInUser!.CNIC}:${loggedInUser!.name ?? ''}');
       socket.listen((event) {
         var d = String.fromCharCodes(event);
         List<String> data = d.split('~').toList();
@@ -67,7 +67,7 @@ class ServerClient with ChangeNotifier {
                 .toList();
             if (v.isNotEmpty) {
               if (v[0].isOnline == null || v[0].isOnline == false) {
-                showNotification(id, true);
+                showNotification(v[0].name ?? v[0].CNIC, true);
 
                 v[0].isOnline = true;
               }

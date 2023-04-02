@@ -405,8 +405,6 @@ class _ChatScreenState extends State<ChatScreen> {
                                             : "text");
                                 path = null;
                                 isImagePicked = 0;
-                                friendsStoriesController.chats.add(ch);
-                                friendsStoriesController.notifyListeners();
                                 replyController.text = "";
                                 friendsStoriesController.sendChat(ch, client);
                               }

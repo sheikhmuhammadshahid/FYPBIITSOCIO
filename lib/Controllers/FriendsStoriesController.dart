@@ -183,9 +183,13 @@ class FriendsStoriesController extends ChangeNotifier {
 
   sendChat(ChatModel ch, ServerClient client) async {
     try {
+      String chatId = ch.senderImage;
+      ch.senderImage = loggedInUser!.profileImage;
+      chats.add(ch);
+      notifyListeners();
       var data = FormData.fromMap({
         'userid': loggedInUser!.CNIC,
-        'chat_id': ch.senderImage,
+        'chat_id': chatId,
         'dateTime': DateTime.now().toString(),
         'text': ch.message,
         'image': ch.type == "image" || ch.type == "video"
