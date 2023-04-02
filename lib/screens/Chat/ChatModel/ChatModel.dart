@@ -6,12 +6,20 @@ class ChatModel {
   bool sender;
   String senderImage;
   String type;
+  bool fromFile;
+  String? url;
+  String? date;
+  String dateTime;
   ChatModel({
     required this.id,
     required this.message,
     required this.sender,
     required this.senderImage,
     required this.type,
+    required this.fromFile,
+    this.url,
+    this.date,
+    required this.dateTime,
   });
 
   ChatModel copyWith({
@@ -20,6 +28,10 @@ class ChatModel {
     bool? sender,
     String? senderImage,
     String? type,
+    bool? fromFile,
+    String? url,
+    String? date,
+    String? dateTime,
   }) {
     return ChatModel(
       id: id ?? this.id,
@@ -27,6 +39,10 @@ class ChatModel {
       sender: sender ?? this.sender,
       senderImage: senderImage ?? this.senderImage,
       type: type ?? this.type,
+      fromFile: fromFile ?? this.fromFile,
+      url: url ?? this.url,
+      date: date ?? this.date,
+      dateTime: dateTime ?? this.dateTime,
     );
   }
 
@@ -38,6 +54,14 @@ class ChatModel {
     result.addAll({'sender': sender});
     result.addAll({'senderImage': senderImage});
     result.addAll({'type': type});
+    result.addAll({'fromFile': fromFile});
+    if (url != null) {
+      result.addAll({'url': url});
+    }
+    if (date != null) {
+      result.addAll({'date': date});
+    }
+    result.addAll({'dateTime': dateTime});
 
     return result;
   }
@@ -49,6 +73,10 @@ class ChatModel {
       sender: map['sender'] ?? false,
       senderImage: map['senderImage'] ?? '',
       type: map['type'] ?? '',
+      fromFile: map['fromFile'] ?? false,
+      url: map['url'],
+      date: map['date'],
+      dateTime: map['dateTime'] ?? '',
     );
   }
 
@@ -59,7 +87,7 @@ class ChatModel {
 
   @override
   String toString() {
-    return 'ChatModel(id: $id, message: $message, sender: $sender, senderImage: $senderImage, type: $type)';
+    return 'ChatModel(id: $id, message: $message, sender: $sender, senderImage: $senderImage, type: $type, fromFile: $fromFile, url: $url, date: $date, dateTime: $dateTime)';
   }
 
   @override
@@ -71,7 +99,11 @@ class ChatModel {
         other.message == message &&
         other.sender == sender &&
         other.senderImage == senderImage &&
-        other.type == type;
+        other.type == type &&
+        other.fromFile == fromFile &&
+        other.url == url &&
+        other.date == date &&
+        other.dateTime == dateTime;
   }
 
   @override
@@ -80,6 +112,10 @@ class ChatModel {
         message.hashCode ^
         sender.hashCode ^
         senderImage.hashCode ^
-        type.hashCode;
+        type.hashCode ^
+        fromFile.hashCode ^
+        url.hashCode ^
+        date.hashCode ^
+        dateTime.hashCode;
   }
 }

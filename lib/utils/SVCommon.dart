@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:biit_social/Controllers/FriendsStoriesController.dart';
 import 'package:biit_social/models/User/UserModel.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
@@ -14,12 +15,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
 
 String ipp = '';
+FriendsStoriesController? friendsStoriesController;
 
 User? loggedInUser;
-String ip = "http://192.168.184.231/BiitSocioApis/api/";
-String imageAddress = "http://192.168.184.231/BiitSocioApis/postImages/";
-String profileimageAddress = "http://192.168.184.231/BiitSocioApis/Images/";
-String storyAddress = 'http://192.168.184.231/BiitSocioApis/Status/';
+String ip = "http://192.168.87.231/BiitSocioApis/api/";
+String imageAddress = "http://192.168.87.231/BiitSocioApis/postImages/";
+String profileimageAddress = "http://192.168.87.231/BiitSocioApis/Images/";
+String storyAddress = 'http://192.168.87.231/BiitSocioApis/Status/';
 var headers = {"Content-Type": "application/json"};
 String selectedOptions = "";
 Future<String> getIp() async {

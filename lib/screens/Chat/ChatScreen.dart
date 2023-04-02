@@ -1,81 +1,95 @@
-import 'package:biit_social/screens/Chat/ChatModel/ChatModel.dart';
+import 'dart:io';
+
+import 'package:biit_social/Client.dart';
+import 'package:biit_social/Controllers/FriendsStoriesController.dart';
+import 'package:biit_social/utils/FilesPicker.dart';
+import 'package:biit_social/utils/getVideoItem.dart';
+import 'package:chat_bubbles/date_chips/date_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:chat_bubbles/chat_bubbles.dart';
 import '../../utils/SVCommon.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:provider/provider.dart';
+
+import 'ChatModel/ChatModel.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+  String profileScreen;
+  String id;
+  String name;
+  String section;
+  ChatScreen(
+      {super.key,
+      required this.id,
+      required this.name,
+      required this.section,
+      required this.profileScreen});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  List<ChatModel> chats = [
-    ChatModel(
-        id: 1,
-        message: 'Hi',
-        type: 'text',
-        sender: true,
-        senderImage: 'images/socialv/faces/face_2.png'),
-    ChatModel(
-        id: 2,
-        type: 'text',
-        message: 'How are You',
-        sender: false,
-        senderImage: 'images/socialv/faces/face_2.png'),
-    ChatModel(
-        id: 3,
-        type: 'text',
-        message: 'I am fine',
-        sender: true,
-        senderImage: 'images/socialv/faces/face_2.png'),
-    ChatModel(
-        id: 4,
-        message: 'Whats going on...',
-        sender: true,
-        type: 'text',
-        senderImage: 'images/socialv/faces/face_2.png'),
-    ChatModel(
-        id: 5,
-        message: 'Creating Chat Gui',
-        sender: false,
-        type: 'text',
-        senderImage: 'images/socialv/faces/face_2.png')
-  ];
   AudioPlayer audioPlayer = AudioPlayer();
   Duration duration = const Duration();
   Duration position = const Duration();
   bool isPlaying = false;
   bool isLoading = false;
   bool isPause = false;
+  late ServerClient client;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    init();
+  }
+
+  late FriendsStoriesController friendsStoriesController;
+  init() {
+    friendsStoriesController = context.read<FriendsStoriesController>();
+    friendsStoriesController.getChats(widget.id);
+  }
+
+  final _formKey = GlobalKey<FormState>();
+  bool ischanged = true;
+  TextEditingController replyController = TextEditingController();
+  String date = "";
   @override
   Widget build(BuildContext context) {
+    client = context.read<ServerClient>();
     final now = DateTime.now();
     return Scaffold(
       backgroundColor: svGetScaffoldColor(),
       appBar: AppBar(
+        elevation: 0,
         backgroundColor: svGetScaffoldColor(),
         iconTheme: IconThemeData(color: context.iconColor),
         title: Row(
           children: [
-            Image.asset('images/socialv/faces/face_2.png',
-                    height: 52, width: 52, fit: BoxFit.cover)
-                .cornerRadiusWithClipRRect(100),
+            widget.profileScreen == ''
+                ? Image.asset('images/socialv/faces/face_2.png',
+                        height: 52, width: 52, fit: BoxFit.cover)
+                    .cornerRadiusWithClipRRect(100)
+                : Image.network(profileimageAddress + widget.profileScreen,
+                        errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.black,
+                      child: const Icon(Icons.no_backpack),
+                    );
+                  }, height: 52, width: 52, fit: BoxFit.cover)
+                    .cornerRadiusWithClipRRect(100),
             const SizedBox(
               width: 10,
             ),
             Column(
-              children: const [
+              children: [
                 Text(
-                  'Name',
-                  style: TextStyle(color: Colors.black),
+                  widget.name,
+                  style: const TextStyle(color: Colors.black),
                 ),
                 Text(
-                  'BSCS7C',
-                  style: TextStyle(color: Colors.black),
+                  widget.section,
+                  style: const TextStyle(color: Colors.black),
                 )
               ],
             ),
@@ -155,75 +169,256 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: Stack(
         children: [
-          SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                for (var v in chats) ...{
-                  if (v.type == 'audio') ...{
-                    BubbleNormalAudio(
-                      color: const Color(0xFFE8E8EE),
-                      duration: duration.inSeconds.toDouble(),
-                      position: position.inSeconds.toDouble(),
-                      isPlaying: isPlaying,
-                      isLoading: isLoading,
-                      isPause: isPause,
-                      onSeekChanged: _changeSeek,
-                      onPlayPauseButtonClick: _playAudio,
-                      sent: true,
+          const Divider(
+            thickness: 1,
+          ),
+          SingleChildScrollView(child: Consumer<FriendsStoriesController>(
+            builder: (context, value, child) {
+              return Container(
+                padding: const EdgeInsets.only(top: 8),
+                height: context.height() * 0.74,
+                child: value.chats.isEmpty
+                    ? const Center(
+                        child: Text('nothing found'),
+                      )
+                    : ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: value.chats.length,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          var ch = value.chats[index];
+                          if (date != ch.date) {
+                            date = ch.date!;
+                            ischanged = true;
+                          } else {
+                            ischanged = false;
+                          }
+                          return Column(
+                            children: [
+                              ischanged
+                                  ? DateChip(
+                                      date: DateTime(
+                                          int.parse(ch.date!.split('/')[2]),
+                                          int.parse(ch.date!.split('/')[0]),
+                                          int.parse(ch.date!.split('/')[1])),
+                                    )
+                                  : const SizedBox.shrink(),
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  textDirection:
+                                      ch.sender ? TextDirection.rtl : null,
+                                  children: [
+                                    ch.senderImage == ""
+                                        ? CircleAvatar(
+                                            backgroundColor:
+                                                context.scaffoldBackgroundColor,
+                                            backgroundImage: const AssetImage(
+                                                'images/socialv/faces/face_5.png'))
+                                        : CircleAvatar(
+                                            backgroundColor:
+                                                context.scaffoldBackgroundColor,
+                                            // backgroundImage: NetworkImage(
+                                            //     profileimageAddress +
+                                            //         ch.senderImage),
+                                            child: sVProfileImageProvider(
+                                                profileimageAddress +
+                                                    ch.senderImage,
+                                                10.0,
+                                                10.0),
+                                          ),
+                                    Flexible(
+                                      fit: FlexFit.loose,
+                                      child: Column(
+                                        children: [
+                                          ch.type != 'text'
+                                              ? const Divider(
+                                                  thickness: 1,
+                                                  height: 5,
+                                                )
+                                              : const SizedBox.shrink(),
+                                          ch.type != 'text'
+                                              ? Text(ch.message)
+                                              : const SizedBox.shrink(),
+                                          Card(
+                                              color: ch.sender
+                                                  ? context.cardColor
+                                                  : context.iconColor,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(12.0),
+                                                child: ch.type == "image"
+                                                    ? ch.fromFile
+                                                        ? Image.file(
+                                                            File(ch.url!),
+                                                            height: context
+                                                                    .height() *
+                                                                0.3,
+                                                            width: context
+                                                                    .width() *
+                                                                0.5,
+                                                            fit: BoxFit.fill,
+                                                            errorBuilder:
+                                                                (context, error,
+                                                                    stackTrace) {
+                                                              return const Icon(
+                                                                  Icons.error);
+                                                            },
+                                                          )
+                                                        : Image.network(
+                                                            imageAddress +
+                                                                ch.url!,
+                                                            height: context
+                                                                    .height() *
+                                                                0.3,
+                                                            width: context
+                                                                    .width() *
+                                                                0.5,
+                                                            fit: BoxFit.fill,
+                                                            errorBuilder:
+                                                                (context, error,
+                                                                    stackTrace) {
+                                                              return const Icon(
+                                                                  Icons.error);
+                                                            },
+                                                          )
+                                                    : ch.type == "video"
+                                                        ? SizedBox(
+                                                            height: context
+                                                                    .height() *
+                                                                0.3,
+                                                            width: context
+                                                                    .width() *
+                                                                0.5,
+                                                            child: GetVideoItem(
+                                                                url: ch.fromFile
+                                                                    ? ch.url!
+                                                                    : imageAddress +
+                                                                        ch.url!,
+                                                                fromNetwork: !ch
+                                                                    .fromFile),
+                                                          )
+                                                        : Text(
+                                                            ch.message,
+                                                            style: TextStyle(
+                                                                color: !ch
+                                                                        .sender
+                                                                    ? Colors
+                                                                        .white
+                                                                    : null),
+                                                          ),
+                                              )),
+                                        ],
+                                      ),
+                                    ),
+                                    Text(
+                                      ch.dateTime.toString(),
+                                      style: const TextStyle(
+                                          color: Colors.black38),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+              );
+            },
+          )),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: context.height() * 0.15,
+              color: context.scaffoldBackgroundColor,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const Divider(
+                      thickness: 1,
                     ),
-                  } else if (v.type == 'text') ...{
-                    BubbleNormal(
-                      text: v.message,
-                      isSender: v.sender,
-                      color: v.sender ? const Color(0xFF1B97F3) : Colors.grey,
-                      tail: true,
-                      textStyle: const TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
+                    Form(
+                      key: _formKey,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: TextFormField(
+                          validator: (value) {
+                            if (value == '' && isImagePicked == 0) {
+                              return 'select something to send!';
+                            }
+                            return null;
+                          },
+                          controller: replyController,
+                          cursorColor: context.iconColor,
+                          decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "Write a reply"),
+                        ),
                       ),
                     ),
-                  }
-                },
-                DateChip(
-                  date: DateTime(now.year, now.month, now.day - 1),
+                    Row(
+                      children: [
+                        IconButton(
+                            onPressed: () async {
+                              await pickFile(context, 1);
+                            },
+                            icon: const Icon(Icons.camera_alt)),
+                        IconButton(
+                            onPressed: () async {
+                              await pickFile(context, 2);
+                            },
+                            icon: const Icon(Icons.filter)),
+                        IconButton(
+                            onPressed: () {},
+                            icon: const Icon(Icons.file_copy_rounded)),
+                        const Spacer(),
+                        TextButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                ChatModel ch = ChatModel(
+                                    date: date,
+                                    fromFile: true,
+                                    dateTime: DateTime.now()
+                                        .toString()
+                                        .splitBetween(' ', '.'),
+                                    id: friendsStoriesController
+                                            .chats.isNotEmpty
+                                        ? friendsStoriesController
+                                                .chats[friendsStoriesController
+                                                        .chats.length -
+                                                    1]
+                                                .id +
+                                            1
+                                        : 1,
+                                    message: replyController.text,
+                                    sender: true,
+                                    senderImage: widget.id,
+                                    url:
+                                        isImagePicked == 1 || isImagePicked == 2
+                                            ? path.path
+                                            : "",
+                                    type: isImagePicked == 1
+                                        ? "image"
+                                        : isImagePicked == 2
+                                            ? 'video'
+                                            : "text");
+                                path = null;
+                                isImagePicked = 0;
+                                replyController.text = "";
+                                friendsStoriesController.sendChat(ch, client);
+                              }
+                            },
+                            child: Icon(
+                              Icons.send,
+                              color: context.iconColor,
+                            ))
+                      ],
+                    )
+                  ],
                 ),
-                const SizedBox(
-                  height: 100,
-                )
-              ],
+              ),
             ),
-          ),
-          MessageBar(
-            onSend: (text) {
-              chats.add(ChatModel(
-                  id: chats[chats.length - 1].id + 1,
-                  message: text,
-                  sender: true,
-                  senderImage: "",
-                  type: 'text'));
-              setState(() {});
-            },
-            actions: [
-              InkWell(
-                child: const Icon(
-                  Icons.add,
-                  color: Colors.black,
-                  size: 24,
-                ),
-                onTap: () {},
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 8, right: 8),
-                child: InkWell(
-                  child: const Icon(
-                    Icons.camera_alt,
-                    color: Colors.green,
-                    size: 24,
-                  ),
-                  onTap: () {},
-                ),
-              ),
-            ],
           ),
         ],
       ),

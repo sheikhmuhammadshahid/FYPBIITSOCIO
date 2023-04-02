@@ -40,7 +40,7 @@ class _SvCreateGroupScreenState extends State<SvCreateGroupScreen> {
                           right: 30,
                           child: GestureDetector(
                             onTap: () {
-                              pickFile(context);
+                              pickFile(context, 0);
                             },
                             child: Icon(
                               Icons.camera_alt_rounded,

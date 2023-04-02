@@ -256,7 +256,7 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
                     // postController
                     //     .controller.flickVideoManager!.videoPlayerController!
                     //     .pause();
-                    await pickFile(context);
+                    await pickFile(context, 0);
                     setState(() {});
                   }),
                   child: Image.asset('images/socialv/icons/ic_CameraPost.png',
@@ -270,7 +270,7 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
                     // postController
                     //     .controller.flickVideoManager!.videoPlayerController!
                     //     .pause();
-                    await pickFile(context);
+                    await pickFile(context, 0);
                     setState(() {});
                   }),
                   child: Text("click here to choose...",

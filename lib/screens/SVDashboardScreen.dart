@@ -1,4 +1,5 @@
 import 'package:biit_social/Client.dart';
+import 'package:biit_social/Controllers/FriendsStoriesController.dart';
 import 'package:biit_social/Controllers/SettingController.dart';
 import 'package:biit_social/TimeTable/Calender/calenderScreen.dart';
 import 'package:flutter/material.dart';
@@ -16,19 +17,32 @@ class SVDashboardScreen extends StatefulWidget {
   State<SVDashboardScreen> createState() => _SVDashboardScreenState();
 }
 
-class _SVDashboardScreenState extends State<SVDashboardScreen> {
+class _SVDashboardScreenState extends State<SVDashboardScreen>
+    with WidgetsBindingObserver {
   // int selectedIndex = 0;
 
   @override
   void initState() {
     setStatusBarColor(Colors.transparent);
-    //ServerClient().connectWithServer();
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    //ServerClient().connectWithServer();
+
     init();
   }
 
+  late ServerClient controller;
   init() async {
-    context.read<ServerClient>().connectWithServer();
+    friendsStoriesController = context.read<FriendsStoriesController>();
+    await friendsStoriesController!.getFriends();
+    // ignore: use_build_context_synchronously
+    controller = context.read<ServerClient>();
+    controller.connectWithServer();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    controller.appLifecycleState = state;
   }
 
   @override
@@ -59,89 +73,3 @@ class _SVDashboardScreenState extends State<SVDashboardScreen> {
             )));
   }
 }
-
-
-//  BottomNavigationBar(
-//         showSelectedLabels: true,
-//         type: BottomNavigationBarType.shifting,
-//         items: [
-//           BottomNavigationBarItem(
-//             icon: Image.asset('images/socialv/icons/ic_Home.png',
-//                     height: 24,
-//                     width: 24,
-//                     fit: BoxFit.cover,
-//                     color: context.iconColor)
-//                 .paddingTop(12),
-//             label: 'Home',
-//             activeIcon: Image.asset('images/socialv/icons/ic_HomeSelected.png',
-//                     height: 24, width: 24, fit: BoxFit.cover)
-//                 .paddingTop(12),
-//           ),
-//           BottomNavigationBarItem(
-//             // icon: const Icon(
-//             //   Icons.person,
-//             //   size: 30,
-//             // ).paddingTop(12),
-//             icon: Image.asset('images/socialv/icons/ic_Profile.png',
-//                     height: 24,
-//                     width: 24,
-//                     fit: BoxFit.cover,
-//                     color: context.iconColor)
-//                 .paddingTop(12),
-//             label: 'Admin',
-//             activeIcon: Image.asset('images/socialv/icons/ic_Profile.png',
-//                     height: 24, width: 24, fit: BoxFit.cover)
-//                 .paddingTop(12),
-//           ),
-//           BottomNavigationBarItem(
-//             icon: Image.asset('images/socialv/icons/ic_3User.png',
-//                     height: 24,
-//                     width: 24,
-//                     fit: BoxFit.cover,
-//                     color: context.iconColor)
-//                 .paddingTop(12),
-//             label: 'Groups',
-//             activeIcon: Image.asset('images/socialv/icons/ic_3User.png',
-//                     height: 24, width: 24, fit: BoxFit.cover)
-//                 .paddingTop(12),
-//           ),
-//           BottomNavigationBarItem(
-//             icon: Image.asset('images/socialv/icons/ic_Notification.png',
-//                     height: 24,
-//                     width: 24,
-//                     fit: BoxFit.cover,
-//                     color: context.iconColor)
-//                 .paddingTop(12),
-//             label: 'Notifications',
-//             activeIcon: Image.asset(
-//                     'images/socialv/icons/ic_NotificationSelected.png',
-//                     height: 24,
-//                     width: 24,
-//                     fit: BoxFit.cover)
-//                 .paddingTop(12),
-//           ),
-//           BottomNavigationBarItem(
-//             //icon: const Icon(Icons.class_outlined),
-//             icon: Image.asset('images/socialv/classLogo.png',
-//                     height: 24, width: 24, fit: BoxFit.cover)
-//                 .paddingTop(12),
-//             label: 'Class',
-//             activeIcon: Image.asset('images/socialv/classLogo.png',
-//                     color: const Color.fromARGB(255, 1, 68, 122),
-//                     height: 24,
-//                     width: 24,
-//                     fit: BoxFit.cover)
-//                 .paddingTop(12),
-//           ),
-//         ],
-//         onTap: (val) {
-//           selectedIndex = val;
-//           setState(() {});
-//           // if (val == 2) {
-//           //   selectedIndex = 0;
-//           //   setState(() {});
-//           //   const SVAddPostFragment().launch(context);
-//           // }
-//         },
-//         currentIndex: selectedIndex,
-//       ),

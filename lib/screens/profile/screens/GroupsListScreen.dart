@@ -175,7 +175,13 @@ class _GroupsListScreenState extends State<GroupsListScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const ChatScreen(),
+                                builder: (context) => ChatScreen(
+                                  id: user.CNIC,
+                                  profileScreen: user.profileImage,
+                                  name: user.name == null ? '' : user.name!,
+                                  section:
+                                      user.section == null ? '' : user.section!,
+                                ),
                               ));
                         },
                         child: Padding(
@@ -193,16 +199,32 @@ class _GroupsListScreenState extends State<GroupsListScreen> {
                                                   ? const SVGroupProfileScreen()
                                                   : SVProfileFragment(
                                                       user: false,
-                                                      id: '',
+                                                      id: user.CNIC,
                                                     ),
                                         ));
                                   },
-                                  child: Image.asset(
-                                          'images/socialv/faces/face_2.png',
-                                          height: 52,
-                                          width: 52,
-                                          fit: BoxFit.cover)
-                                      .cornerRadiusWithClipRRect(100),
+                                  child: user.profileImage == ''
+                                      ? Image.asset(
+                                              'images/socialv/faces/face_2.png',
+                                              height: 52,
+                                              width: 52,
+                                              fit: BoxFit.cover)
+                                          .cornerRadiusWithClipRRect(100)
+                                      : Image.network(
+                                              profileimageAddress +
+                                                  user.profileImage,
+                                              errorBuilder:
+                                                  (context, error, stackTrace) {
+                                          return Container(
+                                            color: Colors.black,
+                                            child:
+                                                const Icon(Icons.no_backpack),
+                                          );
+                                        },
+                                              height: 52,
+                                              width: 52,
+                                              fit: BoxFit.cover)
+                                          .cornerRadiusWithClipRRect(100),
                                 ),
                                 title: widget.toShow == 'Groups'
                                     ? const Text('Group Name')
@@ -216,7 +238,12 @@ class _GroupsListScreenState extends State<GroupsListScreen> {
                                     ? Checkbox(
                                         onChanged: (val) {},
                                         value: index < 3 ? true : false)
-                                    : const SizedBox(),
+                                    : user.isOnline ?? false
+                                        ? const Icon(
+                                            Icons.online_prediction,
+                                            color: Colors.blue,
+                                          )
+                                        : const SizedBox(),
                               ),
                               const Divider(
                                 thickness: 1,

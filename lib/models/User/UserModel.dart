@@ -7,6 +7,7 @@ class User {
   String password;
   String? email;
   String? phone;
+  bool? isOnline;
   String? token;
   bool? isFriend;
   String CNIC;
@@ -23,6 +24,7 @@ class User {
     required this.password,
     this.email,
     this.phone,
+    this.isOnline,
     this.token,
     this.isFriend = false,
     required this.CNIC,
@@ -41,6 +43,7 @@ class User {
     String? password,
     String? email,
     String? phone,
+    bool? isOnline,
     String? token,
     bool? isFriend,
     String? CNIC,
@@ -58,6 +61,7 @@ class User {
       password: password ?? this.password,
       email: email ?? this.email,
       phone: phone ?? this.phone,
+      isOnline: isOnline ?? this.isOnline,
       token: token ?? this.token,
       isFriend: isFriend ?? this.isFriend,
       CNIC: CNIC ?? this.CNIC,
@@ -84,6 +88,9 @@ class User {
     }
     if (phone != null) {
       result.addAll({'phone': phone});
+    }
+    if (isOnline != null) {
+      result.addAll({'isOnline': isOnline});
     }
     if (token != null) {
       result.addAll({'token': token});
@@ -122,7 +129,8 @@ class User {
       password: map['password'] ?? '',
       email: map['email'],
       phone: map['phone'],
-      //  token: map['token'],
+      isOnline: map['isOnline'],
+      token: map['token'],
       isFriend: map['isFriend'],
       CNIC: map['CNIC'] ?? '',
       sonOf: map['sonOf'],
@@ -140,7 +148,7 @@ class User {
 
   @override
   String toString() {
-    return 'User(aridNo: $aridNo, name: $name, profileImage: $profileImage, password: $password, email: $email, phone: $phone, token: $token, isFriend: $isFriend, CNIC: $CNIC, sonOf: $sonOf, postsCount: $postsCount, countFriends: $countFriends, section: $section, isTeachingTo: $isTeachingTo, userType: $userType)';
+    return 'User(aridNo: $aridNo, name: $name, profileImage: $profileImage, password: $password, email: $email, phone: $phone, isOnline: $isOnline, token: $token, isFriend: $isFriend, CNIC: $CNIC, sonOf: $sonOf, postsCount: $postsCount, countFriends: $countFriends, section: $section, isTeachingTo: $isTeachingTo, userType: $userType)';
   }
 
   @override
@@ -154,6 +162,7 @@ class User {
         other.password == password &&
         other.email == email &&
         other.phone == phone &&
+        other.isOnline == isOnline &&
         other.token == token &&
         other.isFriend == isFriend &&
         other.CNIC == CNIC &&
@@ -173,6 +182,7 @@ class User {
         password.hashCode ^
         email.hashCode ^
         phone.hashCode ^
+        isOnline.hashCode ^
         token.hashCode ^
         isFriend.hashCode ^
         CNIC.hashCode ^

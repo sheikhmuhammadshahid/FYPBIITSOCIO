@@ -1,7 +1,9 @@
+import 'package:biit_social/Client.dart';
 import 'package:biit_social/Controllers/SettingController.dart';
 import 'package:biit_social/models/FriendRequesModel.dart';
 import 'package:biit_social/models/Stories/Societies.dart';
 import 'package:biit_social/models/Stories/Stories.dart';
+import 'package:biit_social/screens/Chat/ChatModel/ChatModel.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import '../models/SVNotificationModel.dart';
@@ -14,6 +16,7 @@ class FriendsStoriesController extends ChangeNotifier {
   bool isStoriesLoading = true;
   Duration duration = const Duration(seconds: 3);
   List<Society> societies = [];
+  List<ChatModel> chats = [];
   List<User> friends = [];
   List<Stories> stories = [];
   int indexShownStory = -1;
@@ -161,14 +164,61 @@ class FriendsStoriesController extends ChangeNotifier {
     } catch (e) {}
   }
 
+  getChats(id) async {
+    try {
+      isStoriesLoading = true;
+      notifyListeners();
+      var response = await Dio().get(
+          '${ip}chat/getChat?loggedInUserId=${loggedInUser!.CNIC}&chatwithId=$id');
+      if (response.statusCode == 200) {
+        chats.clear();
+        for (var element in response.data) {
+          chats.add(ChatModel.fromMap(element));
+        }
+      }
+    } catch (e) {}
+    isStoriesLoading = false;
+    notifyListeners();
+  }
+
+  sendChat(ChatModel ch, ServerClient client) async {
+    try {
+      String chatId = ch.senderImage;
+      ch.senderImage = loggedInUser!.profileImage;
+      chats.add(ch);
+      notifyListeners();
+      var data = FormData.fromMap({
+        'userid': loggedInUser!.CNIC,
+        'chat_id': chatId,
+        'dateTime': DateTime.now().toString(),
+        'text': ch.message,
+        'image': ch.type == "image" || ch.type == "video"
+            ? await MultipartFile.fromFile(ch.url!)
+            : null,
+        'type': ch.type
+      });
+      var response = await Dio().post('${ip}chat/addChat',
+          data: data, options: Options(headers: headers));
+      if (response.statusCode == 200) {
+        //EasyLoading.showToast('added');
+        client.sendMessage(
+            message: '${loggedInUser!.CNIC}~${ch.senderImage}~${ch.message}');
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   getFriends() async {
     try {
       var response = await Dio()
           .get('${ip}Friends/getFriends?user_id=${loggedInUser!.CNIC}');
       if (response.statusCode == 200) {
-        friends.clear();
         for (var element in response.data) {
-          friends.add(User.fromMap(element));
+          User u = User.fromMap(element);
+          if (friends.where((element) => element.CNIC == u.CNIC).isEmpty) {
+            friends.add(u);
+          }
         }
       }
     } catch (e) {}

@@ -6,6 +6,8 @@ import 'package:biit_social/utils/SVConstants.dart';
 import '../../../utils/FilesPicker.dart';
 
 class SVPostOptionsComponent extends StatefulWidget {
+  const SVPostOptionsComponent({super.key});
+
   @override
   State<SVPostOptionsComponent> createState() => _SVPostOptionsComponentState();
 }
@@ -37,7 +39,7 @@ class _SVPostOptionsComponentState extends State<SVPostOptionsComponent> {
               children: [
                 GestureDetector(
                   onTap: (() {
-                    pickFile(context);
+                    pickFile(context, 0);
                   }),
                   child: Image.asset('images/socialv/icons/ic_CameraPost.png',
                       height: 30, width: 30, fit: BoxFit.cover),
@@ -47,7 +49,7 @@ class _SVPostOptionsComponentState extends State<SVPostOptionsComponent> {
                 ),
                 GestureDetector(
                   onTap: (() {
-                    pickFile(context);
+                    pickFile(context, 0);
                   }),
                   child: Text("click here to choose...",
                       style: secondaryTextStyle(

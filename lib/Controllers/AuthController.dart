@@ -79,7 +79,7 @@ class AuthController extends ChangeNotifier {
     notifyListeners();
   }
 
-  checkisLoggedIn(context) async {
+  checkisLoggedIn(BuildContext context) async {
     try {
       sharedPref = await SharedPreferences.getInstance();
       if (sharedPref!.containsKey('rememberMe')) {
@@ -91,15 +91,20 @@ class AuthController extends ChangeNotifier {
         if (rememberMe) {
           SVLoginInComponent.passwordController.text = loggedInUser!.password;
           SVLoginInComponent.userController.text = loggedInUser!.CNIC;
+          // ignore: use_build_context_synchronously
+
+          // ignore: use_build_context_synchronously
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (context) => const SVDashboardScreen(),
               ));
         } else {
+          // ignore: use_build_context_synchronously
           const SVSignInScreen().launch(context, isNewTask: true);
         }
       } else {
+        // ignore: use_build_context_synchronously
         const SVSignInScreen().launch(context, isNewTask: true);
       }
     } catch (e) {
@@ -139,7 +144,7 @@ class AuthController extends ChangeNotifier {
     saveLoggedInUser();
   }
 
-  login(User u, context) async {
+  login(User u, BuildContext context) async {
     try {
       EasyLoading.show(status: 'Please wait...', dismissOnTap: false);
       //EasyLoading.showInfo('', duration: const Duration(days: 2));
@@ -157,6 +162,9 @@ class AuthController extends ChangeNotifier {
 
           // checkUserType(context);
           await updateToken();
+          // ignore: use_build_context_synchronously
+
+          // ignore: use_build_context_synchronously
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
