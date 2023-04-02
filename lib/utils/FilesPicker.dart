@@ -8,37 +8,38 @@ import '../screens/fragments/SVAddPostFragment.dart';
 int isImagePicked = 0;
 
 var path;
-pickFile(context) async {
-  int fromCamera = 0;
-  await AwesomeDialog(
-    context: context,
-    dialogType: DialogType.info,
-    borderSide: const BorderSide(
-      color: Colors.green,
-      width: 2,
-    ),
-    btnCancelText: "Camera",
-    btnCancelColor: Colors.black,
-    btnOkColor: Colors.black,
-    btnOkText: "Gallary",
-    width: 280,
-    buttonsBorderRadius: const BorderRadius.all(
-      Radius.circular(2),
-    ),
-    dismissOnTouchOutside: false,
-    dismissOnBackKeyPress: false,
-    headerAnimationLoop: false,
-    animType: AnimType.bottomSlide,
-    title: 'Add Photo!',
-    //desc: 'This Dialog can be dismissed touching outside',
-    showCloseIcon: true,
-    btnCancelOnPress: () {
-      fromCamera = 1;
-    },
-    btnOkOnPress: () {
-      fromCamera = 2;
-    },
-  ).show();
+pickFile(context, int fromCamera) async {
+  if (fromCamera == 0) {
+    await AwesomeDialog(
+      context: context,
+      dialogType: DialogType.info,
+      borderSide: const BorderSide(
+        color: Colors.green,
+        width: 2,
+      ),
+      btnCancelText: "Camera",
+      btnCancelColor: Colors.black,
+      btnOkColor: Colors.black,
+      btnOkText: "Gallary",
+      width: 280,
+      buttonsBorderRadius: const BorderRadius.all(
+        Radius.circular(2),
+      ),
+      dismissOnTouchOutside: false,
+      dismissOnBackKeyPress: false,
+      headerAnimationLoop: false,
+      animType: AnimType.bottomSlide,
+      title: 'Add Photo!',
+      //desc: 'This Dialog can be dismissed touching outside',
+      showCloseIcon: true,
+      btnCancelOnPress: () {
+        fromCamera = 1;
+      },
+      btnOkOnPress: () {
+        fromCamera = 2;
+      },
+    ).show();
+  }
   List<AssetEntity>? result = [];
   AssetEntity? entity;
   if (fromCamera == 2) {

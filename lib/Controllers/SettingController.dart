@@ -59,7 +59,7 @@ class SettingController extends ChangeNotifier {
     Item(
         title: 'Personal',
         icon: const Icon(
-          Icons.personal_injury,
+          Icons.person,
           size: 24,
           color: Colors.white,
         )),
@@ -94,7 +94,7 @@ class SettingController extends ChangeNotifier {
     Item(
         title: 'Teacher',
         icon: const Icon(
-          Icons.theater_comedy,
+          Icons.person_3,
           size: 24,
           color: Colors.white,
         )),
@@ -117,11 +117,12 @@ class SettingController extends ChangeNotifier {
           const SizedBox(
             width: 4,
           ),
-          Text(
-            items[index].title,
+          const Text(
+            '' //items[index].title,
+            ,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(color: Colors.white
+            style: TextStyle(color: Colors.white
                 //color: context.iconColor,
                 ),
           ),
