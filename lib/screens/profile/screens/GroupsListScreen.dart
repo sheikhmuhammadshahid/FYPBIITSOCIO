@@ -67,6 +67,7 @@ class _GroupsListScreenState extends State<GroupsListScreen> {
     try {
       friendsStoriesController = context.read<FriendsStoriesController>();
       friendsStoriesController.getFriends();
+
       if (toShow!.toLowerCase().contains('gro')) {
         friendsStoriesController.getGroups();
       }
@@ -175,77 +176,85 @@ class _GroupsListScreenState extends State<GroupsListScreen> {
                 height: !toShow!.toLowerCase().contains('add')
                     ? MediaQuery.of(context).size.height - 200
                     : MediaQuery.of(context).size.height,
-                child: ListView.builder(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  itemCount: value.groups.length,
-                  itemBuilder: (context, index) {
-                    Group group = value.groups[index];
+                child: value.isStoriesLoading
+                    ? svGetUserShimmer()
+                    : ListView.builder(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        itemCount: value.groups.length,
+                        itemBuilder: (context, index) {
+                          Group group = value.groups[index];
 
-                    return group.name
-                            .toLowerCase()
-                            .contains(value.tofilter.toLowerCase())
-                        ? GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ChatScreen(
-                                      groupChat: true,
-                                      id: group.id.toString(),
-                                      profileScreen: group.profile,
-                                      name: group.name,
-                                      section: group.Admin,
-                                    ),
-                                  ));
-                            },
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 10, right: 10),
-                              child: Column(
-                                children: [
-                                  ListTile(
-                                    leading: GestureDetector(
-                                      onTap: () {
-                                        const SVGroupProfileScreen()
-                                            .launch(context);
-                                      },
-                                      child: group.profile == ''
-                                          ? Image.asset(
-                                                  group.isOfficial!
-                                                      ? 'images/socialv/gifs/BIITLOGO.png'
-                                                      : 'images/socialv/faces/face_2.png',
-                                                  height: 52,
-                                                  width: 52,
-                                                  fit: BoxFit.cover)
-                                              .cornerRadiusWithClipRRect(100)
-                                          : Image.network(
-                                                  profileimageAddress +
-                                                      group.profile,
-                                                  errorBuilder: (context, error,
-                                                      stackTrace) {
-                                              return Container(
-                                                color: Colors.black,
-                                                child: const Icon(
-                                                    Icons.no_backpack),
-                                              );
+                          return group.name
+                                  .toLowerCase()
+                                  .contains(value.tofilter.toLowerCase())
+                              ? GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ChatScreen(
+                                            groupChat: true,
+                                            id: group.id.toString(),
+                                            profileScreen: group.profile,
+                                            name: group.name,
+                                            section: group.description,
+                                          ),
+                                        ));
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 10, right: 10),
+                                    child: Column(
+                                      children: [
+                                        ListTile(
+                                          leading: GestureDetector(
+                                            onTap: () {
+                                              const SVGroupProfileScreen()
+                                                  .launch(context);
                                             },
-                                                  height: 52,
-                                                  width: 52,
-                                                  fit: BoxFit.cover)
-                                              .cornerRadiusWithClipRRect(100),
+                                            child: group.profile == ''
+                                                ? Image.asset(
+                                                        group.isOfficial!
+                                                            ? 'images/socialv/gifs/BIITLOGO.png'
+                                                            : 'images/socialv/faces/face_2.png',
+                                                        height: 52,
+                                                        width: 52,
+                                                        fit: BoxFit.cover)
+                                                    .cornerRadiusWithClipRRect(
+                                                        100)
+                                                : Image.network(
+                                                        profileimageAddress +
+                                                            group.profile,
+                                                        errorBuilder: (context,
+                                                            error, stackTrace) {
+                                                    return Container(
+                                                      color: Colors.black,
+                                                      child: const Icon(
+                                                          Icons.no_backpack),
+                                                    );
+                                                  },
+                                                        height: 52,
+                                                        width: 52,
+                                                        fit: BoxFit.cover)
+                                                    .cornerRadiusWithClipRRect(
+                                                        100),
+                                          ),
+                                          title: Text(group.name),
+                                          subtitle: Text(group.description == ''
+                                              ? group.isOfficial!
+                                                  ? 'Official group'
+                                                  : 'non Official'
+                                              : group.description),
+                                        ),
+                                        const Divider(
+                                          thickness: 1,
+                                        )
+                                      ],
                                     ),
-                                    title: Text(group.name),
-                                    subtitle: Text(group.Admin),
-                                  ),
-                                  const Divider(
-                                    thickness: 1,
-                                  )
-                                ],
-                              ),
-                            ))
-                        : const SizedBox.shrink();
-                  },
-                ),
+                                  ))
+                              : const SizedBox.shrink();
+                        },
+                      ),
               );
             },
           ),

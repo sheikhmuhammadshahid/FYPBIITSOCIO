@@ -6,6 +6,7 @@ import 'package:biit_social/models/Stories/Stories.dart';
 import 'package:biit_social/screens/Chat/ChatModel/ChatModel.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import '../models/SVGroupModel.dart';
 import '../models/SVNotificationModel.dart';
 import '../models/User/UserModel.dart';
@@ -262,6 +263,8 @@ class FriendsStoriesController extends ChangeNotifier {
 
   getFriends() async {
     try {
+      isStoriesLoading = true;
+      setState();
       var response = await Dio()
           .get('${ip}Friends/getFriends?user_id=${loggedInUser!.CNIC}');
       if (response.statusCode == 200) {
@@ -274,11 +277,14 @@ class FriendsStoriesController extends ChangeNotifier {
         }
       }
     } catch (e) {}
+    isStoriesLoading = false;
     setState();
   }
 
   getGroups() async {
     try {
+      isStoriesLoading = true;
+      setState();
       var res = await Dio().get(
           '${ip}groups/getGroups?cnic=${loggedInUser!.CNIC}&userType=${loggedInUser!.userType}');
       if (res.statusCode == 200) {
@@ -288,8 +294,35 @@ class FriendsStoriesController extends ChangeNotifier {
         }
       }
     } catch (e) {}
+    isStoriesLoading = false;
     setState();
   }
 
-  createGroup() async {}
+  createGroup(List<String> users) async {
+    try {
+      var d = users.join(',');
+      print(d);
+      var body = FormData.fromMap({
+        'Admin': group.Admin,
+        'description': group.description,
+        'name': group.name,
+        'profile': group.profile != ''
+            ? await MultipartFile.fromFile(group.profile)
+            : null,
+        'isOfficial': group.isOfficial,
+        'memberCount': users.length,
+        'users': users
+      });
+      print(body);
+      var response = await Dio().post('${ip}Groups/addGroup',
+          data: body, options: Options(headers: headers));
+      if (response.statusCode == 200) {
+        EasyLoading.showToast(response.data['message']);
+
+        // groups.add(response.data);
+      }
+    } catch (e) {
+      EasyLoading.showToast('Server not responding!');
+    }
+  }
 }

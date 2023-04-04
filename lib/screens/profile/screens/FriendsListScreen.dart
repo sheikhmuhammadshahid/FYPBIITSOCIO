@@ -1,4 +1,5 @@
 import 'package:biit_social/Controllers/FriendsStoriesController.dart';
+import 'package:biit_social/utils/FilesPicker.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:biit_social/utils/SVCommon.dart';
@@ -56,6 +57,7 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
     } catch (e) {}
   }
 
+  List<String> selectedUsers = [];
   @override
   Widget build(BuildContext context) {
     friendsStoriesController = context.read<FriendsStoriesController>();
@@ -81,7 +83,10 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
         actions: [
           if (toShow!.toLowerCase().contains('add'))
             TextButton(
-                onPressed: () {},
+                onPressed: () async {
+                  await friendsStoriesController.createGroup(selectedUsers);
+                  path = null;
+                },
                 child: Text(
                   'Create',
                   style: boldTextStyle(size: 16),
@@ -246,13 +251,27 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                                         : user.userType == "3"
                                             ? user.section ?? '---'
                                             : 'Admin'),
-                                    trailing:
-                                        toShow!.toLowerCase().contains('add')
-                                            ? Checkbox(
-                                                onChanged: (val) {},
-                                                value: index < 3 ? true : false)
-                                            : onlineUserIcon(
-                                                user.isOnline ?? false),
+                                    trailing: toShow!
+                                            .toLowerCase()
+                                            .contains('add')
+                                        ? Checkbox(
+                                            onChanged: (val) {
+                                              try {
+                                                if (val!) {
+                                                  selectedUsers.add(user.CNIC);
+                                                } else {
+                                                  selectedUsers
+                                                      .remove(user.CNIC);
+                                                }
+                                                setState(() {});
+                                              } catch (e) {}
+                                            },
+                                            value: selectedUsers.any(
+                                                (element) =>
+                                                    element.trim() ==
+                                                    user.CNIC.trim()))
+                                        : onlineUserIcon(
+                                            user.isOnline ?? false),
                                   ),
                                   const Divider(
                                     thickness: 1,
