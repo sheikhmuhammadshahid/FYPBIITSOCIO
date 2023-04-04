@@ -123,7 +123,10 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   Text(
                     widget.section,
-                    style: const TextStyle(color: Colors.black),
+                    style: const TextStyle(
+                      color: Colors.grey,
+                      fontSize: 15,
+                    ),
                   )
                 ],
               ),

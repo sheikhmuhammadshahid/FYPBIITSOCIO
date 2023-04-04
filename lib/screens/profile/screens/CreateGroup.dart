@@ -99,8 +99,10 @@ class _SvCreateGroupScreenState extends State<SvCreateGroupScreen> {
                           if (_formKey.currentState!.validate()) {
                             friendsStoriesController.group = Group(
                                 id: 0,
+                                description: descriptionController.text,
                                 Admin: loggedInUser!.CNIC,
                                 name: titleController.text,
+                                isOfficial: false,
                                 profile: path != null ? path.path : '');
                             FriendsListScreen(toShow: 'Add Member')
                                 .launch(context);

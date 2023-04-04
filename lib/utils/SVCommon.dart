@@ -132,6 +132,34 @@ getPostsShimmer(context) {
       ));
 }
 
+svGetUserShimmer() {
+  return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey,
+      child: ListView.builder(
+        itemCount: 10,
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          return ListTile(
+            leading: const CircleAvatar(
+              radius: 50,
+              backgroundColor: Colors.white,
+            ),
+            title: Container(
+              height: 20,
+              width: double.infinity,
+              color: Colors.white,
+            ),
+            subtitle: Container(
+              height: 20,
+              width: double.infinity,
+              color: Colors.white,
+            ),
+          );
+        },
+      ));
+}
+
 getNotificationShimmer(context) {
   return Shimmer.fromColors(
       baseColor: Colors.grey[300]!,
