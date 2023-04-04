@@ -1,4 +1,5 @@
 import 'package:biit_social/screens/auth/screens/SVSignInScreen.dart';
+import 'package:biit_social/screens/profile/screens/FriendsListScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:biit_social/models/SVCommonModels.dart';
@@ -104,8 +105,8 @@ class _SVHomeDrawerComponentState extends State<SVHomeDrawerComponent> {
                       const SVDiarScreen().launch(context);
                     } else if (selectedIndex == 1) {
                       finish(context);
-                      GroupsListScreen(
-                        toShow: 'Friends',
+                      FriendsListScreen(
+                        toShow: 'friends',
                       ).launch(context);
                     } else if (selectedIndex == 0) {
                       finish(context);

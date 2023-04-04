@@ -220,6 +220,7 @@ Widget svGetTextField(BuildContext context,
     InputBorder? inputBorder,
     bool readOnly = false,
     String? label,
+    var validator,
     TextStyle? hintStyle,
     TextStyle? labelStyle,
     TextEditingController? controller,
@@ -234,6 +235,7 @@ Widget svGetTextField(BuildContext context,
       TextFormField(
         maxLines: maxLine,
         onTap: onTap,
+        validator: validator,
         readOnly: readOnly,
         controller: controller,
         decoration: svInputDecoration(context,
@@ -434,4 +436,10 @@ sVImageProvider(url, height, width, GFAvatarShape shape) {
       ),
     ),
   );
+}
+
+onlineUserIcon(bool isOnline) {
+  return isOnline
+      ? const CircleAvatar(radius: 10, backgroundColor: Colors.green)
+      : const SizedBox();
 }

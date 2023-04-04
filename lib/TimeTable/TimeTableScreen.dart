@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:provider/provider.dart';
-import 'package:collection/collection.dart';
 import 'package:biit_social/Controllers/PostController.dart';
-import 'package:biit_social/TimeTable/TimeTableModel.dart';
 
 class TimeTableScreen extends StatefulWidget {
   const TimeTableScreen({super.key});
@@ -18,45 +16,25 @@ class TimeTableScreen extends StatefulWidget {
 class _TimeTableScreenState extends State<TimeTableScreen> {
   TextEditingController text = TextEditingController();
   final _rows = <PlutoRow>[];
-  final _columns = [
-    PlutoColumn(
-      title: 'Slot',
-      field: '6',
-      type: PlutoColumnType.text(),
-    ),
-    PlutoColumn(
-      title: 'Monday',
-      field: '1',
-      type: PlutoColumnType.text(),
-    ),
-    PlutoColumn(
-      title: 'Tuesday',
-      field: '2',
-      type: PlutoColumnType.text(),
-    ),
-
-    PlutoColumn(
-      title: 'Wednesday',
-      field: '3',
-      type: PlutoColumnType.text(),
-    ),
-    PlutoColumn(
-      title: 'Thursday',
-      field: '4',
-      type: PlutoColumnType.text(),
-    ),
-    PlutoColumn(
-      title: 'Friday',
-      field: '5',
-      type: PlutoColumnType.text(),
-    ),
-
-    // PlutoColumn(
-    //   title: 'Role',
-    //   field: 'role',
-    //   type: PlutoColumnType.text(),
-    // ),
-  ];
+  final _columns = <PlutoColumn>[];
+  getColumns() {
+    _columns.add(
+      PlutoColumn(
+          title: 'Slot',
+          backgroundColor: context.scaffoldBackgroundColor,
+          field: '1',
+          width: context.width() * 0.37,
+          type: PlutoColumnType.text(),
+          enableColumnDrag: false),
+    );
+    return _columns.add(PlutoColumn(
+        backgroundColor: context.scaffoldBackgroundColor,
+        enableColumnDrag: false,
+        title: getWeekday(DateTime.now().weekday),
+        field: '2',
+        width: context.width() * 0.58,
+        type: PlutoColumnType.text()));
+  }
 
   @override
   void initState() {
@@ -65,30 +43,38 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
     // _loadData();
   }
 
-  getData(d, TimeTableModel item) {
-    return item.Day.toString().toLowerCase().startsWith(d)
-        ? '${item.courseName} ${item.teacherName}'
-        : '-';
-  }
+  // getData(d, TimeTableModel item) {
+  //   return item.Day.toString().toLowerCase().startsWith(d)
+  //       ? '${item.courseName} ${item.teacherName}'
+  //       : '-';
+  // }
 
   getRows(PostController value) {
-    var d = groupBy(value.timeTable, (p0) => p0.slot);
+    String day = getWeekday(DateTime.now().weekday);
     _rows.clear();
-    for (var element in d.values) {
-      for (var ele in element) {
-        _rows.add(PlutoRow(
-          cells: {
-            '6': PlutoCell(value: ele.slot),
-            '1': PlutoCell(value: getData('mo', element[0])),
-            '2': PlutoCell(value: getData('tu', element[1])),
-            '3': PlutoCell(value: getData('we', element[2])),
-            '4': PlutoCell(value: getData('th', element[3])),
-            '5': PlutoCell(value: getData('fr', element[4])),
-          },
-        ));
-        break;
-      }
+
+    for (var ele in value.timeTable) {
+      _rows.add(PlutoRow(
+        cells: {
+          '1': PlutoCell(
+            value: ele.slot,
+          ),
+          '2': PlutoCell(
+              value: day.toLowerCase().contains('fri')
+                  ? ele.friday
+                  : day.toLowerCase().contains('mon')
+                      ? ele.monday
+                      : day.toLowerCase().contains('tue')
+                          ? ele.tuesday
+                          : day.toLowerCase().contains('wed')
+                              ? ele.wednesday
+                              : day.toLowerCase().contains('thu')
+                                  ? ele.thursday
+                                  : ''),
+        },
+      ));
     }
+    return _rows;
   }
 
   @override
@@ -97,8 +83,9 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
     return Consumer<PostController>(
       builder: (context, value, child) {
         getRows(value);
+        getColumns();
         return Container(
-          color: Colors.white,
+          color: context.scaffoldBackgroundColor,
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -112,6 +99,9 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                       mode: PlutoGridMode.readOnly,
                       configuration: PlutoGridConfiguration(
                         style: PlutoGridStyleConfig(
+                          iconColor: context.iconColor,
+
+                          rowColor: context.scaffoldBackgroundColor,
                           borderColor: Colors.black,
                           gridBorderColor: Colors.black,
                           gridBorderRadius: BorderRadius.circular(12),
@@ -139,6 +129,27 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
         );
       },
     );
+  }
+}
+
+String getWeekday(int weekday) {
+  switch (weekday) {
+    case 1:
+      return 'Monday';
+    case 2:
+      return 'Tuesday';
+    case 3:
+      return 'Wednesday';
+    case 4:
+      return 'Thursday';
+    case 5:
+      return 'Friday';
+    case 6:
+      return 'Saturday';
+    case 7:
+      return 'Sunday';
+    default:
+      return '';
   }
 }
 

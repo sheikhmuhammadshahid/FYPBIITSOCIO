@@ -18,11 +18,13 @@ class ChatScreen extends StatefulWidget {
   String id;
   String name;
   String section;
+  bool groupChat;
   ChatScreen(
       {super.key,
       required this.id,
       required this.name,
       required this.section,
+      required this.groupChat,
       required this.profileScreen});
 
   @override
@@ -44,10 +46,19 @@ class _ChatScreenState extends State<ChatScreen> {
     init();
   }
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    friendsStoriesController.chats.clear();
+
+    super.dispose();
+  }
+
   late FriendsStoriesController friendsStoriesController;
   init() {
     friendsStoriesController = context.read<FriendsStoriesController>();
-    friendsStoriesController.getChats(widget.id);
+
+    friendsStoriesController.getChats(widget.id, widget.groupChat);
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -58,6 +69,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     client = context.read<ServerClient>();
     final now = DateTime.now();
+
     return Scaffold(
       backgroundColor: svGetScaffoldColor(),
       appBar: AppBar(
@@ -66,105 +78,118 @@ class _ChatScreenState extends State<ChatScreen> {
         iconTheme: IconThemeData(color: context.iconColor),
         title: Row(
           children: [
-            widget.profileScreen == ''
-                ? Image.asset('images/socialv/faces/face_2.png',
-                        height: 52, width: 52, fit: BoxFit.cover)
-                    .cornerRadiusWithClipRRect(100)
-                : Image.network(profileimageAddress + widget.profileScreen,
-                        errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: Colors.black,
-                      child: const Icon(Icons.no_backpack),
-                    );
-                  }, height: 52, width: 52, fit: BoxFit.cover)
-                    .cornerRadiusWithClipRRect(100),
+            Stack(
+              children: [
+                widget.profileScreen == ''
+                    ? Image.asset(
+                            widget.groupChat
+                                ? 'images/socialv/gifs/BIITLOGO.png'
+                                : 'images/socialv/faces/face_2.png',
+                            height: 52,
+                            width: 52,
+                            fit: BoxFit.cover)
+                        .cornerRadiusWithClipRRect(100)
+                    : Image.network(profileimageAddress + widget.profileScreen,
+                            errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: Colors.black,
+                          child: const Icon(Icons.no_backpack),
+                        );
+                      }, height: 52, width: 52, fit: BoxFit.cover)
+                        .cornerRadiusWithClipRRect(100),
+                !widget.groupChat
+                    ? Consumer<FriendsStoriesController>(
+                        builder: (context, value, child) {
+                          return onlineUserIcon(value.friends
+                                  .firstWhere(
+                                      (element) => element.CNIC == widget.id)
+                                  .isOnline ??
+                              false);
+                        },
+                      )
+                    : const SizedBox.shrink(),
+              ],
+            ),
             const SizedBox(
               width: 10,
             ),
-            Column(
-              children: [
-                Text(
-                  widget.name,
-                  style: const TextStyle(color: Colors.black),
-                ),
-                Text(
-                  widget.section,
-                  style: const TextStyle(color: Colors.black),
-                )
-              ],
+            Flexible(
+              fit: FlexFit.loose,
+              child: Column(
+                children: [
+                  Text(
+                    widget.name,
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                  Text(
+                    widget.section,
+                    style: const TextStyle(color: Colors.black),
+                  )
+                ],
+              ),
             ),
           ],
         ),
         actions: [
-          PopupMenuButton(
-            itemBuilder: (context) {
-              return [
-                PopupMenuItem(
-                    child: TextButton(
-                        onPressed: () {},
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.delete,
-                              color: svGetBodyColor(),
-                            ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              'Delete',
-                              style: boldTextStyle(),
-                            ),
-                          ],
-                        ))),
-                PopupMenuItem(
-                    child: TextButton(
-                        onPressed: () {},
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.edit,
-                              color: svGetBodyColor(),
-                            ),
-                            Text(
-                              'Edit',
-                              style: boldTextStyle(),
-                            ),
-                          ],
-                        ))),
-                PopupMenuItem(
-                    child: TextButton(
-                        onPressed: () {},
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.exit_to_app,
-                              color: svGetBodyColor(),
-                            ),
-                            Text(
-                              'Left group',
-                              style: boldTextStyle(),
-                            ),
-                          ],
-                        ))),
-                PopupMenuItem(
-                    child: TextButton(
-                        onPressed: () {},
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.volume_off,
-                              color: svGetBodyColor(),
-                            ),
-                            Text(
-                              'Mute group',
-                              style: boldTextStyle(),
-                            ),
-                          ],
-                        )))
-              ];
-            },
-          ),
+          if (widget.groupChat)
+            PopupMenuButton(
+              itemBuilder: (context) {
+                return [
+                  if (widget.section == loggedInUser!.CNIC ||
+                      widget.section == loggedInUser!.name) ...{
+                    PopupMenuItem(
+                        child: TextButton(
+                            onPressed: () {},
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.delete,
+                                  color: svGetBodyColor(),
+                                ),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  'Delete',
+                                  style: boldTextStyle(),
+                                ),
+                              ],
+                            ))),
+                    PopupMenuItem(
+                        child: TextButton(
+                            onPressed: () {},
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.edit,
+                                  color: svGetBodyColor(),
+                                ),
+                                Text(
+                                  'Edit',
+                                  style: boldTextStyle(),
+                                ),
+                              ],
+                            ))),
+                  },
+                  if (widget.groupChat)
+                    PopupMenuItem(
+                        child: TextButton(
+                            onPressed: () {},
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.exit_to_app,
+                                  color: svGetBodyColor(),
+                                ),
+                                Text(
+                                  'Left group',
+                                  style: boldTextStyle(),
+                                ),
+                              ],
+                            ))),
+                ];
+              },
+            ),
         ],
       ),
       body: Stack(
@@ -188,7 +213,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         itemBuilder: (context, index) {
                           var ch = value.chats[index];
                           if (date != ch.date) {
-                            date = ch.date!;
+                            date = ch.date ?? '';
                             ischanged = true;
                           } else {
                             ischanged = false;
@@ -196,12 +221,15 @@ class _ChatScreenState extends State<ChatScreen> {
                           return Column(
                             children: [
                               ischanged
-                                  ? DateChip(
-                                      date: DateTime(
-                                          int.parse(ch.date!.split('/')[2]),
-                                          int.parse(ch.date!.split('/')[0]),
-                                          int.parse(ch.date!.split('/')[1])),
-                                    )
+                                  ? ch.date != '' && ch.date != null
+                                      ? DateChip(
+                                          date: DateTime(
+                                              int.parse(ch.date!.split('/')[2]),
+                                              int.parse(ch.date!.split('/')[0]),
+                                              int.parse(
+                                                  ch.date!.split('/')[1])),
+                                        )
+                                      : const SizedBox.shrink()
                                   : const SizedBox.shrink(),
                               Padding(
                                 padding: const EdgeInsets.all(4.0),
@@ -406,7 +434,9 @@ class _ChatScreenState extends State<ChatScreen> {
                                 path = null;
                                 isImagePicked = 0;
                                 replyController.text = "";
-                                friendsStoriesController.sendChat(ch, client);
+
+                                friendsStoriesController.sendChat(
+                                    ch, client, widget.groupChat);
                               }
                             },
                             child: Icon(

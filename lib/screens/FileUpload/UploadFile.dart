@@ -20,7 +20,7 @@ class _UploadFileState extends State<UploadFile> {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         allowMultiple: false,
         type: FileType.custom,
-        allowedExtensions: ['xlsx', 'xls', 'xml'],
+        allowedExtensions: ['xlsx', 'xls', 'xml', 'pdf'],
       );
       if (result!.count > 0) {
         path = result.files[0].path;

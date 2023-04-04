@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:biit_social/utils/SVCommon.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../Controllers/SettingController.dart';
@@ -99,13 +100,20 @@ class _SvBottomNavigationState extends State<SvBottomNavigation> {
                 },
                 child: Padding(
                     padding: const EdgeInsets.only(right: 7),
-                    child: Chip(
-                        visualDensity: VisualDensity.standard,
-                        backgroundColor: settingController.selectedIndexText ==
-                                settingController.items[i].title
-                            ? context.primaryColor.withOpacity(0.9)
-                            : context.iconColor.withOpacity(0.5),
-                        label: settingController.getWidget(context, i))),
+                    child: GestureDetector(
+                      onLongPress: () => EasyLoading.showToast(
+                          settingController.items[i].title,
+                          dismissOnTap: true,
+                          toastPosition: EasyLoadingToastPosition.bottom),
+                      child: Chip(
+                          visualDensity: VisualDensity.standard,
+                          backgroundColor:
+                              settingController.selectedIndexText ==
+                                      settingController.items[i].title
+                                  ? context.primaryColor.withOpacity(0.9)
+                                  : context.iconColor.withOpacity(0.5),
+                          label: settingController.getWidget(context, i)),
+                    )),
               )
           ]),
     );
