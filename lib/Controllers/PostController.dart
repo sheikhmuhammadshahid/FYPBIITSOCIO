@@ -34,17 +34,13 @@ class PostController with ChangeNotifier {
     try {
       isTimeTableLoading = true;
       setState();
-      var response = await Dio().get('${ip}post/getTimeTable?section=cs-3a');
+      var response = await Dio()
+          .get('${ip}post/getTimeTable?section=${loggedInUser!.section}');
       if (response.statusCode == 200) {
         timeTable.clear();
-        var sortedItems = response.data.asMap().entries.toList()
-          ..sort((a, b) => order[a.key].compareTo(order[b.key]))
-          ..map((entry) => entry.value).toList();
-        for (var element in sortedItems) {
-          print('ss');
-          for (var element1 in element.value) {
-            timeTable.add(TimeTableModel.fromMap(element1));
-          }
+
+        for (var element1 in response.data) {
+          timeTable.add(TimeTableModel.fromMap(element1));
         }
       }
     } catch (e) {

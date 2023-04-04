@@ -6,6 +6,7 @@ import 'package:biit_social/models/Stories/Stories.dart';
 import 'package:biit_social/screens/Chat/ChatModel/ChatModel.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import '../models/SVGroupModel.dart';
 import '../models/SVNotificationModel.dart';
 import '../models/User/UserModel.dart';
 import '../utils/SVCommon.dart';
@@ -17,7 +18,23 @@ class FriendsStoriesController extends ChangeNotifier {
   Duration duration = const Duration(seconds: 3);
   List<Society> societies = [];
   List<ChatModel> chats = [];
+  List<Items> section = [];
+  List<DropdownMenuItem> desciplines = [];
+  List<Group> groups = [];
   List<User> friends = [];
+  String tofilter = '';
+  late Group group;
+  // filterFriends(text) {
+  //   try {
+  //     friendsToShow = friends
+  //         .where((element) => element.name!
+  //             .toLowerCase()
+  //             .contains(text.toString().toLowerCase()))
+  //         .toList();
+  //     notifyListeners();
+  //   } catch (e) {}
+  // }
+
   List<Stories> stories = [];
   int indexShownStory = -1;
   int index = 0;
@@ -164,12 +181,44 @@ class FriendsStoriesController extends ChangeNotifier {
     } catch (e) {}
   }
 
-  getChats(id) async {
+  getSectionAndDesciplines() async {
+    try {
+      var response = await Dio().get('${ip}user/getDescipline');
+      if (response.statusCode == 200) {
+        section.clear();
+        desciplines.clear();
+        int i = 1;
+        desciplines.add(
+          const DropdownMenuItem(value: 'All', child: Text("All")),
+        );
+        section.add(Items(name: 'All', id: 0));
+        for (var element in response.data['sections']) {
+          section.add(Items(name: element, id: i));
+          i++;
+        }
+        i = 1;
+        for (var element in response.data['desciplines']) {
+          desciplines.add(
+            DropdownMenuItem(value: element, child: Text(element)),
+          );
+        }
+      }
+    } catch (e) {}
+    notifyListeners();
+  }
+
+  getChats(id, fromGroup) async {
     try {
       isStoriesLoading = true;
-      notifyListeners();
-      var response = await Dio().get(
-          '${ip}chat/getChat?loggedInUserId=${loggedInUser!.CNIC}&chatwithId=$id');
+      setState();
+      String url = '';
+      if (fromGroup) {
+        url =
+            '${ip}groups/getChatOfGroup?id=$id&loggedInUserId=${loggedInUser!.CNIC}';
+      } else {
+        '${ip}chat/getChat?loggedInUserId=${loggedInUser!.CNIC}&chatwithId=$id';
+      }
+      var response = await Dio().get(url);
       if (response.statusCode == 200) {
         chats.clear();
         for (var element in response.data) {
@@ -181,7 +230,7 @@ class FriendsStoriesController extends ChangeNotifier {
     notifyListeners();
   }
 
-  sendChat(ChatModel ch, ServerClient client) async {
+  sendChat(ChatModel ch, ServerClient client, fromGroup) async {
     try {
       String chatId = ch.senderImage;
       ch.senderImage = loggedInUser!.profileImage;
@@ -201,8 +250,10 @@ class FriendsStoriesController extends ChangeNotifier {
           data: data, options: Options(headers: headers));
       if (response.statusCode == 200) {
         //EasyLoading.showToast('added');
-        client.sendMessage(
-            message: '${loggedInUser!.CNIC}~${ch.senderImage}~${ch.message}');
+        if (fromGroup) {
+          client.sendMessage(
+              message: '${loggedInUser!.CNIC}~${ch.senderImage}~${ch.message}');
+        }
       }
     } catch (e) {
       print(e);
@@ -214,6 +265,7 @@ class FriendsStoriesController extends ChangeNotifier {
       var response = await Dio()
           .get('${ip}Friends/getFriends?user_id=${loggedInUser!.CNIC}');
       if (response.statusCode == 200) {
+        friends.clear();
         for (var element in response.data) {
           User u = User.fromMap(element);
           if (friends.where((element) => element.CNIC == u.CNIC).isEmpty) {
@@ -224,4 +276,20 @@ class FriendsStoriesController extends ChangeNotifier {
     } catch (e) {}
     setState();
   }
+
+  getGroups() async {
+    try {
+      var res = await Dio().get(
+          '${ip}groups/getGroups?cnic=${loggedInUser!.CNIC}&userType=${loggedInUser!.userType}');
+      if (res.statusCode == 200) {
+        groups.clear();
+        for (var element in res.data) {
+          groups.add(Group.fromMap(element));
+        }
+      }
+    } catch (e) {}
+    setState();
+  }
+
+  createGroup() async {}
 }

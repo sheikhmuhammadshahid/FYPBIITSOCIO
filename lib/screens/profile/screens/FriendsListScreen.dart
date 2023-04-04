@@ -1,58 +1,43 @@
 import 'package:biit_social/Controllers/FriendsStoriesController.dart';
-import 'package:biit_social/models/SVGroupModel.dart';
-import 'package:biit_social/screens/profile/screens/CreateGroup.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:biit_social/utils/SVCommon.dart';
 import 'package:provider/provider.dart';
+import '../../../models/User/UserModel.dart';
 import '../../Chat/ChatScreen.dart';
+import '../../fragments/SVProfileFragment.dart';
 import '../../fragments/SVSearchFragment.dart';
 import 'SVGroupProfileScreen.dart';
 
-class GroupsListScreen extends StatefulWidget {
+class FriendsListScreen extends StatefulWidget {
   String? toShow;
-  GroupsListScreen({Key? key, required this.toShow}) : super(key: key);
+  FriendsListScreen({Key? key, required this.toShow}) : super(key: key);
 
   @override
-  State<GroupsListScreen> createState() => _GroupsListScreenState(toShow);
+  State<FriendsListScreen> createState() => _FriendsListScreenState(toShow);
 }
 
-class _GroupsListScreenState extends State<GroupsListScreen> {
+class _FriendsListScreenState extends State<FriendsListScreen> {
   // List<String> tabList = ['Topics', 'Replies', 'Engagement', 'Favourite'];
 
   int selectedTab = 0;
   String? toShow;
-  _GroupsListScreenState(this.toShow);
+  _FriendsListScreenState(this.toShow);
 
-  var desciplines = [
-    const DropdownMenuItem(value: "All", child: Text("All")),
-    const DropdownMenuItem(value: "BSIT", child: Text("BSIT")),
-    const DropdownMenuItem(value: "BSCS", child: Text("BSCS")),
-    const DropdownMenuItem(value: "BSSE", child: Text("BSSE")),
-    const DropdownMenuItem(value: "BSAI", child: Text("BSAI")),
-  ];
-  List<Items> sections = [
-    Items(id: 28, name: "All"),
-    Items(id: 1, name: "BSCS-7C"),
-    Items(id: 3, name: "BSCS-5B"),
-    Items(id: 4, name: "BSCS-7A"),
-    Items(id: 5, name: "BSIT-7A"),
-    Items(id: 6, name: "BSIT-2A"),
-    Items(id: 7, name: "BSCS-6A"),
-  ];
+  List<DropdownMenuItem> desciplines = [];
+
   List<Items> selectedSections = [];
   String? selectedDescipline;
   bool selected = false;
+
   getSections() {
     selectedSections = selectedDescipline != "All"
-        ? sections
-            .where((element) =>
-                element.id == 28 ||
-                element.name!
-                    .toLowerCase()
-                    .startsWith(selectedDescipline!.toLowerCase()))
+        ? friendsStoriesController.section
+            .where((element) => element.name!
+                .toLowerCase()
+                .startsWith(selectedDescipline!.toLowerCase()))
             .toList()
-        : sections;
+        : friendsStoriesController.section;
     setState(() {});
   }
 
@@ -67,22 +52,19 @@ class _GroupsListScreenState extends State<GroupsListScreen> {
     try {
       friendsStoriesController = context.read<FriendsStoriesController>();
       friendsStoriesController.getFriends();
-      if (toShow!.toLowerCase().contains('gro')) {
-        friendsStoriesController.getGroups();
-      }
+      friendsStoriesController.getSectionAndDesciplines();
     } catch (e) {}
   }
 
   @override
   Widget build(BuildContext context) {
+    friendsStoriesController = context.read<FriendsStoriesController>();
     return Scaffold(
       floatingActionButton: !toShow!.toLowerCase().contains('add')
           ? FloatingActionButton(
               backgroundColor: context.primaryColor,
               onPressed: () {
-                toShow == 'Friends'
-                    ? const SVSearchFragment().launch(context)
-                    : const SvCreateGroupScreen().launch(context);
+                const SVSearchFragment().launch(context);
               },
               child: Icon(
                 Icons.add,
@@ -140,32 +122,44 @@ class _GroupsListScreenState extends State<GroupsListScreen> {
       body: SingleChildScrollView(
         child: Column(children: [
           if (toShow!.toLowerCase().contains('add')) ...{
-            DropdownButtonFormField(
-              value: selectedDescipline,
-              hint: const Text("Select Descipline"),
-              items: desciplines.toList(),
-              onChanged: (value) {
-                selectedDescipline = value!;
-                selected = true;
-                getSections();
+            Consumer<FriendsStoriesController>(
+              builder: (context, value, child) {
+                return Padding(
+                  padding: const EdgeInsets.only(left: 12.0, right: 12),
+                  child: Column(
+                    children: [
+                      DropdownButtonFormField(
+                        value: selectedDescipline,
+                        hint: const Text("Select Descipline"),
+                        items: friendsStoriesController.desciplines,
+                        onChanged: (value) {
+                          selectedDescipline = value!;
+                          selected = true;
+                          getSections();
+                        },
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      if (selected) ...{
+                        //  Selector(items: selectedSections, lable: "Section")
+                        TextFormField(
+                          decoration: const InputDecoration(
+                              hintText: 'Select Sections'),
+                          readOnly: true,
+                          onTap: () async {
+                            await getSelector(
+                                context, 'Select Sections', selectedSections);
+                          },
+                        ),
+                      },
+                      const SizedBox(
+                        height: 20,
+                      )
+                    ],
+                  ),
+                );
               },
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            if (selected) ...{
-              //  Selector(items: selectedSections, lable: "Section")
-              TextFormField(
-                decoration: const InputDecoration(hintText: 'Select Sections'),
-                readOnly: true,
-                onTap: () async {
-                  await getSelector(
-                      context, 'Select Sections', selectedSections);
-                },
-              ),
-            },
-            const SizedBox(
-              height: 20,
             )
           },
           Consumer<FriendsStoriesController>(
@@ -177,11 +171,11 @@ class _GroupsListScreenState extends State<GroupsListScreen> {
                     : MediaQuery.of(context).size.height,
                 child: ListView.builder(
                   physics: const AlwaysScrollableScrollPhysics(),
-                  itemCount: value.groups.length,
+                  itemCount: value.friends.length,
                   itemBuilder: (context, index) {
-                    Group group = value.groups[index];
+                    User user = value.friends[index];
 
-                    return group.name
+                    return user.name!
                             .toLowerCase()
                             .contains(value.tofilter.toLowerCase())
                         ? GestureDetector(
@@ -190,11 +184,13 @@ class _GroupsListScreenState extends State<GroupsListScreen> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => ChatScreen(
-                                      groupChat: true,
-                                      id: group.id.toString(),
-                                      profileScreen: group.profile,
-                                      name: group.name,
-                                      section: group.Admin,
+                                      groupChat: false,
+                                      id: user.CNIC,
+                                      profileScreen: user.profileImage,
+                                      name: user.name == null ? '' : user.name!,
+                                      section: user.section == null
+                                          ? ''
+                                          : user.section!,
                                     ),
                                   ));
                             },
@@ -206,21 +202,29 @@ class _GroupsListScreenState extends State<GroupsListScreen> {
                                   ListTile(
                                     leading: GestureDetector(
                                       onTap: () {
-                                        const SVGroupProfileScreen()
-                                            .launch(context);
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => widget
+                                                          .toShow ==
+                                                      "Groups"
+                                                  ? const SVGroupProfileScreen()
+                                                  : SVProfileFragment(
+                                                      user: false,
+                                                      id: user.CNIC,
+                                                    ),
+                                            ));
                                       },
-                                      child: group.profile == ''
+                                      child: user.profileImage == ''
                                           ? Image.asset(
-                                                  group.isOfficial!
-                                                      ? 'images/socialv/gifs/BIITLOGO.png'
-                                                      : 'images/socialv/faces/face_2.png',
+                                                  'images/socialv/faces/face_2.png',
                                                   height: 52,
                                                   width: 52,
                                                   fit: BoxFit.cover)
                                               .cornerRadiusWithClipRRect(100)
                                           : Image.network(
                                                   profileimageAddress +
-                                                      group.profile,
+                                                      user.profileImage,
                                                   errorBuilder: (context, error,
                                                       stackTrace) {
                                               return Container(
@@ -234,8 +238,21 @@ class _GroupsListScreenState extends State<GroupsListScreen> {
                                                   fit: BoxFit.cover)
                                               .cornerRadiusWithClipRRect(100),
                                     ),
-                                    title: Text(group.name),
-                                    subtitle: Text(group.Admin),
+                                    title: widget.toShow == 'Groups'
+                                        ? const Text('Group Name')
+                                        : Text(value.friends[index].name ?? ''),
+                                    subtitle: Text(user.userType == "2"
+                                        ? "Teacher"
+                                        : user.userType == "3"
+                                            ? user.section ?? '---'
+                                            : 'Admin'),
+                                    trailing:
+                                        toShow!.toLowerCase().contains('add')
+                                            ? Checkbox(
+                                                onChanged: (val) {},
+                                                value: index < 3 ? true : false)
+                                            : onlineUserIcon(
+                                                user.isOnline ?? false),
                                   ),
                                   const Divider(
                                     thickness: 1,
