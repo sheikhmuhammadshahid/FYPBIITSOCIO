@@ -217,7 +217,8 @@ class FriendsStoriesController extends ChangeNotifier {
         url =
             '${ip}groups/getChatOfGroup?id=$id&loggedInUserId=${loggedInUser!.CNIC}';
       } else {
-        '${ip}chat/getChat?loggedInUserId=${loggedInUser!.CNIC}&chatwithId=$id';
+        url =
+            '${ip}chat/getChat?loggedInUserId=${loggedInUser!.CNIC}&chatwithId=$id';
       }
       var response = await Dio().get(url);
       if (response.statusCode == 200) {

@@ -205,156 +205,174 @@ class _ChatScreenState extends State<ChatScreen> {
               return Container(
                 padding: const EdgeInsets.only(top: 8),
                 height: context.height() * 0.74,
-                child: value.chats.isEmpty
-                    ? const Center(
-                        child: Text('nothing found'),
-                      )
-                    : ListView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: value.chats.length,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          var ch = value.chats[index];
-                          if (date != ch.date) {
-                            date = ch.date ?? '';
-                            ischanged = true;
-                          } else {
-                            ischanged = false;
-                          }
-                          return Column(
-                            children: [
-                              ischanged
-                                  ? ch.date != '' && ch.date != null
-                                      ? DateChip(
-                                          date: DateTime(
-                                              int.parse(ch.date!.split('/')[2]),
-                                              int.parse(ch.date!.split('/')[0]),
-                                              int.parse(
-                                                  ch.date!.split('/')[1])),
-                                        )
-                                      : const SizedBox.shrink()
-                                  : const SizedBox.shrink(),
-                              Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  textDirection:
-                                      ch.sender ? TextDirection.rtl : null,
-                                  children: [
-                                    ch.senderImage == ""
-                                        ? CircleAvatar(
-                                            backgroundColor:
-                                                context.scaffoldBackgroundColor,
-                                            backgroundImage: const AssetImage(
-                                                'images/socialv/faces/face_5.png'))
-                                        : CircleAvatar(
-                                            backgroundColor:
-                                                context.scaffoldBackgroundColor,
-                                            // backgroundImage: NetworkImage(
-                                            //     profileimageAddress +
-                                            //         ch.senderImage),
-                                            child: sVProfileImageProvider(
-                                                profileimageAddress +
-                                                    ch.senderImage,
-                                                10.0,
-                                                10.0),
+                child: friendsStoriesController.isStoriesLoading
+                    ? const SizedBox(
+                        height: 50,
+                        width: 50,
+                        child: CircularProgressIndicator(),
+                      ).center()
+                    : value.chats.isEmpty
+                        ? const Center(
+                            child: Text('nothing found'),
+                          )
+                        : ListView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            itemCount: value.chats.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              var ch = value.chats[index];
+                              if (date != ch.date) {
+                                date = ch.date ?? '';
+                                ischanged = true;
+                              } else {
+                                ischanged = false;
+                              }
+                              return Column(
+                                children: [
+                                  ischanged
+                                      ? ch.date != '' && ch.date != null
+                                          ? DateChip(
+                                              date: DateTime(
+                                                  int.parse(
+                                                      ch.date!.split('/')[2]),
+                                                  int.parse(
+                                                      ch.date!.split('/')[0]),
+                                                  int.parse(
+                                                      ch.date!.split('/')[1])),
+                                            )
+                                          : const SizedBox.shrink()
+                                      : const SizedBox.shrink(),
+                                  Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      textDirection:
+                                          ch.sender ? TextDirection.rtl : null,
+                                      children: [
+                                        ch.senderImage == ""
+                                            ? CircleAvatar(
+                                                backgroundColor: context
+                                                    .scaffoldBackgroundColor,
+                                                backgroundImage: const AssetImage(
+                                                    'images/socialv/faces/face_5.png'))
+                                            : CircleAvatar(
+                                                backgroundColor: context
+                                                    .scaffoldBackgroundColor,
+                                                // backgroundImage: NetworkImage(
+                                                //     profileimageAddress +
+                                                //         ch.senderImage),
+                                                child: sVProfileImageProvider(
+                                                    profileimageAddress +
+                                                        ch.senderImage,
+                                                    10.0,
+                                                    10.0),
+                                              ),
+                                        Flexible(
+                                          fit: FlexFit.loose,
+                                          child: Column(
+                                            children: [
+                                              ch.type != 'text'
+                                                  ? const Divider(
+                                                      thickness: 1,
+                                                      height: 5,
+                                                    )
+                                                  : const SizedBox.shrink(),
+                                              ch.type != 'text'
+                                                  ? Text(ch.message)
+                                                  : const SizedBox.shrink(),
+                                              Card(
+                                                  color: ch.sender
+                                                      ? context.cardColor
+                                                      : context.iconColor,
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            12.0),
+                                                    child: ch.type == "image"
+                                                        ? ch.fromFile
+                                                            ? Image.file(
+                                                                File(ch.url!),
+                                                                height: context
+                                                                        .height() *
+                                                                    0.3,
+                                                                width: context
+                                                                        .width() *
+                                                                    0.5,
+                                                                fit:
+                                                                    BoxFit.fill,
+                                                                errorBuilder:
+                                                                    (context,
+                                                                        error,
+                                                                        stackTrace) {
+                                                                  return const Icon(
+                                                                      Icons
+                                                                          .error);
+                                                                },
+                                                              )
+                                                            : Image.network(
+                                                                imageAddress +
+                                                                    ch.url!,
+                                                                height: context
+                                                                        .height() *
+                                                                    0.3,
+                                                                width: context
+                                                                        .width() *
+                                                                    0.5,
+                                                                fit:
+                                                                    BoxFit.fill,
+                                                                errorBuilder:
+                                                                    (context,
+                                                                        error,
+                                                                        stackTrace) {
+                                                                  return const Icon(
+                                                                      Icons
+                                                                          .error);
+                                                                },
+                                                              )
+                                                        : ch.type == "video"
+                                                            ? SizedBox(
+                                                                height: context
+                                                                        .height() *
+                                                                    0.3,
+                                                                width: context
+                                                                        .width() *
+                                                                    0.5,
+                                                                child: GetVideoItem(
+                                                                    url: ch.fromFile
+                                                                        ? ch
+                                                                            .url!
+                                                                        : imageAddress +
+                                                                            ch
+                                                                                .url!,
+                                                                    fromNetwork:
+                                                                        !ch.fromFile),
+                                                              )
+                                                            : Text(
+                                                                ch.message,
+                                                                style: TextStyle(
+                                                                    color: !ch
+                                                                            .sender
+                                                                        ? Colors
+                                                                            .white
+                                                                        : null),
+                                                              ),
+                                                  )),
+                                            ],
                                           ),
-                                    Flexible(
-                                      fit: FlexFit.loose,
-                                      child: Column(
-                                        children: [
-                                          ch.type != 'text'
-                                              ? const Divider(
-                                                  thickness: 1,
-                                                  height: 5,
-                                                )
-                                              : const SizedBox.shrink(),
-                                          ch.type != 'text'
-                                              ? Text(ch.message)
-                                              : const SizedBox.shrink(),
-                                          Card(
-                                              color: ch.sender
-                                                  ? context.cardColor
-                                                  : context.iconColor,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(12.0),
-                                                child: ch.type == "image"
-                                                    ? ch.fromFile
-                                                        ? Image.file(
-                                                            File(ch.url!),
-                                                            height: context
-                                                                    .height() *
-                                                                0.3,
-                                                            width: context
-                                                                    .width() *
-                                                                0.5,
-                                                            fit: BoxFit.fill,
-                                                            errorBuilder:
-                                                                (context, error,
-                                                                    stackTrace) {
-                                                              return const Icon(
-                                                                  Icons.error);
-                                                            },
-                                                          )
-                                                        : Image.network(
-                                                            imageAddress +
-                                                                ch.url!,
-                                                            height: context
-                                                                    .height() *
-                                                                0.3,
-                                                            width: context
-                                                                    .width() *
-                                                                0.5,
-                                                            fit: BoxFit.fill,
-                                                            errorBuilder:
-                                                                (context, error,
-                                                                    stackTrace) {
-                                                              return const Icon(
-                                                                  Icons.error);
-                                                            },
-                                                          )
-                                                    : ch.type == "video"
-                                                        ? SizedBox(
-                                                            height: context
-                                                                    .height() *
-                                                                0.3,
-                                                            width: context
-                                                                    .width() *
-                                                                0.5,
-                                                            child: GetVideoItem(
-                                                                url: ch.fromFile
-                                                                    ? ch.url!
-                                                                    : imageAddress +
-                                                                        ch.url!,
-                                                                fromNetwork: !ch
-                                                                    .fromFile),
-                                                          )
-                                                        : Text(
-                                                            ch.message,
-                                                            style: TextStyle(
-                                                                color: !ch
-                                                                        .sender
-                                                                    ? Colors
-                                                                        .white
-                                                                    : null),
-                                                          ),
-                                              )),
-                                        ],
-                                      ),
+                                        ),
+                                        Text(
+                                          ch.dateTime.toString(),
+                                          style: const TextStyle(
+                                              color: Colors.black38),
+                                        )
+                                      ],
                                     ),
-                                    Text(
-                                      ch.dateTime.toString(),
-                                      style: const TextStyle(
-                                          color: Colors.black38),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
               );
             },
           )),
