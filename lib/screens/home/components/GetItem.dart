@@ -217,7 +217,9 @@ Widget getItem(
                   fit: BoxFit.cover,
                   color: context.iconColor,
                 ).onTap(() {
-                  const SVCommentScreen().launch(context);
+                  SVCommentScreen(
+                    postId: post.id!,
+                  ).launch(context);
                 },
                     splashColor: Colors.transparent,
                     highlightColor: Colors.transparent),

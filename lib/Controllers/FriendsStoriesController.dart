@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:biit_social/Client.dart';
 import 'package:biit_social/Controllers/SettingController.dart';
 import 'package:biit_social/models/FriendRequesModel.dart';
@@ -7,6 +9,7 @@ import 'package:biit_social/screens/Chat/ChatModel/ChatModel.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import '../models/SVCommentModel.dart';
 import '../models/SVGroupModel.dart';
 import '../models/SVNotificationModel.dart';
 import '../models/User/UserModel.dart';
@@ -15,9 +18,12 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class FriendsStoriesController extends ChangeNotifier {
+  bool isCLicked = false;
+  int selectedIndex = -1;
   bool isStoriesLoading = true;
   Duration duration = const Duration(seconds: 3);
   List<Society> societies = [];
+  List<SVCommentModel> comments = [];
   List<ChatModel> chats = [];
   List<Items> section = [];
   List<DropdownMenuItem> desciplines = [];
@@ -325,5 +331,41 @@ class FriendsStoriesController extends ChangeNotifier {
     } catch (e) {
       EasyLoading.showToast('Server not responding!');
     }
+  }
+
+  getComments(postId) async {
+    try {
+      isCLicked = false;
+      isStoriesLoading = true;
+      comments.clear();
+      setState();
+      var response =
+          await Dio().get('${ip}comments/getComment?post_id=$postId');
+      if (response.statusCode == 200) {
+        for (var element in response.data) {
+          comments.add(SVCommentModel.fromMap(element));
+        }
+      }
+    } catch (e) {}
+    isStoriesLoading = false;
+    setState();
+  }
+
+  addComment(postId, repLiedOn) async {
+    try {
+      var v = comments.last;
+      var data = jsonEncode({
+        'userId': loggedInUser!.CNIC,
+        'postId': postId,
+        'dateTime': v.time,
+        'repliedOn': repLiedOn,
+        'text': v.comment,
+      });
+      var response = await Dio().post('${ip}comments/addComment',
+          data: data, options: Options(headers: headers));
+      if (response.statusCode == 200) {
+        EasyLoading.showToast('commented successfully');
+      }
+    } catch (e) {}
   }
 }
