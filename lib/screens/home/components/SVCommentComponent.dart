@@ -3,16 +3,20 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:biit_social/models/SVCommentModel.dart';
 import 'package:biit_social/utils/SVCommon.dart';
 
+import 'SVCommentReplyComponent.dart';
+
 class SVCommentComponent extends StatefulWidget {
+  int PostId;
   final SVCommentModel comment;
 
-  SVCommentComponent({required this.comment});
+  SVCommentComponent({super.key, required this.comment, required this.PostId});
 
   @override
   State<SVCommentComponent> createState() => _SVCommentComponentState();
 }
 
 class _SVCommentComponentState extends State<SVCommentComponent> {
+  bool isClicked = false;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -23,15 +27,22 @@ class _SVCommentComponentState extends State<SVCommentComponent> {
           children: [
             Row(
               children: [
-                Image.asset(widget.comment.profileImage.validate(),
-                        height: 48, width: 48, fit: BoxFit.cover)
-                    .cornerRadiusWithClipRRect(8),
+                widget.comment.profileImage == ''
+                    ? Image.asset('images/socialv/faces/face_5.png'.validate(),
+                            height: 48, width: 48, fit: BoxFit.cover)
+                        .cornerRadiusWithClipRRect(8)
+                    : Image.network(
+                            profileimageAddress + widget.comment.profileImage!,
+                            height: 48,
+                            width: 48,
+                            fit: BoxFit.cover)
+                        .cornerRadiusWithClipRRect(8),
                 16.width,
                 Text(widget.comment.name.validate(),
                     style: boldTextStyle(size: 14)),
                 4.width,
-                Image.asset('images/socialv/icons/ic_TickSquare.png',
-                    height: 14, width: 14, fit: BoxFit.cover),
+                // Image.asset('images/socialv/icons/ic_TickSquare.png',
+                //     height: 14, width: 14, fit: BoxFit.cover),
               ],
             ),
             Row(
@@ -44,7 +55,7 @@ class _SVCommentComponentState extends State<SVCommentComponent> {
                   color: context.iconColor,
                 ),
                 4.width,
-                Text('${widget.comment.time.validate()} ago',
+                Text(DateTime.parse(widget.comment.time.validate()).timeAgo,
                     style:
                         secondaryTextStyle(color: svGetBodyColor(), size: 12)),
               ],
@@ -58,7 +69,7 @@ class _SVCommentComponentState extends State<SVCommentComponent> {
         Row(
           children: [
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               decoration: BoxDecoration(
                   borderRadius: radius(4), color: svGetScaffoldColor()),
               child: Row(
@@ -85,13 +96,32 @@ class _SVCommentComponentState extends State<SVCommentComponent> {
             }, borderRadius: radius(4)),
             16.width,
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               decoration: BoxDecoration(
-                  borderRadius: radius(4), color: svGetScaffoldColor()),
-              child: Text('Reply', style: secondaryTextStyle(size: 12)),
-            )
+                  borderRadius: radius(4),
+                  color: isClicked ? context.iconColor : svGetScaffoldColor()),
+              child: Text('Reply',
+                  style: secondaryTextStyle(
+                      size: 12, color: isClicked ? Colors.white : null)),
+            ).onTap(() {
+              friendsStoriesController!.isCLicked = !isClicked;
+              friendsStoriesController!.setState();
+              setState(() {
+                isClicked = !isClicked;
+              });
+            })
           ],
-        )
+        ),
+        if (isClicked) ...{
+          10.height,
+          SizedBox(
+            height: context.width() * 0.3,
+            child: SVCommentReplyComponent(
+              postId: widget.PostId,
+              repLiedOn: widget.comment.id,
+            ),
+          )
+        }
       ],
     ).paddingOnly(
         top: 16,

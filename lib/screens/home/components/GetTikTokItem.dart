@@ -221,7 +221,9 @@ Widget getTikTokItem(
                           fit: BoxFit.cover,
                           color: Colors.white)
                       .onTap(() {
-                    const SVCommentScreen().launch(context);
+                    SVCommentScreen(
+                      postId: postController.posts[index].id!,
+                    ).launch(context);
                   },
                           splashColor: Colors.transparent,
                           highlightColor: Colors.transparent),
