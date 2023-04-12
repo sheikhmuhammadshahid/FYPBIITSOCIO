@@ -11,6 +11,7 @@ import 'package:biit_social/main.dart';
 import 'package:biit_social/screens/addPost/components/SVPostTextComponent.dart';
 import 'package:biit_social/utils/SVColors.dart';
 import 'package:biit_social/utils/SVCommon.dart';
+import '../../Controllers/FriendsStoriesController.dart';
 import '../../utils/FilesPicker.dart';
 import '../../utils/SVConstants.dart';
 import 'package:provider/provider.dart';
@@ -63,25 +64,26 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
   ];
   getSections() {
     selectedSections = selectedDescipline != "All"
-        ? sections
-            .where((element) =>
-                element.id == 28 ||
-                element.name!
-                    .toLowerCase()
-                    .startsWith(selectedDescipline!.toLowerCase()))
+        ? friendsStoriesController!.section
+            .where((element) => element.name!
+                .toLowerCase()
+                .startsWith(selectedDescipline!.toLowerCase()))
             .toList()
-        : sections;
+        : friendsStoriesController!.section;
     setState(() {});
   }
 
   List<Items> selectedSections = [];
   String? selectedDescipline;
+  late FriendsStoriesController friendStoriesController;
   bool selected = false;
   TextEditingController descriptionController = TextEditingController();
   late PostController postController;
+
   @override
   Widget build(BuildContext context) {
-    postController = Provider.of<PostController>(context);
+    friendStoriesController = context.read<FriendsStoriesController>();
+    postController = context.read<PostController>();
     return Scaffold(
       backgroundColor: context.cardColor,
       appBar: AppBar(
@@ -190,15 +192,18 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
                           const SizedBox(
                             height: 10,
                           ),
-                          DropdownButtonFormField(
-                            value: selectedDescipline,
-                            hint: const Text("Select Descipline"),
-                            items: desciplines.toList(),
-                            onChanged: (value) {
-                              selectedDescipline = value!;
-                              selected = true;
-                              getSections();
-                            },
+                          Consumer<FriendsStoriesController>(
+                            builder: (context, value, child) =>
+                                DropdownButtonFormField(
+                              value: selectedDescipline,
+                              hint: const Text("Select Descipline"),
+                              items: friendStoriesController.desciplines,
+                              onChanged: (value) {
+                                selectedDescipline = value!;
+                                selected = true;
+                                getSections();
+                              },
+                            ),
                           ),
                           const SizedBox(
                             height: 10,

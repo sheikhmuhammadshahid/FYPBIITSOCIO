@@ -83,7 +83,10 @@ class _SVPostComponentState extends State<SVPostComponent> {
                         itemBuilder: (context, index) {
                           if ((index == 0 && isAdmin) ||
                               (postController.fromDiary) && index == 0) {
-                            return const TimeTableScreen();
+                            return settingController.selectedWall ==
+                                    loggedInUser!.userType
+                                ? const TimeTableScreen()
+                                : const SizedBox.shrink();
                           }
                           return GestureDetector(
                               onTap: () {
