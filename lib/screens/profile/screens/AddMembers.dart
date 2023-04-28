@@ -1,14 +1,13 @@
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/material.dart';
 
-class SVAddMembers extends StatefulWidget {
-  const SVAddMembers({super.key});
+class SVGroupMembers extends StatefulWidget {
+  const SVGroupMembers({super.key});
 
   @override
-  State<SVAddMembers> createState() => _SVAddMembersState();
+  State<SVGroupMembers> createState() => _SVAddMembersState();
 }
 
-class _SVAddMembersState extends State<SVAddMembers> {
+class _SVAddMembersState extends State<SVGroupMembers> {
   @override
   Widget build(BuildContext context) {
     return Container();

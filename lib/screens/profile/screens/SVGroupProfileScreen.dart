@@ -1,13 +1,36 @@
+import 'package:biit_social/Controllers/FriendsStoriesController.dart';
+import 'package:biit_social/models/SVGroupModel.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:biit_social/screens/profile/components/SVProfileHeaderComponent.dart';
 import 'package:biit_social/screens/profile/components/SVProfilePostsComponent.dart';
 import 'package:biit_social/utils/SVColors.dart';
 import 'package:biit_social/utils/SVCommon.dart';
 import 'package:biit_social/utils/SVConstants.dart';
+import 'package:provider/provider.dart';
 
-class SVGroupProfileScreen extends StatelessWidget {
-  const SVGroupProfileScreen({super.key});
+import '../components/SVGroupProfile.dart';
+
+class SVGroupProfileScreen extends StatefulWidget {
+  Group group;
+  SVGroupProfileScreen({super.key, required this.group});
+
+  @override
+  State<SVGroupProfileScreen> createState() => _SVGroupProfileScreenState();
+}
+
+class _SVGroupProfileScreenState extends State<SVGroupProfileScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getDetail();
+  }
+
+  late FriendsStoriesController friendsStoriesController;
+  getDetail() {
+    friendsStoriesController = context.read<FriendsStoriesController>();
+    friendsStoriesController.getGroupDetail(widget.group.id);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,15 +49,21 @@ class SVGroupProfileScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SVProfileHeaderComponent(),
+            SVGroupProfile(
+              isOfficial: widget.group.isOfficial!,
+              url: widget.group.profile,
+            ),
             16.height,
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Avengers Group', style: boldTextStyle(size: 20)),
+                Text(widget.group.name, style: boldTextStyle(size: 20)),
                 4.width,
-                Image.asset('images/socialv/icons/ic_TickSquare.png',
-                    height: 14, width: 14, fit: BoxFit.cover),
+                widget.group.profile == ''
+                    ? Image.asset('images/socialv/icons/ic_TickSquare.png',
+                        height: 14, width: 14, fit: BoxFit.cover)
+                    : Image.network(profileimageAddress + widget.group.profile,
+                        height: 14, width: 14, fit: BoxFit.cover),
               ],
             ),
             8.height,
@@ -49,7 +78,7 @@ class SVGroupProfileScreen extends StatelessWidget {
                   color: context.iconColor,
                 ),
                 8.width,
-                Text('Public Group',
+                Text(widget.group.isOfficial! ? 'Official' : 'Public Group',
                     style: secondaryTextStyle(color: svGetBodyColor())),
                 18.width,
                 Image.asset(
@@ -60,7 +89,7 @@ class SVGroupProfileScreen extends StatelessWidget {
                   color: context.iconColor,
                 ),
                 8.width,
-                Text('03 Years Ago',
+                Text(widget.group.Admin,
                     style: secondaryTextStyle(color: svGetBodyColor())),
               ],
             ),
@@ -72,95 +101,105 @@ class SVGroupProfileScreen extends StatelessWidget {
                   color: context.cardColor,
                   borderRadius: radius(SVAppCommonRadius)),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 100,
-                        child: Stack(
-                          alignment: Alignment.centerLeft,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  border:
-                                      Border.all(color: Colors.white, width: 2),
-                                  borderRadius: radius(100)),
-                              child: Image.asset(
-                                      'images/socialv/faces/face_2.png',
-                                      height: 32,
-                                      width: 32,
-                                      fit: BoxFit.cover)
-                                  .cornerRadiusWithClipRRect(100),
+                  Consumer<FriendsStoriesController>(
+                    builder: (context, value, child) => value.isStoriesLoading
+                        ? const CircularProgressIndicator()
+                        : SizedBox(
+                            width: 100,
+                            child: Stack(
+                              alignment: Alignment.centerLeft,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.white, width: 2),
+                                      borderRadius: radius(100)),
+                                  child: Image.asset(
+                                          'images/socialv/faces/face_2.png',
+                                          height: 32,
+                                          width: 32,
+                                          fit: BoxFit.cover)
+                                      .cornerRadiusWithClipRRect(100),
+                                ),
+                                Positioned(
+                                  left: 14,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.white, width: 2),
+                                        borderRadius: radius(100)),
+                                    child: Image.asset(
+                                            'images/socialv/faces/face_3.png',
+                                            height: 32,
+                                            width: 32,
+                                            fit: BoxFit.cover)
+                                        .cornerRadiusWithClipRRect(100),
+                                  ),
+                                ),
+                                Positioned(
+                                  left: 30,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.white, width: 2),
+                                        borderRadius: radius(100)),
+                                    child: Image.asset(
+                                            'images/socialv/faces/face_4.png',
+                                            height: 32,
+                                            width: 32,
+                                            fit: BoxFit.cover)
+                                        .cornerRadiusWithClipRRect(100),
+                                  ),
+                                ),
+                                Positioned(
+                                  left: 46,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.white, width: 2),
+                                        borderRadius: radius(100)),
+                                    child: Image.asset(
+                                            'images/socialv/faces/face_5.png',
+                                            height: 32,
+                                            width: 32,
+                                            fit: BoxFit.cover)
+                                        .cornerRadiusWithClipRRect(100),
+                                  ),
+                                ),
+                                Positioned(
+                                  right: 0,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.white, width: 2),
+                                        borderRadius: radius(100)),
+                                    child: Image.asset(
+                                            'images/socialv/faces/face_1.png',
+                                            height: 32,
+                                            width: 32,
+                                            fit: BoxFit.cover)
+                                        .cornerRadiusWithClipRRect(100),
+                                  ),
+                                ),
+                              ],
                             ),
-                            Positioned(
-                              left: 14,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: Colors.white, width: 2),
-                                    borderRadius: radius(100)),
-                                child: Image.asset(
-                                        'images/socialv/faces/face_3.png',
-                                        height: 32,
-                                        width: 32,
-                                        fit: BoxFit.cover)
-                                    .cornerRadiusWithClipRRect(100),
-                              ),
-                            ),
-                            Positioned(
-                              left: 30,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: Colors.white, width: 2),
-                                    borderRadius: radius(100)),
-                                child: Image.asset(
-                                        'images/socialv/faces/face_4.png',
-                                        height: 32,
-                                        width: 32,
-                                        fit: BoxFit.cover)
-                                    .cornerRadiusWithClipRRect(100),
-                              ),
-                            ),
-                            Positioned(
-                              left: 46,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: Colors.white, width: 2),
-                                    borderRadius: radius(100)),
-                                child: Image.asset(
-                                        'images/socialv/faces/face_5.png',
-                                        height: 32,
-                                        width: 32,
-                                        fit: BoxFit.cover)
-                                    .cornerRadiusWithClipRRect(100),
-                              ),
-                            ),
-                            Positioned(
-                              right: 0,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: Colors.white, width: 2),
-                                    borderRadius: radius(100)),
-                                child: Image.asset(
-                                        'images/socialv/faces/face_1.png',
-                                        height: 32,
-                                        width: 32,
-                                        fit: BoxFit.cover)
-                                    .cornerRadiusWithClipRRect(100),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      16.width,
-                      Text('+6 Members',
-                          style: secondaryTextStyle(color: context.iconColor)),
-                    ],
+                          ),
+                  ),
+                  Consumer<FriendsStoriesController>(
+                    builder: (context, value, child) => Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        16.width,
+                        Text(
+                            value.groupUsers.isNotEmpty
+                                ? value.groupUsers.length.toString()
+                                : '',
+                            style:
+                                secondaryTextStyle(color: context.iconColor)),
+                      ],
+                    ),
                   ),
                   28.height,
                   AppButton(

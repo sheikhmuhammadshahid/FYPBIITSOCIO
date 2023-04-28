@@ -14,14 +14,15 @@ import 'package:biit_social/utils/SVConstants.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
 
-String ipp = '';
+
 FriendsStoriesController? friendsStoriesController;
 
 User? loggedInUser;
-String ip = "http://192.168.87.231/BiitSocioApis/api/";
-String imageAddress = "http://192.168.87.231/BiitSocioApis/postImages/";
-String profileimageAddress = "http://192.168.87.231/BiitSocioApis/Images/";
-String storyAddress = 'http://192.168.87.231/BiitSocioApis/Status/';
+String ippp = '192.168.0.3';
+String ip = "http://$ippp/BiitSocioApis/api/";
+String imageAddress = "http://$ippp/BiitSocioApis/postImages/";
+String profileimageAddress = "http://$ippp/BiitSocioApis/Images/";
+String storyAddress = 'http://$ippp/BiitSocioApis/Status/';
 var headers = {"Content-Type": "application/json"};
 String selectedOptions = "";
 Future<String> getIp() async {

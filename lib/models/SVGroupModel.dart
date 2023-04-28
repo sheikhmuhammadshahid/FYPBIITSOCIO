@@ -10,6 +10,7 @@ class Group {
   String Admin;
   String name;
   String profile;
+  int? memberCount;
   List<User>? enreolledUsers = [];
   bool? isOfficial;
   Group({
@@ -18,6 +19,7 @@ class Group {
     required this.Admin,
     required this.name,
     required this.profile,
+    this.memberCount,
     this.enreolledUsers,
     this.isOfficial,
   });
@@ -28,6 +30,7 @@ class Group {
     String? Admin,
     String? name,
     String? profile,
+    int? memberCount,
     List<User>? enreolledUsers,
     bool? isOfficial,
   }) {
@@ -37,6 +40,7 @@ class Group {
       Admin: Admin ?? this.Admin,
       name: name ?? this.name,
       profile: profile ?? this.profile,
+      memberCount: memberCount ?? this.memberCount,
       enreolledUsers: enreolledUsers ?? this.enreolledUsers,
       isOfficial: isOfficial ?? this.isOfficial,
     );
@@ -50,6 +54,9 @@ class Group {
     result.addAll({'Admin': Admin});
     result.addAll({'name': name});
     result.addAll({'profile': profile});
+    if (memberCount != null) {
+      result.addAll({'memberCount': memberCount});
+    }
     if (enreolledUsers != null) {
       result.addAll(
           {'enreolledUsers': enreolledUsers!.map((x) => x.toMap()).toList()});
@@ -68,6 +75,7 @@ class Group {
       Admin: map['Admin'] ?? '',
       name: map['name'] ?? '',
       profile: map['profile'] ?? '',
+      memberCount: map['memberCount']?.toInt(),
       enreolledUsers: map['enreolledUsers'] != null
           ? List<User>.from(map['enreolledUsers']?.map((x) => User.fromMap(x)))
           : null,
@@ -81,7 +89,7 @@ class Group {
 
   @override
   String toString() {
-    return 'Group(id: $id, description: $description, Admin: $Admin, name: $name, profile: $profile, enreolledUsers: $enreolledUsers, isOfficial: $isOfficial)';
+    return 'Group(id: $id, description: $description, Admin: $Admin, name: $name, profile: $profile, memberCount: $memberCount, enreolledUsers: $enreolledUsers, isOfficial: $isOfficial)';
   }
 
   @override
@@ -94,6 +102,7 @@ class Group {
         other.Admin == Admin &&
         other.name == name &&
         other.profile == profile &&
+        other.memberCount == memberCount &&
         listEquals(other.enreolledUsers, enreolledUsers) &&
         other.isOfficial == isOfficial;
   }
@@ -105,6 +114,7 @@ class Group {
         Admin.hashCode ^
         name.hashCode ^
         profile.hashCode ^
+        memberCount.hashCode ^
         enreolledUsers.hashCode ^
         isOfficial.hashCode;
   }

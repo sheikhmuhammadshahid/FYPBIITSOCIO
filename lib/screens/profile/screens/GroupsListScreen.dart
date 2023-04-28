@@ -209,8 +209,9 @@ class _GroupsListScreenState extends State<GroupsListScreen> {
                                         ListTile(
                                           leading: GestureDetector(
                                             onTap: () {
-                                              const SVGroupProfileScreen()
-                                                  .launch(context);
+                                              SVGroupProfileScreen(
+                                                group: group,
+                                              ).launch(context);
                                             },
                                             child: group.profile == ''
                                                 ? Image.asset(
