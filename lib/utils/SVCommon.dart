@@ -14,11 +14,10 @@ import 'package:biit_social/utils/SVConstants.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
 
-
 FriendsStoriesController? friendsStoriesController;
 
 User? loggedInUser;
-String ippp = '192.168.0.3';
+String ippp = '192.168.201.231';
 String ip = "http://$ippp/BiitSocioApis/api/";
 String imageAddress = "http://$ippp/BiitSocioApis/postImages/";
 String profileimageAddress = "http://$ippp/BiitSocioApis/Images/";

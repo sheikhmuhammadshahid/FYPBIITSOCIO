@@ -1,4 +1,8 @@
+import 'package:biit_social/Controllers/FriendsStoriesController.dart';
+import 'package:biit_social/models/User/UserModel.dart';
 import 'package:flutter/material.dart';
+import 'package:nb_utils/nb_utils.dart';
+import 'package:provider/provider.dart';
 
 class SVGroupMembers extends StatefulWidget {
   const SVGroupMembers({super.key});
@@ -10,6 +14,37 @@ class SVGroupMembers extends StatefulWidget {
 class _SVAddMembersState extends State<SVGroupMembers> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    FriendsStoriesController friendsStoriesController =
+        context.read<FriendsStoriesController>();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Group members',
+          style: TextStyle(color: context.iconColor),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ListView.builder(
+            itemCount: friendsStoriesController.groupUsers.length,
+            itemBuilder: (context, index) {
+              User u = friendsStoriesController.groupUsers[index];
+              return Padding(
+                padding: const EdgeInsets.only(top: 5.0),
+                child: Card(
+                  child: ListTile(
+                      title: Text(u.name!),
+                      subtitle: Text(
+                        u.userType == "1"
+                            ? u.aridNo
+                            : u.userType == "2"
+                                ? 'Teacher'
+                                : 'Admin',
+                      )),
+                ),
+              );
+            }),
+      ),
+    );
   }
 }

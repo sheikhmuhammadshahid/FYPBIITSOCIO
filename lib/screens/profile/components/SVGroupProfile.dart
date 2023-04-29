@@ -57,12 +57,12 @@ class SVGroupProfile extends StatelessWidget {
   }
 
   Widget getProfileImage(controller) {
-    return url == ''
+    return url == '' && !isOfficial
         ? Image.asset('images/socialv/faces/face_5.png',
                 height: 88, width: 88, fit: BoxFit.cover)
             .cornerRadiusWithClipRRect(SVAppCommonRadius)
-        : isOfficial
-            ? Image.asset('images/socialv/faces/face_5.png',
+        : isOfficial && url == ''
+            ? Image.asset('images/socialv/gifs/BIITLOGO.png',
                     height: 88, width: 88, fit: BoxFit.cover)
                 .cornerRadiusWithClipRRect(SVAppCommonRadius)
             : Image.network(profileimageAddress + url,

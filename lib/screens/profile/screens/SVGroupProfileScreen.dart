@@ -9,6 +9,7 @@ import 'package:biit_social/utils/SVConstants.dart';
 import 'package:provider/provider.dart';
 
 import '../components/SVGroupProfile.dart';
+import 'AddMembers.dart';
 
 class SVGroupProfileScreen extends StatefulWidget {
   Group group;
@@ -185,7 +186,9 @@ class _SVGroupProfileScreenState extends State<SVGroupProfileScreen> {
                                 ),
                               ],
                             ),
-                          ),
+                          ).onTap(() {
+                            const SVGroupMembers().launch(context);
+                          }),
                   ),
                   Consumer<FriendsStoriesController>(
                     builder: (context, value, child) => Row(
@@ -194,7 +197,7 @@ class _SVGroupProfileScreenState extends State<SVGroupProfileScreen> {
                         16.width,
                         Text(
                             value.groupUsers.isNotEmpty
-                                ? value.groupUsers.length.toString()
+                                ? '${value.groupUsers.length} members'
                                 : '',
                             style:
                                 secondaryTextStyle(color: context.iconColor)),
