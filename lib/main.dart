@@ -6,6 +6,7 @@ import 'package:biit_social/Controllers/PostController.dart';
 import 'package:biit_social/Controllers/SettingController.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:biit_social/screens/SVSplashScreen.dart';
 import 'package:biit_social/store/AppStore.dart';
@@ -239,17 +240,22 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return Observer(
-      builder: (_) => MaterialApp(
-        builder: EasyLoading.init(),
-        scrollBehavior: SBehavior(),
-        navigatorKey: navigatorKey,
-        title: 'BIIT SOCIO',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        themeMode: appStore.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-        home: const SVSplashScreen(),
+    return ScreenUtilInit(
+      designSize: const Size(360, 730),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) => Observer(
+        builder: (_) => MaterialApp(
+          builder: EasyLoading.init(),
+          scrollBehavior: SBehavior(),
+          navigatorKey: navigatorKey,
+          title: 'BIIT SOCIO',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: appStore.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+          home: const SVSplashScreen(),
+        ),
       ),
     );
   }

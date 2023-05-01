@@ -17,7 +17,7 @@ import 'package:shimmer/shimmer.dart';
 FriendsStoriesController? friendsStoriesController;
 
 User? loggedInUser;
-String ippp = '192.168.201.231';
+String ippp = '192.168.220.231';
 String ip = "http://$ippp/BiitSocioApis/api/";
 String imageAddress = "http://$ippp/BiitSocioApis/postImages/";
 String profileimageAddress = "http://$ippp/BiitSocioApis/Images/";
@@ -450,17 +450,17 @@ sVImageProvider(url, height, width, GFAvatarShape shape) {
       imageBuilder: (context, imageProvider) => GFAvatar(
         shape: shape,
 
-        backgroundImage: width < 70.0 ? imageProvider : null,
+        backgroundImage: width > 70.0 ? null : imageProvider,
         maxRadius: 50,
         //size: GFSize.LARGE,
         borderRadius: BorderRadius.circular(10),
+
         child: width > 70.0
             ? Image.network(
                 url,
                 filterQuality: FilterQuality.high,
               ).center()
             : null,
-        //size: 200,
       ),
     ),
   );

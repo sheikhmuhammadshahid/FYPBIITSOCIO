@@ -361,7 +361,7 @@ class FriendsStoriesController extends ChangeNotifier {
       var response = await Dio().get('${ip}Groups/getGroupDetail?id=$id');
       if (response.statusCode == 200) {
         for (var element in response.data) {
-          groupUsers.add(User.fromMap(element['user']));
+          groupUsers.add(User.fromMap(element));
         }
       }
     } catch (e) {

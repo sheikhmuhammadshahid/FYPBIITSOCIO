@@ -92,7 +92,12 @@ class _SVPostComponentState extends State<SVPostComponent> {
                               onTap: () {
                                 Navigator.push(context, MaterialPageRoute(
                                   builder: (context) {
-                                    return TikTokView(index: index - 1);
+                                    return TikTokView(
+                                        index: postController.fromDiary
+                                            ? index - 1
+                                            : isAdmin
+                                                ? index - 1
+                                                : index);
                                   },
                                 ));
                               },
