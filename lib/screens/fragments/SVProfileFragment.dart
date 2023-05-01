@@ -32,26 +32,24 @@ class _SVProfileFragmentState extends State<SVProfileFragment> {
   }
 
   init() {
+    settingController ??= context.read<SettingController>();
     if (!widget.user!) {
-      Provider.of<SettingController>(context, listen: false)
-          .getUserProfile(widget.id);
+      settingController!.getUserProfile(widget.id);
     } else {
-      Provider.of<SettingController>(context, listen: false).isGettingUser =
-          false;
-      Provider.of<SettingController>(context, listen: false).notifyListeners();
+      settingController!.isGettingUser = false;
+      settingController!.setState();
     }
   }
 
-  late SettingController settingController;
+  SettingController? settingController;
   @override
   Widget build(BuildContext context) {
-    var friendController =
-        Provider.of<FriendsStoriesController>(context, listen: false);
-    settingController = Provider.of<SettingController>(context);
+    var friendController = context.read<FriendsStoriesController>();
+    settingController ??= context.read<SettingController>();
     return WillPopScope(
       onWillPop: () async {
-        settingController.isGettingUser = true;
-        settingController.userToShow = null;
+        settingController!.isGettingUser = true;
+        settingController!.userToShow = null;
 
         Future.delayed(const Duration(milliseconds: 100)).then((value) {});
         return true;

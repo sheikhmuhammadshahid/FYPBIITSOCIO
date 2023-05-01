@@ -37,7 +37,7 @@ class _SVPostComponentState extends State<SVPostComponent> {
         if (!postController.isLoading) {
           postController.pageNumber = 0;
           postController.getTimeTable();
-          postController.getPosts(context);
+          postController.getPosts(context.read<SettingController>());
         }
       }
     } catch (e) {
@@ -61,7 +61,7 @@ class _SVPostComponentState extends State<SVPostComponent> {
                     onEndOfPage: () {
                       postController.fromDiary
                           ? {}
-                          : postController.getPosts(context);
+                          : postController.getPosts(settingController);
                     },
                     child: RefreshIndicator(
                       color: context.iconColor,
@@ -70,7 +70,7 @@ class _SVPostComponentState extends State<SVPostComponent> {
                             ? {}
                             : {
                                 postController.pageNumber = 0,
-                                postController.getPosts(context)
+                                postController.getPosts(settingController)
                               };
                       },
                       child: ListView.builder(
@@ -122,7 +122,7 @@ class _SVPostComponentState extends State<SVPostComponent> {
                           ? {}
                           : {
                               postController.pageNumber = 0,
-                              postController.getPosts(context)
+                              postController.getPosts(settingController)
                             };
                     },
                     child: const Center(

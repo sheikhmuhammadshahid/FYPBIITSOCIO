@@ -1,3 +1,4 @@
+import 'package:biit_social/Controllers/SettingController.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:biit_social/screens/auth/components/SVLoginInComponent.dart';
@@ -25,6 +26,7 @@ class _SVSignInScreenState extends State<SVSignInScreen> {
     });
   }
 
+  late SettingController settingController;
   Widget getFragment() {
     if (selectedIndex == 0) {
       return SVLoginInComponent(

@@ -62,11 +62,7 @@ class _SVHomeFragmentState extends State<SVHomeFragment> {
         actions: [
           GestureDetector(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(
-                builder: (context) {
-                  return const SVSearchFragment();
-                },
-              ));
+              const SVSearchFragment().launch(context);
             },
             child: CircleAvatar(
               backgroundColor: context.scaffoldBackgroundColor,

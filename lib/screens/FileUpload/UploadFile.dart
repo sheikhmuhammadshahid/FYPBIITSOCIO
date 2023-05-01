@@ -38,7 +38,7 @@ class _UploadFileState extends State<UploadFile> {
 
   @override
   Widget build(BuildContext context) {
-    var postController = Provider.of<PostController>(context);
+    var postController = context.read<PostController>();
     return Scaffold(
       appBar: AppBar(
         elevation: 0,

@@ -1,10 +1,8 @@
+import 'package:biit_social/Controllers/PostController.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import 'package:biit_social/Controllers/PostController.dart';
 import 'package:biit_social/utils/SVCommon.dart';
-
 import '../models/User/UserModel.dart';
 
 class SettingController extends ChangeNotifier {
@@ -15,7 +13,8 @@ class SettingController extends ChangeNotifier {
   bool isPaused = false;
   String selectedWall = "3";
   bool isGettingUser = true;
-  changeIndex(index, text, context) {
+  changeIndex(index, text, PostController postController,
+      SettingController settingController) {
     selectedIndex = index;
     selectedIndexText = items[index].title;
     if (text == 'BIIT') {
@@ -35,11 +34,10 @@ class SettingController extends ChangeNotifier {
     } else if (text == "Calender") {
       selectedWall = "7";
     }
-    PostController p = Provider.of<PostController>(context, listen: false);
 
-    p.pageNumber = 0;
-    p.getPosts(context);
-    setState();
+    postController.pageNumber = 0;
+    settingController.setState();
+    postController.getPosts(settingController);
   }
 
   setState() {
@@ -48,64 +46,31 @@ class SettingController extends ChangeNotifier {
     } catch (e) {}
   }
 
-  final items = [
-    Item(
-        title: 'BIIT',
-        icon: const Icon(
-          Icons.admin_panel_settings_sharp,
-          size: 24,
-          color: Colors.white,
-        )),
-    Item(
-        title: 'Personal',
-        icon: const Icon(
-          Icons.person,
-          size: 24,
-          color: Colors.white,
-        )),
-    Item(
-        title: 'Societies',
-        icon: const Icon(
-          Icons.theater_comedy,
-          size: 24,
-          color: Colors.white,
-        )),
-    Item(
-        title: 'Calender',
-        icon: const Icon(
-          Icons.calendar_month,
-          size: 24,
-          color: Colors.white,
-        )),
-    Item(
-        title: 'Class',
-        icon: const Icon(
-          Icons.class_sharp,
-          size: 24,
-          color: Colors.white,
-        )),
-    Item(
-        title: 'Student',
-        icon: const Icon(
-          Icons.person,
-          size: 24,
-          color: Colors.white,
-        )),
-    Item(
-        title: 'Teacher',
-        icon: const Icon(
-          Icons.person_3,
-          size: 24,
-          color: Colors.white,
-        )),
-    Item(
-        title: 'Groups',
-        icon: const Icon(
-          Icons.group,
-          size: 24,
-          color: Colors.white,
-        )),
-  ];
+  getWidget1(title, icon) {
+    if (!items.any((element) => element.title == title)) {
+      items.add(Item(
+          title: title,
+          icon: Icon(
+            icon,
+            size: 24,
+            color: Colors.white,
+          )));
+    }
+  }
+
+  getItems() {
+    items.clear();
+    getWidget1('BIIT', Icons.admin_panel_settings_sharp);
+    getWidget1('Personal', Icons.person);
+    getWidget1('Societies', Icons.theater_comedy);
+    getWidget1('Calender', Icons.calendar_month);
+    getWidget1('Class', Icons.class_sharp);
+    getWidget1('Student', Icons.person);
+    getWidget1('Teacher', Icons.person_3);
+    getWidget1('Groups', Icons.group);
+  }
+
+  List<Item> items = [];
 
   var navItems = [];
   getWidget(context, index) {

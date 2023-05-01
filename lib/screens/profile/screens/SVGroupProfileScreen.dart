@@ -28,6 +28,8 @@ class _SVGroupProfileScreenState extends State<SVGroupProfileScreen> {
   late FriendsStoriesController friendsStoriesController;
   getDetail() {
     friendsStoriesController = context.read<FriendsStoriesController>();
+    friendsStoriesController.isCLicked = false;
+    friendsStoriesController.notifyListeners();
     friendsStoriesController.getGroupDetail(widget.group.id);
   }
 
@@ -201,128 +203,165 @@ class _SVGroupProfileScreenState extends State<SVGroupProfileScreen> {
             //   ),
             // ),
 
-            Consumer<FriendsStoriesController>(
-                builder: (context, value, child) => SizedBox(
-                      width: context.width(),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(left: 30.0, right: 30),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                    value.groupUsers.isNotEmpty
-                                        ? '${value.groupUsers.length} members'
-                                        : 'members',
-                                    style: secondaryTextStyle(
-                                        color: context.iconColor,
-                                        weight: FontWeight.bold)),
-                                Icon(
-                                  Icons.search,
-                                  size: 20,
-                                  color: context.iconColor,
-                                )
-                              ],
-                            ),
+            context.watch<FriendsStoriesController>().isStoriesLoading
+                ? svGetUserShimmer()
+                : SizedBox(
+                    width: context.width(),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 30.0, right: 30),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                  friendsStoriesController.groupUsers.isNotEmpty
+                                      ? '${friendsStoriesController.groupUsers.length} members'
+                                      : 'members',
+                                  overflow: TextOverflow.clip,
+                                  style: secondaryTextStyle(
+                                      color: context.iconColor,
+                                      weight: FontWeight.bold)),
+                              10.width,
+                              Row(
+                                children: [
+                                  if (context
+                                      .watch<FriendsStoriesController>()
+                                      .isCLicked)
+                                    SizedBox(
+                                        width: context.width() * 0.43,
+                                        height: context.height() * 0.04,
+                                        child: TextFormField(
+                                            decoration: const InputDecoration(
+                                                hintText: 'Search here!',
+                                                border: OutlineInputBorder()),
+                                            onChanged: (ring) {
+                                              friendsStoriesController
+                                                  .tofilter = ring;
+                                              friendsStoriesController
+                                                  .notifyListeners();
+                                            })),
+                                  GestureDetector(
+                                    onTap: () {
+                                      friendsStoriesController.isCLicked =
+                                          !friendsStoriesController.isCLicked;
+                                      friendsStoriesController
+                                          .notifyListeners();
+                                    },
+                                    child: Icon(
+                                      Icons.search,
+                                      size: 30,
+                                      color: context.iconColor,
+                                    ),
+                                  )
+                                ],
+                              )
+                            ],
                           ),
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            itemCount: value.groupUsers.length,
-                            itemBuilder: (context, index) {
-                              User user = value.groupUsers[index];
+                        ),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          itemCount: friendsStoriesController.groupUsers.length,
+                          itemBuilder: (context, index) {
+                            User user =
+                                friendsStoriesController.groupUsers[index];
 
-                              return user.name!
-                                      .toLowerCase()
-                                      .contains(value.tofilter.toLowerCase())
-                                  ? GestureDetector(
-                                      onTap: () {
-                                        // ChatScreen(
-                                        //   groupChat: false,
-                                        //   id: user.CNIC,
-                                        //   profileScreen: user.profileImage,
-                                        //   name: user.name == null
-                                        //       ? ''
-                                        //       : user.name!,
-                                        //   section: user.section == null
-                                        //       ? ''
-                                        //       : user.section!,
-                                        // ).launch(context);
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 10, right: 10),
-                                        child: Column(
-                                          children: [
-                                            ListTile(
-                                              leading: GestureDetector(
-                                                onTap: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          SVProfileFragment(
-                                                        user: false,
-                                                        id: user.CNIC,
-                                                      ),
+                            return user.name!.toLowerCase().contains(
+                                    friendsStoriesController.tofilter
+                                        .toLowerCase())
+                                ? GestureDetector(
+                                    onTap: () {
+                                      // ChatScreen(
+                                      //   groupChat: false,
+                                      //   id: user.CNIC,
+                                      //   profileScreen: user.profileImage,
+                                      //   name: user.name == null
+                                      //       ? ''
+                                      //       : user.name!,
+                                      //   section: user.section == null
+                                      //       ? ''
+                                      //       : user.section!,
+                                      // ).launch(context);
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 10, right: 10),
+                                      child: Column(
+                                        children: [
+                                          ListTile(
+                                            leading: GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        SVProfileFragment(
+                                                      user: false,
+                                                      id: user.CNIC,
                                                     ),
-                                                  );
-                                                },
-                                                child: user.profileImage == ''
-                                                    ? Image.asset(
-                                                            'images/socialv/faces/face_2.png',
-                                                            height: 52,
-                                                            width: 52,
-                                                            fit: BoxFit.cover)
-                                                        .cornerRadiusWithClipRRect(
-                                                            100)
-                                                    : Image.network(
-                                                            profileimageAddress +
-                                                                user.profileImage,
-                                                            errorBuilder:
-                                                                (context, error,
-                                                                    stackTrace) {
-                                                        return Container(
-                                                          color: Colors.black,
-                                                          child: const Icon(
-                                                              Icons
-                                                                  .no_backpack),
-                                                        );
-                                                      },
-                                                            height: 52,
-                                                            width: 52,
-                                                            fit: BoxFit.cover)
-                                                        .cornerRadiusWithClipRRect(
-                                                            100),
-                                              ),
-                                              title: Text(user.name ?? ''),
-                                              subtitle: Text(user.userType ==
-                                                      "2"
-                                                  ? "Teacher"
-                                                  : user.userType == "1"
-                                                      ? user.section ?? '---'
-                                                      : 'Admin'),
-                                              trailing: index == 0
-                                                  ? const SizedBox()
-                                                  : const SizedBox.shrink(),
+                                                  ),
+                                                );
+                                              },
+                                              child: user.profileImage == ''
+                                                  ? Image.asset(
+                                                          'images/socialv/faces/face_2.png',
+                                                          height: 52,
+                                                          width: 52,
+                                                          fit: BoxFit.cover)
+                                                      .cornerRadiusWithClipRRect(
+                                                          100)
+                                                  : Image.network(
+                                                          profileimageAddress +
+                                                              user.profileImage,
+                                                          errorBuilder:
+                                                              (context, error,
+                                                                  stackTrace) {
+                                                      return Container(
+                                                        color: Colors.black,
+                                                        child: const Icon(
+                                                            Icons.no_backpack),
+                                                      );
+                                                    },
+                                                          height: 52,
+                                                          width: 52,
+                                                          fit: BoxFit.cover)
+                                                      .cornerRadiusWithClipRRect(
+                                                          100),
                                             ),
-                                            const Divider(
-                                              thickness: 1,
-                                            ),
-                                          ],
-                                        ),
+                                            title: Text(user.name ?? ''),
+                                            subtitle: Text(user.userType == "2"
+                                                ? "Teacher"
+                                                : user.userType == "1"
+                                                    ? user.section ?? '---'
+                                                    : 'Admin'),
+                                            trailing: index == 0
+                                                ? Chip(
+                                                    backgroundColor:
+                                                        context.iconColor,
+                                                    label: Text(
+                                                      'Group Admin',
+                                                      style: TextStyle(
+                                                          color: context
+                                                              .cardColor),
+                                                    ))
+                                                : const SizedBox.shrink(),
+                                          ),
+                                          const Divider(
+                                            thickness: 1,
+                                          ),
+                                        ],
                                       ),
-                                    )
-                                  : const SizedBox.shrink();
-                            },
-                          ),
-                        ],
-                      ),
-                    ))
+                                    ),
+                                  )
+                                : const SizedBox.shrink();
+                          },
+                        ),
+                      ],
+                    ),
+                  )
             // 16.height,
             // const SVProfilePostsComponent(),
             // 16.height,

@@ -13,7 +13,7 @@ class SVRequestNotificationComponent extends StatelessWidget {
   late FriendsStoriesController friendsStoriesController;
   @override
   Widget build(BuildContext context) {
-    friendsStoriesController = Provider.of<FriendsStoriesController>(context);
+    friendsStoriesController = context.read<FriendsStoriesController>();
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

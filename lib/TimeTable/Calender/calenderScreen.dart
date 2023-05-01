@@ -23,9 +23,9 @@ class _CalenderScreenState extends State<CalenderScreen> {
       showVerticalLine: true, // To display live time line in day view.
       showLiveTimeLineInAllDays:
           true, // To display live time line in all pages in day view.
-      minDay: DateTime(1990),
-      maxDay: DateTime(2050),
-      initialDay: DateTime(2021),
+      minDay: DateTime(DateTime.now().year),
+      maxDay: DateTime(DateTime.now().year + 1),
+      initialDay: DateTime.now(),
       heightPerMinute: 1, // height occupied by 1 minute time span.
       eventArranger:
           const SideEventArranger(), // To define how simultaneous events will be arranged.
@@ -36,16 +36,33 @@ class _CalenderScreenState extends State<CalenderScreen> {
 
   getMonthVIew() {
     return MonthView(
-      controller: EventController(),
+      controller: EventController(
+        eventFilter: (date, events) => [
+          CalendarEventData(
+              title: 'data',
+              date: DateTime(2023, 1, 3, 3, 3, 4),
+              startTime: DateTime(2023, 1, 3, 3, 3, 4),
+              endDate: DateTime(2023, 1, 5, 3),
+              endTime: DateTime(2023, 1, 5, 3))
+        ],
+      ),
+      pageTransitionCurve: Curves.easeInCirc,
       // to provide custom UI for month cells.
       cellBuilder: (date, events, isToday, isInMonth) {
         // Return your widget to display as month cell.
-        return Container();
+        return isToday
+            ? Column(
+                children: [
+                  Text(date.day.toString()),
+                  Text(events.isNotEmpty ? events[0].title : '')
+                ],
+              )
+            : const Text('');
       },
-      minMonth: DateTime(1990),
-      maxMonth: DateTime(2050),
-      initialMonth: DateTime(2021),
-      cellAspectRatio: 1,
+      minMonth: DateTime(DateTime.now().year),
+      maxMonth: DateTime(DateTime.now().year + 1),
+      initialMonth: DateTime.now(),
+      // /cellAspectRatio: 1,
       onPageChange: (date, pageIndex) => print("$date, $pageIndex"),
       onCellTap: (events, date) {
         // Implement callback when user taps on a cell.

@@ -1,4 +1,4 @@
-import '../screens/auth/components/SVLoginInComponent.dart';
+import 'package:biit_social/utils/SVCommon.dart';
 
 class SVDrawerModel {
   String? title;
@@ -9,14 +9,13 @@ class SVDrawerModel {
 
 List<SVDrawerModel> getDrawerOptions() {
   List<SVDrawerModel> list = [];
-  if (SVLoginInComponent.loggedIn == 4) {
-    list.add(SVDrawerModel(
-        image: 'images/socialv/icons/ic_Profile.png', title: 'Profile'));
-  } else {
-    list.add(SVDrawerModel(
-        image: 'images/socialv/icons/ic_Profile.png', title: 'Profile'));
+
+  list.add(SVDrawerModel(
+      image: 'images/socialv/icons/ic_Profile.png', title: 'Profile'));
+  if (loggedInUser!.userType != '4') {
     list.add(SVDrawerModel(
         image: 'images/socialv/icons/ic_2User.png', title: 'Friends'));
+
     list.add(SVDrawerModel(
         image: 'images/socialv/icons/ic_3User.png', title: 'Groups'));
     list.add(SVDrawerModel(
