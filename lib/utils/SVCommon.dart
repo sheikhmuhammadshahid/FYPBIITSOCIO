@@ -140,20 +140,18 @@ svGetUserShimmer() {
         itemCount: 10,
         shrinkWrap: true,
         itemBuilder: (context, index) {
-          return ListTile(
-            leading: const CircleAvatar(
-              radius: 50,
-              backgroundColor: Colors.white,
-            ),
-            title: Container(
-              height: 20,
-              width: double.infinity,
-              color: Colors.white,
-            ),
-            subtitle: Container(
-              height: 20,
-              width: double.infinity,
-              color: Colors.white,
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListTile(
+              leading: const CircleAvatar(
+                radius: 50,
+                backgroundColor: Colors.white,
+              ),
+              title: Container(
+                height: 30,
+                width: double.infinity,
+                color: Colors.white,
+              ),
             ),
           );
         },
@@ -249,6 +247,7 @@ Widget svGetTextField(BuildContext context,
     bool readOnly = false,
     String? label,
     var validator,
+    var onchanged,
     TextStyle? hintStyle,
     TextStyle? labelStyle,
     TextEditingController? controller,
@@ -261,6 +260,8 @@ Widget svGetTextField(BuildContext context,
         height: 20,
       ),
       TextFormField(
+        onChanged: onchanged,
+        onFieldSubmitted: onchanged,
         maxLines: maxLine,
         onTap: onTap,
         validator: validator,

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:biit_social/Controllers/HandleNotification.dart';
+import 'package:biit_social/Controllers/SettingController.dart';
 import 'package:biit_social/models/Post/PostModel.dart';
 import 'package:biit_social/models/Stories/Stories.dart';
 import 'package:dio/dio.dart';
@@ -10,8 +11,6 @@ import 'package:http/http.dart' as http;
 import '../TimeTable/TimeTableModel.dart';
 import '../utils/FilesPicker.dart';
 import '../utils/SVCommon.dart';
-import 'SettingController.dart';
-import 'package:provider/provider.dart';
 
 class PostController with ChangeNotifier {
   List<Post> posts = [];
@@ -183,7 +182,7 @@ class PostController with ChangeNotifier {
     setState();
   }
 
-  getPosts(context) async {
+  getPosts(SettingController context) async {
     try {
       if (pageNumber >= 1) {
         isLazyLoading = true;
@@ -198,7 +197,7 @@ class PostController with ChangeNotifier {
       pageNumber++;
 
       String url =
-          "${ip}post/getPosts?cnic='3230440894009'&&pageNumber=$pageNumber&&fromWall=${Provider.of<SettingController>(context, listen: false).selectedWall}";
+          "${ip}post/getPosts?cnic='3230440894009'&&pageNumber=$pageNumber&&fromWall=${context.selectedWall}";
       //var v = jsonEncode(post.toMap());
 
       print(url);

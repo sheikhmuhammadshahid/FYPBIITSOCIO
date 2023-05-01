@@ -8,7 +8,6 @@ import '../../../Controllers/AuthController.dart';
 import '../../../models/User/UserModel.dart';
 
 class SVLoginInComponent extends StatefulWidget {
-  static int loggedIn = 1;
   final VoidCallback? callback;
   static final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   static TextEditingController userController = TextEditingController();

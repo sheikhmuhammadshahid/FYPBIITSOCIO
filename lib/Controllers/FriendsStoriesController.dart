@@ -20,6 +20,7 @@ import 'package:provider/provider.dart';
 class FriendsStoriesController extends ChangeNotifier {
   bool isCLicked = false;
   int selectedIndex = -1;
+  TextEditingController filterController = TextEditingController();
   bool isStoriesLoading = true;
   Duration duration = const Duration(seconds: 3);
   List<Society> societies = [];

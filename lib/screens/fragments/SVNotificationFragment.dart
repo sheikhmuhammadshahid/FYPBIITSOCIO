@@ -45,8 +45,7 @@ class _SVNotificationFragmentState extends State<SVNotificationFragment> {
   }
 
   init() {
-    friendsController =
-        Provider.of<FriendsStoriesController>(context, listen: false);
+    friendsController = context.read<FriendsStoriesController>();
     friendsController.getNotifications(context);
   }
 

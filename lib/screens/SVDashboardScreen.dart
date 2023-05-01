@@ -60,16 +60,11 @@ class _SVDashboardScreenState extends State<SVDashboardScreen>
 
     return Scaffold(
         backgroundColor: svGetScaffoldColor(),
-        body: settingController.selectedWall == '7'
+        body: context.watch<SettingController>().selectedWall == '7'
             ? const CalenderScreen()
             : const SVHomeFragment(),
         extendBody: true,
-        bottomNavigationBar: Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: Consumer<SettingController>(
-              builder: (context, value, child) {
-                return const SvBottomNavigation();
-              },
-            )));
+        bottomNavigationBar: const Padding(
+            padding: EdgeInsets.only(bottom: 10), child: SvBottomNavigation()));
   }
 }

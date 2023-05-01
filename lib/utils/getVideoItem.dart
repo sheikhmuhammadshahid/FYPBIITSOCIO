@@ -55,7 +55,7 @@ class _GetVideoItemState extends State<GetVideoItem>
   late SettingController settingController;
   @override
   Widget build(BuildContext context) {
-    settingController = Provider.of<SettingController>(context);
+    settingController = context.read<SettingController>();
     return VisibilityDetector(
       key: ObjectKey(flickManager),
       onVisibilityChanged: (visibility) {

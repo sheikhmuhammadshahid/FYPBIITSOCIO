@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:biit_social/Controllers/PostController.dart';
 import 'package:biit_social/utils/SVCommon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -29,13 +30,16 @@ class _SvBottomNavigationState extends State<SvBottomNavigation> {
   @override
   void dispose() {
     // TODO: implement dispose
-    settingController.dispose();
+
     super.dispose();
   }
 
+  late PostController postController;
   @override
   Widget build(BuildContext context) {
-    settingController = Provider.of<SettingController>(context);
+    settingController = context.read<SettingController>();
+    postController = context.read<PostController>();
+    settingController.getItems();
     try {
       if (loggedInUser!.userType == "1") {
         var v = settingController.items
@@ -52,7 +56,9 @@ class _SvBottomNavigationState extends State<SvBottomNavigation> {
       } else if (loggedInUser!.userType == "4") {
         var v = settingController.items
             .where((element) =>
-                element.title == 'Groups' || element.title == 'Class')
+                element.title == 'Groups' ||
+                element.title == 'Class' ||
+                element.title == 'Personal')
             .toList();
         for (var element in v) {
           settingController.items.remove(element);
@@ -93,28 +99,31 @@ class _SvBottomNavigationState extends State<SvBottomNavigation> {
           children: [
             for (int i = 0; i < settingController.items.length; i++)
               GestureDetector(
-                key: ValueKey(i),
-                onTap: () {
-                  settingController.changeIndex(
-                      i, settingController.items[i].title, context);
-                },
-                child: Padding(
-                    padding: const EdgeInsets.only(right: 7),
-                    child: GestureDetector(
-                      onLongPress: () => EasyLoading.showToast(
-                          settingController.items[i].title,
-                          dismissOnTap: true,
-                          toastPosition: EasyLoadingToastPosition.bottom),
-                      child: Chip(
-                          visualDensity: VisualDensity.standard,
-                          backgroundColor:
-                              settingController.selectedIndexText ==
-                                      settingController.items[i].title
-                                  ? context.primaryColor.withOpacity(0.9)
-                                  : context.iconColor.withOpacity(0.5),
-                          label: settingController.getWidget(context, i)),
-                    )),
-              )
+                  key: ValueKey(i),
+                  onTap: () {
+                    settingController.changeIndex(
+                        i,
+                        settingController.items[i].title,
+                        postController,
+                        settingController);
+                  },
+                  child: Padding(
+                      padding: const EdgeInsets.only(right: 7),
+                      child: GestureDetector(
+                        onLongPress: () => EasyLoading.showToast(
+                            settingController.items[i].title,
+                            dismissOnTap: true,
+                            toastPosition: EasyLoadingToastPosition.bottom),
+                        child: Chip(
+                            visualDensity: VisualDensity.standard,
+                            backgroundColor: context
+                                        .watch<SettingController>()
+                                        .selectedIndexText ==
+                                    settingController.items[i].title
+                                ? context.primaryColor.withOpacity(0.9)
+                                : context.iconColor.withOpacity(0.5),
+                            label: settingController.getWidget(context, i)),
+                      )))
           ]),
     );
   }

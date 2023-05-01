@@ -43,15 +43,14 @@ class _TikTokViewState extends State<TikTokView> {
 
   @override
   Widget build(BuildContext context) {
-    postController = Provider.of<PostController>(context);
-    SettingController settingController =
-        Provider.of<SettingController>(context);
+    postController = context.read<PostController>();
+    SettingController settingController = context.read<SettingController>();
     return Consumer<PostController>(
       builder: (context, value, child) {
         return PageView.builder(
           onPageChanged: (val) {
             if (val == postController.posts.length - 1) {
-              postController.getPosts(context);
+              postController.getPosts(settingController);
             }
           },
           scrollDirection: Axis.vertical,

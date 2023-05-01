@@ -1,3 +1,4 @@
+import 'package:biit_social/Controllers/SettingController.dart';
 import 'package:biit_social/screens/auth/screens/SVSignInScreen.dart';
 import 'package:biit_social/screens/profile/screens/FriendsListScreen.dart';
 import 'package:flutter/material.dart';
@@ -8,9 +9,9 @@ import 'package:biit_social/utils/SVColors.dart';
 import 'package:biit_social/utils/SVCommon.dart';
 
 import '../../Teacher/givePermission.dart';
-import '../../auth/components/SVLoginInComponent.dart';
 import '../../fragments/SVProfileFragment.dart';
 import '../../profile/screens/GroupsListScreen.dart';
+import 'package:provider/provider.dart';
 
 class SVHomeDrawerComponent extends StatefulWidget {
   const SVHomeDrawerComponent({super.key});
@@ -20,12 +21,13 @@ class SVHomeDrawerComponent extends StatefulWidget {
 }
 
 class _SVHomeDrawerComponentState extends State<SVHomeDrawerComponent> {
-  List<SVDrawerModel> options = getDrawerOptions();
-
   int selectedIndex = -1;
+  late SettingController settingController;
 
+  List<SVDrawerModel> options = getDrawerOptions();
   @override
   Widget build(BuildContext context) {
+    settingController = context.read<SettingController>();
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -95,11 +97,7 @@ class _SVHomeDrawerComponentState extends State<SVHomeDrawerComponent> {
                     setState(() {});
 
                     if (selectedIndex == options.length - 1) {
-                      Navigator.pushReplacement(context, MaterialPageRoute(
-                        builder: (context) {
-                          return const SVSignInScreen();
-                        },
-                      ));
+                      const SVSignInScreen().launch(context, isNewTask: true);
                     } else if (selectedIndex == 4) {
                       finish(context);
                       const SVDiarScreen().launch(context);
@@ -125,7 +123,7 @@ class _SVHomeDrawerComponentState extends State<SVHomeDrawerComponent> {
               }).toList(),
             ),
           ),
-          if (SVLoginInComponent.loggedIn == 2)
+          if (loggedInUser!.userType == "2")
             SettingItemWidget(
               title: 'Give Permissions',
               titleTextStyle: boldTextStyle(size: 14),

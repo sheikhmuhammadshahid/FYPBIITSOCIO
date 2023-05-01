@@ -43,9 +43,10 @@ class SVGroupProfile extends StatelessWidget {
                     bottom: 0,
                     child: Container(
                         decoration: BoxDecoration(
-                            border: Border.all(color: Colors.white, width: 2),
+                            color: Colors.white,
+                            border: Border.all(color: Colors.grey, width: 2),
                             borderRadius: radius(18)),
-                        child: getProfileImage(controller)),
+                        child: getProfileImage(controller, context)),
                   ),
                 ],
               ),
@@ -56,15 +57,18 @@ class SVGroupProfile extends StatelessWidget {
     );
   }
 
-  Widget getProfileImage(controller) {
+  Widget getProfileImage(controller, context) {
     return url == '' && !isOfficial
         ? Image.asset('images/socialv/faces/face_5.png',
                 height: 88, width: 88, fit: BoxFit.cover)
             .cornerRadiusWithClipRRect(SVAppCommonRadius)
         : isOfficial && url == ''
-            ? Image.asset('images/socialv/gifs/BIITLOGO.png',
-                    height: 88, width: 88, fit: BoxFit.cover)
-                .cornerRadiusWithClipRRect(SVAppCommonRadius)
+            ? Image.asset(
+                'images/socialv/gifs/BIITLOGO.png',
+                height: 88,
+                width: 88,
+                fit: BoxFit.cover,
+              ).cornerRadiusWithClipRRect(SVAppCommonRadius)
             : Image.network(profileimageAddress + url,
                     height: 88, width: 88, fit: BoxFit.cover)
                 .cornerRadiusWithClipRRect(SVAppCommonRadius);
