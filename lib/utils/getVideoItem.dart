@@ -28,6 +28,7 @@ class _GetVideoItemState extends State<GetVideoItem>
     animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 500));
     flickManager = FlickManager(
+      autoPlay: false,
       videoPlayerController: widget.fromNetwork
           ? VideoPlayerController.network(
               widget.url,
@@ -58,13 +59,16 @@ class _GetVideoItemState extends State<GetVideoItem>
     return VisibilityDetector(
       key: ObjectKey(flickManager),
       onVisibilityChanged: (visibility) {
-        if (visibility.visibleFraction == 0 && mounted) {
-          flickManager.flickControlManager!.autoPause();
+        if (visibility.visibleFraction < 1 && mounted) {
+          //  flickManager.flickControlManager!.autoPause();
+          animationController.reverse();
+          flickManager.flickVideoManager!.videoPlayerController!.pause();
         } else if (visibility.visibleFraction == 1) {
           //settingController.isPaused = false;
           animationController.forward();
           //settingController.notifyListeners();
-          flickManager.flickControlManager!.autoResume();
+
+          flickManager.flickVideoManager!.videoPlayerController!.play();
         }
       },
       child: GestureDetector(onTap: () {

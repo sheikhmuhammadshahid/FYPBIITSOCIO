@@ -44,7 +44,7 @@ class _SVHomeFragmentState extends State<SVHomeFragment> {
       key: scaffoldKey,
       backgroundColor: svGetScaffoldColor(),
       appBar: AppBar(
-        backgroundColor: svGetScaffoldColor(),
+        backgroundColor: context.scaffoldBackgroundColor,
         elevation: 0,
         leading: IconButton(
           icon: Image.asset(

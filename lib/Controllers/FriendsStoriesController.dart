@@ -23,6 +23,7 @@ class FriendsStoriesController extends ChangeNotifier {
   bool isStoriesLoading = true;
   Duration duration = const Duration(seconds: 3);
   List<Society> societies = [];
+  List<User> groupUsers = [];
   List<SVCommentModel> comments = [];
   List<ChatModel> chats = [];
   List<Items> section = [];
@@ -347,6 +348,26 @@ class FriendsStoriesController extends ChangeNotifier {
         }
       }
     } catch (e) {}
+    isStoriesLoading = false;
+    setState();
+  }
+
+  getGroupDetail(int id) async {
+    try {
+      isStoriesLoading = true;
+      groupUsers.clear();
+      setState();
+
+      var response = await Dio().get('${ip}Groups/getGroupDetail?id=$id');
+      if (response.statusCode == 200) {
+        for (var element in response.data) {
+          groupUsers.add(User.fromMap(element));
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+    print(groupUsers);
     isStoriesLoading = false;
     setState();
   }

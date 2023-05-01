@@ -1,13 +1,35 @@
+import 'package:biit_social/Controllers/FriendsStoriesController.dart';
+import 'package:biit_social/models/SVGroupModel.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:biit_social/screens/profile/components/SVProfileHeaderComponent.dart';
-import 'package:biit_social/screens/profile/components/SVProfilePostsComponent.dart';
-import 'package:biit_social/utils/SVColors.dart';
 import 'package:biit_social/utils/SVCommon.dart';
-import 'package:biit_social/utils/SVConstants.dart';
+import 'package:provider/provider.dart';
 
-class SVGroupProfileScreen extends StatelessWidget {
-  const SVGroupProfileScreen({super.key});
+import '../../../models/User/UserModel.dart';
+import '../../fragments/SVProfileFragment.dart';
+import '../components/SVGroupProfile.dart';
+
+class SVGroupProfileScreen extends StatefulWidget {
+  Group group;
+  SVGroupProfileScreen({super.key, required this.group});
+
+  @override
+  State<SVGroupProfileScreen> createState() => _SVGroupProfileScreenState();
+}
+
+class _SVGroupProfileScreenState extends State<SVGroupProfileScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getDetail();
+  }
+
+  late FriendsStoriesController friendsStoriesController;
+  getDetail() {
+    friendsStoriesController = context.read<FriendsStoriesController>();
+    friendsStoriesController.getGroupDetail(widget.group.id);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,15 +48,21 @@ class SVGroupProfileScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SVProfileHeaderComponent(),
+            SVGroupProfile(
+              isOfficial: widget.group.isOfficial!,
+              url: widget.group.profile,
+            ),
             16.height,
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Avengers Group', style: boldTextStyle(size: 20)),
+                Text(widget.group.name, style: boldTextStyle(size: 20)),
                 4.width,
-                Image.asset('images/socialv/icons/ic_TickSquare.png',
-                    height: 14, width: 14, fit: BoxFit.cover),
+                widget.group.profile == ''
+                    ? Image.asset('images/socialv/icons/ic_TickSquare.png',
+                        height: 14, width: 14, fit: BoxFit.cover)
+                    : Image.network(profileimageAddress + widget.group.profile,
+                        height: 14, width: 14, fit: BoxFit.cover),
               ],
             ),
             8.height,
@@ -49,7 +77,7 @@ class SVGroupProfileScreen extends StatelessWidget {
                   color: context.iconColor,
                 ),
                 8.width,
-                Text('Public Group',
+                Text(widget.group.isOfficial! ? 'Official' : 'Public Group',
                     style: secondaryTextStyle(color: svGetBodyColor())),
                 18.width,
                 Image.asset(
@@ -59,127 +87,245 @@ class SVGroupProfileScreen extends StatelessWidget {
                   fit: BoxFit.cover,
                   color: context.iconColor,
                 ),
-                8.width,
-                Text('03 Years Ago',
-                    style: secondaryTextStyle(color: svGetBodyColor())),
               ],
             ),
-            16.height,
-            Container(
-              padding: const EdgeInsets.all(16),
-              margin: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                  color: context.cardColor,
-                  borderRadius: radius(SVAppCommonRadius)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 100,
-                        child: Stack(
-                          alignment: Alignment.centerLeft,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  border:
-                                      Border.all(color: Colors.white, width: 2),
-                                  borderRadius: radius(100)),
-                              child: Image.asset(
-                                      'images/socialv/faces/face_2.png',
-                                      height: 32,
-                                      width: 32,
-                                      fit: BoxFit.cover)
-                                  .cornerRadiusWithClipRRect(100),
+            25.height,
+            // Container(
+            //   padding: const EdgeInsets.all(16),
+            //   margin: const EdgeInsets.all(16),
+            //   decoration: BoxDecoration(
+            //       color: context.cardColor,
+            //       borderRadius: radius(SVAppCommonRadius)),
+            //   child: Column(
+            //     crossAxisAlignment: CrossAxisAlignment.center,
+            //     children: [
+            //       Consumer<FriendsStoriesController>(
+            //         builder: (context, value, child) => value.isStoriesLoading
+            //             ? const CircularProgressIndicator()
+            //             : SizedBox(
+            //                 width: 100,
+            //                 child: Stack(
+            //                   alignment: Alignment.centerLeft,
+            //                   children: [
+            //                     Container(
+            //                       decoration: BoxDecoration(
+            //                           border: Border.all(
+            //                               color: Colors.white, width: 2),
+            //                           borderRadius: radius(100)),
+            //                       child: Image.asset(
+            //                               'images/socialv/faces/face_2.png',
+            //                               height: 32,
+            //                               width: 32,
+            //                               fit: BoxFit.cover)
+            //                           .cornerRadiusWithClipRRect(100),
+            //                     ),
+            //                     Positioned(
+            //                       left: 14,
+            //                       child: Container(
+            //                         decoration: BoxDecoration(
+            //                             border: Border.all(
+            //                                 color: Colors.white, width: 2),
+            //                             borderRadius: radius(100)),
+            //                         child: Image.asset(
+            //                                 'images/socialv/faces/face_3.png',
+            //                                 height: 32,
+            //                                 width: 32,
+            //                                 fit: BoxFit.cover)
+            //                             .cornerRadiusWithClipRRect(100),
+            //                       ),
+            //                     ),
+            //                     Positioned(
+            //                       left: 30,
+            //                       child: Container(
+            //                         decoration: BoxDecoration(
+            //                             border: Border.all(
+            //                                 color: Colors.white, width: 2),
+            //                             borderRadius: radius(100)),
+            //                         child: Image.asset(
+            //                                 'images/socialv/faces/face_4.png',
+            //                                 height: 32,
+            //                                 width: 32,
+            //                                 fit: BoxFit.cover)
+            //                             .cornerRadiusWithClipRRect(100),
+            //                       ),
+            //                     ),
+            //                     Positioned(
+            //                       left: 46,
+            //                       child: Container(
+            //                         decoration: BoxDecoration(
+            //                             border: Border.all(
+            //                                 color: Colors.white, width: 2),
+            //                             borderRadius: radius(100)),
+            //                         child: Image.asset(
+            //                                 'images/socialv/faces/face_5.png',
+            //                                 height: 32,
+            //                                 width: 32,
+            //                                 fit: BoxFit.cover)
+            //                             .cornerRadiusWithClipRRect(100),
+            //                       ),
+            //                     ),
+            //                     Positioned(
+            //                       right: 0,
+            //                       child: Container(
+            //                         decoration: BoxDecoration(
+            //                             border: Border.all(
+            //                                 color: Colors.white, width: 2),
+            //                             borderRadius: radius(100)),
+            //                         child: Image.asset(
+            //                                 'images/socialv/faces/face_1.png',
+            //                                 height: 32,
+            //                                 width: 32,
+            //                                 fit: BoxFit.cover)
+            //                             .cornerRadiusWithClipRRect(100),
+            //                       ),
+            //                     ),
+            //                   ],
+            //                 ),
+            //               ).onTap(() {
+            //                 const SVGroupMembers().launch(context);
+            //               }),
+            //       ),
+            //       28.height,
+            //       AppButton(
+            //         shapeBorder:
+            //             RoundedRectangleBorder(borderRadius: radius(4)),
+            //         text: 'Left Group',
+            //         textStyle: boldTextStyle(color: Colors.white),
+            //         onTap: () {},
+            //         elevation: 0,
+            //         color: SVAppColorPrimary,
+            //         width: context.width() - 64,
+            //       ),
+            //       10.height,
+            //     ],
+            //   ),
+            // ),
+
+            Consumer<FriendsStoriesController>(
+                builder: (context, value, child) => SizedBox(
+                      width: context.width(),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(left: 30.0, right: 30),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                    value.groupUsers.isNotEmpty
+                                        ? '${value.groupUsers.length} members'
+                                        : 'members',
+                                    style: secondaryTextStyle(
+                                        color: context.iconColor,
+                                        weight: FontWeight.bold)),
+                                Icon(
+                                  Icons.search,
+                                  size: 20,
+                                  color: context.iconColor,
+                                )
+                              ],
                             ),
-                            Positioned(
-                              left: 14,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: Colors.white, width: 2),
-                                    borderRadius: radius(100)),
-                                child: Image.asset(
-                                        'images/socialv/faces/face_3.png',
-                                        height: 32,
-                                        width: 32,
-                                        fit: BoxFit.cover)
-                                    .cornerRadiusWithClipRRect(100),
-                              ),
-                            ),
-                            Positioned(
-                              left: 30,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: Colors.white, width: 2),
-                                    borderRadius: radius(100)),
-                                child: Image.asset(
-                                        'images/socialv/faces/face_4.png',
-                                        height: 32,
-                                        width: 32,
-                                        fit: BoxFit.cover)
-                                    .cornerRadiusWithClipRRect(100),
-                              ),
-                            ),
-                            Positioned(
-                              left: 46,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: Colors.white, width: 2),
-                                    borderRadius: radius(100)),
-                                child: Image.asset(
-                                        'images/socialv/faces/face_5.png',
-                                        height: 32,
-                                        width: 32,
-                                        fit: BoxFit.cover)
-                                    .cornerRadiusWithClipRRect(100),
-                              ),
-                            ),
-                            Positioned(
-                              right: 0,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: Colors.white, width: 2),
-                                    borderRadius: radius(100)),
-                                child: Image.asset(
-                                        'images/socialv/faces/face_1.png',
-                                        height: 32,
-                                        width: 32,
-                                        fit: BoxFit.cover)
-                                    .cornerRadiusWithClipRRect(100),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            itemCount: value.groupUsers.length,
+                            itemBuilder: (context, index) {
+                              User user = value.groupUsers[index];
+
+                              return user.name!
+                                      .toLowerCase()
+                                      .contains(value.tofilter.toLowerCase())
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        // ChatScreen(
+                                        //   groupChat: false,
+                                        //   id: user.CNIC,
+                                        //   profileScreen: user.profileImage,
+                                        //   name: user.name == null
+                                        //       ? ''
+                                        //       : user.name!,
+                                        //   section: user.section == null
+                                        //       ? ''
+                                        //       : user.section!,
+                                        // ).launch(context);
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 10, right: 10),
+                                        child: Column(
+                                          children: [
+                                            ListTile(
+                                              leading: GestureDetector(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          SVProfileFragment(
+                                                        user: false,
+                                                        id: user.CNIC,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                child: user.profileImage == ''
+                                                    ? Image.asset(
+                                                            'images/socialv/faces/face_2.png',
+                                                            height: 52,
+                                                            width: 52,
+                                                            fit: BoxFit.cover)
+                                                        .cornerRadiusWithClipRRect(
+                                                            100)
+                                                    : Image.network(
+                                                            profileimageAddress +
+                                                                user.profileImage,
+                                                            errorBuilder:
+                                                                (context, error,
+                                                                    stackTrace) {
+                                                        return Container(
+                                                          color: Colors.black,
+                                                          child: const Icon(
+                                                              Icons
+                                                                  .no_backpack),
+                                                        );
+                                                      },
+                                                            height: 52,
+                                                            width: 52,
+                                                            fit: BoxFit.cover)
+                                                        .cornerRadiusWithClipRRect(
+                                                            100),
+                                              ),
+                                              title: Text(user.name ?? ''),
+                                              subtitle: Text(user.userType ==
+                                                      "2"
+                                                  ? "Teacher"
+                                                  : user.userType == "1"
+                                                      ? user.section ?? '---'
+                                                      : 'Admin'),
+                                              trailing: index == 0
+                                                  ? const SizedBox()
+                                                  : const SizedBox.shrink(),
+                                            ),
+                                            const Divider(
+                                              thickness: 1,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  : const SizedBox.shrink();
+                            },
+                          ),
+                        ],
                       ),
-                      16.width,
-                      Text('+6 Members',
-                          style: secondaryTextStyle(color: context.iconColor)),
-                    ],
-                  ),
-                  28.height,
-                  AppButton(
-                    shapeBorder:
-                        RoundedRectangleBorder(borderRadius: radius(4)),
-                    text: 'Left Group',
-                    textStyle: boldTextStyle(color: Colors.white),
-                    onTap: () {},
-                    elevation: 0,
-                    color: SVAppColorPrimary,
-                    width: context.width() - 64,
-                  ),
-                  10.height,
-                ],
-              ),
-            ),
-            16.height,
-            const SVProfilePostsComponent(),
-            16.height,
+                    ))
+            // 16.height,
+            // const SVProfilePostsComponent(),
+            // 16.height,
           ],
         ),
       ),

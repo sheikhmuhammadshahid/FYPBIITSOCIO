@@ -8,7 +8,6 @@ import '../../../models/User/UserModel.dart';
 import '../../Chat/ChatScreen.dart';
 import '../../fragments/SVProfileFragment.dart';
 import '../../fragments/SVSearchFragment.dart';
-import 'SVGroupProfileScreen.dart';
 
 class FriendsListScreen extends StatefulWidget {
   String? toShow;
@@ -212,14 +211,11 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) => widget
-                                                          .toShow ==
-                                                      "Groups"
-                                                  ? const SVGroupProfileScreen()
-                                                  : SVProfileFragment(
-                                                      user: false,
-                                                      id: user.CNIC,
-                                                    ),
+                                              builder: (context) =>
+                                                  SVProfileFragment(
+                                                user: false,
+                                                id: user.CNIC,
+                                              ),
                                             ));
                                       },
                                       child: user.profileImage == ''

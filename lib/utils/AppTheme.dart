@@ -14,11 +14,14 @@ class AppTheme {
     hoverColor: Colors.white54,
     dividerColor: viewLineColor,
     fontFamily: GoogleFonts.inter().fontFamily,
-    appBarTheme: const AppBarTheme(
+    appBarTheme: AppBarTheme(
+      elevation: 0,
       color: SVAppLayoutBackground,
-      iconTheme: IconThemeData(color: textPrimaryColor),
-      systemOverlayStyle:
-          SystemUiOverlayStyle(statusBarIconBrightness: Brightness.dark),
+      iconTheme: const IconThemeData(color: textPrimaryColor),
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.light,
+        statusBarColor: Colors.transparent.withOpacity(0.2),
+      ),
     ),
     textSelectionTheme: const TextSelectionThemeData(cursorColor: Colors.black),
     cardTheme: const CardTheme(color: Colors.white),
@@ -31,15 +34,15 @@ class AppTheme {
       titleSmall: TextStyle(color: textSecondaryColor),
     ),
     visualDensity: VisualDensity.adaptivePlatformDensity,
-    colorScheme: ColorScheme.light(primary: SVAppColorPrimary)
+    colorScheme: const ColorScheme.light(primary: SVAppColorPrimary)
         .copyWith(error: Colors.red),
   ).copyWith(
     pageTransitionsTheme: const PageTransitionsTheme(
         builders: <TargetPlatform, PageTransitionsBuilder>{
-          TargetPlatform.android: const OpenUpwardsPageTransitionsBuilder(),
-          TargetPlatform.iOS: const CupertinoPageTransitionsBuilder(),
-          TargetPlatform.linux: const OpenUpwardsPageTransitionsBuilder(),
-          TargetPlatform.macOS: const OpenUpwardsPageTransitionsBuilder(),
+          TargetPlatform.android: OpenUpwardsPageTransitionsBuilder(),
+          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.linux: OpenUpwardsPageTransitionsBuilder(),
+          TargetPlatform.macOS: OpenUpwardsPageTransitionsBuilder(),
         }),
   );
 
@@ -72,17 +75,17 @@ class AppTheme {
       titleSmall: TextStyle(color: Colors.white54),
     ),
     visualDensity: VisualDensity.adaptivePlatformDensity,
-    colorScheme: ColorScheme.dark(
+    colorScheme: const ColorScheme.dark(
             primary: appBackgroundColorDark, onPrimary: cardBackgroundBlackDark)
         .copyWith(secondary: whiteColor)
-        .copyWith(error: Color(0xFFCF6676)),
+        .copyWith(error: const Color(0xFFCF6676)),
   ).copyWith(
     pageTransitionsTheme: const PageTransitionsTheme(
         builders: <TargetPlatform, PageTransitionsBuilder>{
-          TargetPlatform.android: const OpenUpwardsPageTransitionsBuilder(),
-          TargetPlatform.iOS: const CupertinoPageTransitionsBuilder(),
-          TargetPlatform.linux: const OpenUpwardsPageTransitionsBuilder(),
-          TargetPlatform.macOS: const OpenUpwardsPageTransitionsBuilder(),
+          TargetPlatform.android: OpenUpwardsPageTransitionsBuilder(),
+          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.linux: OpenUpwardsPageTransitionsBuilder(),
+          TargetPlatform.macOS: OpenUpwardsPageTransitionsBuilder(),
         }),
   );
 }

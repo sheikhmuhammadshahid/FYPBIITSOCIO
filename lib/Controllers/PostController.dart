@@ -226,11 +226,9 @@ class PostController with ChangeNotifier {
     } catch (e) {
       print(e);
     }
-    if (isLoading) {
-      isLoading = false;
-    } else {
-      isLazyLoading = false;
-    }
+    isLoading = false;
+    isLazyLoading = false;
+
     setState();
   }
 

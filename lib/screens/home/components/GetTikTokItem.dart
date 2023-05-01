@@ -58,7 +58,7 @@ Widget getTikTokItem(
         Align(
           alignment: Alignment.topLeft,
           child: Padding(
-            padding: const EdgeInsets.only(top: 10.0),
+            padding: const EdgeInsets.only(top: 40.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
