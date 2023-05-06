@@ -33,8 +33,8 @@ class PostController with ChangeNotifier {
     try {
       isTimeTableLoading = true;
       setState();
-      var response = await Dio()
-          .get('${ip}post/getTimeTable?section=${loggedInUser!.section}');
+      var response = await Dio().get(
+          '${ip}post/getTimeTable?section=${loggedInUser!.userType == "1" ? loggedInUser!.section : loggedInUser!.CNIC}&userType=${loggedInUser!.userType}');
       if (response.statusCode == 200) {
         timeTable.clear();
 

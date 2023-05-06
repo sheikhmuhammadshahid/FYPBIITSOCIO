@@ -58,7 +58,7 @@ class _SVHomeFragmentState extends State<SVHomeFragment> {
             scaffoldKey.currentState?.openDrawer();
           },
         ),
-        title: Text('BIITSOCIO', style: boldTextStyle(size: 18)),
+        title: Text(loggedInUser!.name!, style: boldTextStyle(size: 18)),
         actions: [
           GestureDetector(
             onTap: () {

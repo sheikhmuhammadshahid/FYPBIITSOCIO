@@ -46,17 +46,17 @@ class _SVGivePermissionState extends State<SVGivePermission> {
         child: Column(
           children: [
             TextFormField(
-              decoration: const InputDecoration(hintText: 'Select student'),
+              decoration: const InputDecoration(hintText: 'Select Teacher'),
               readOnly: true,
               onTap: () async {
-                await getSelector(context, 'Select student', items);
+                await getSelector(context, 'Select Teacher', items);
               },
             ),
             const SizedBox(
               height: 40,
             ),
             TextFormField(
-              decoration: const InputDecoration(hintText: 'Select permissons'),
+              decoration: const InputDecoration(hintText: 'Select Students'),
               readOnly: true,
               onTap: () async {
                 await getSelector(context, 'Select permissons', items1);

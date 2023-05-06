@@ -34,6 +34,7 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
     afterBuildCreated(() {
       setStatusBarColor(context.cardColor);
     });
+    context.read<FriendsStoriesController>().getSectionAndDesciplines();
   }
 
   @override
@@ -53,25 +54,6 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
     const DropdownMenuItem(value: "2", child: Text("Teachers")),
     const DropdownMenuItem(value: "3", child: Text("Admin")),
   ];
-  List<Items> sections = [
-    Items(id: 28, name: "All"),
-    Items(id: 1, name: "BSCS-7C"),
-    Items(id: 3, name: "BSCS-5B"),
-    Items(id: 4, name: "BSCS-7A"),
-    Items(id: 5, name: "BSIT-7A"),
-    Items(id: 6, name: "BSIT-2A"),
-    Items(id: 7, name: "BSCS-6A"),
-  ];
-  getSections() {
-    selectedSections = selectedDescipline != "All"
-        ? friendsStoriesController!.section
-            .where((element) => element.name!
-                .toLowerCase()
-                .startsWith(selectedDescipline!.toLowerCase()))
-            .toList()
-        : friendsStoriesController!.section;
-    setState(() {});
-  }
 
   List<Items> selectedSections = [];
   String? selectedDescipline;
@@ -79,7 +61,7 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
   bool selected = false;
   TextEditingController descriptionController = TextEditingController();
   late PostController postController;
-
+  bool clicked = false;
   @override
   Widget build(BuildContext context) {
     friendStoriesController = context.read<FriendsStoriesController>();
@@ -96,7 +78,11 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
           if (loggedInUser!.userType == "2" ||
               loggedInUser!.userType == "3") ...{
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  clicked = !clicked;
+                });
+              },
               icon: const Icon(Icons.supervised_user_circle_sharp),
             ),
             IconButton(
@@ -165,46 +151,52 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
                       padding: const EdgeInsets.only(left: 16, right: 16),
                       child: Column(
                         children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: Container(
-                              color: Colors.black,
-                              height:
-                                  MediaQuery.of(context).size.height / 2 - 50,
-                              width: MediaQuery.of(context).size.width,
-                              child: StatefulBuilder(
-                                builder: (context, setState) {
-                                  return isImagePicked != 0
-                                      ? isImagePicked == 1
-                                          ? Image.file(
-                                              File(path.path),
-                                              fit: BoxFit.fill,
-                                            )
-                                          : GetVideoItem(
-                                              url: path.path,
-                                              fromNetwork: false)
-                                      : Image.asset(
-                                          'images/socialv/posts/post_one.png');
-                                },
+                          if (!clicked)
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: Container(
+                                color: Colors.black,
+                                height:
+                                    MediaQuery.of(context).size.height / 2 - 50,
+                                width: MediaQuery.of(context).size.width,
+                                child: StatefulBuilder(
+                                  builder: (context, setState) {
+                                    return isImagePicked != 0
+                                        ? isImagePicked == 1
+                                            ? Image.file(
+                                                File(path.path),
+                                                fit: BoxFit.fill,
+                                              )
+                                            : GetVideoItem(
+                                                url: path.path,
+                                                fromNetwork: false)
+                                        : Image.asset(
+                                            'images/socialv/posts/post_one.png');
+                                  },
+                                ),
                               ),
                             ),
-                          ),
                           const SizedBox(
                             height: 10,
                           ),
-                          Consumer<FriendsStoriesController>(
-                            builder: (context, value, child) =>
-                                DropdownButtonFormField(
-                              value: selectedDescipline,
-                              hint: const Text("Select Descipline"),
-                              items: friendStoriesController.desciplines,
-                              onChanged: (value) {
-                                selectedDescipline = value!;
-                                selected = true;
-                                getSections();
-                              },
-                            ),
-                          ),
+                          context
+                                  .watch<FriendsStoriesController>()
+                                  .desciplines
+                                  .isNotEmpty
+                              ? DropdownButtonFormField(
+                                  value: selectedDescipline,
+                                  hint: const Text("Select Descipline"),
+                                  items: friendStoriesController.desciplines,
+                                  onChanged: (value) {
+                                    selectedDescipline = value!;
+                                    selected = true;
+                                    selectedSections = friendStoriesController
+                                        .getSections(selectedDescipline!);
+                                    print(selectedSections);
+                                    setState(() {});
+                                  },
+                                )
+                              : const SizedBox(),
                           const SizedBox(
                             height: 10,
                           ),
@@ -217,7 +209,21 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
                               onTap: () async {
                                 await getSelector(context, 'Select Sections',
                                     selectedSections);
+                                setState(() {});
                               },
+                            )
+                          },
+                          if (selected) ...{
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            //  Selector(items: selectedSections, lable: "Section")
+                            Wrap(
+                              children: [
+                                for (int i = 0; i < selecteds.length; i++) ...{
+                                  Chip(label: Text(selecteds[i]))
+                                }
+                              ],
                             )
                           }
                         ],

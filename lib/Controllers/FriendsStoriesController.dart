@@ -112,7 +112,7 @@ class FriendsStoriesController extends ChangeNotifier {
       isStoriesLoading = true;
       var controller = Provider.of<SettingController>(context, listen: false);
       var response = await Dio().get(
-          "${ip}Notification/getNotification?userId=${controller.selectedWall}");
+          "${ip}Notification/getNotification?userId=${loggedInUser!.CNIC}&fromWall=${controller.selectedWall}");
       if (response.statusCode == 200) {
         notifications.clear();
         listEarlier.clear();
@@ -202,7 +202,9 @@ class FriendsStoriesController extends ChangeNotifier {
         );
         section.add(Items(name: 'All', id: 0));
         for (var element in response.data['sections']) {
-          section.add(Items(name: element, id: i));
+          if (element != '' && element != null) {
+            section.add(Items(name: element, id: i));
+          }
           i++;
         }
         i = 1;
@@ -214,6 +216,46 @@ class FriendsStoriesController extends ChangeNotifier {
       }
     } catch (e) {}
     notifyListeners();
+  }
+
+  getSections(String selectedDescipline) {
+    List<Items> items = [];
+    try {
+      items.add(Items(id: section.length + 1, name: 'All'));
+      var v = selectedDescipline != "All"
+          ? selectedDescipline != "Parents" &&
+                  selectedDescipline != "Students" &&
+                  selectedDescipline != "Teachers"
+              ? section
+                  .where((element) => element.name!
+                      .toLowerCase()
+                      .startsWith(selectedDescipline.toLowerCase()))
+                  .toList()
+              : selectedDescipline == "Teachers"
+                  ? section.where((element) =>
+                      element.name!.split('!').length == 1
+                          ? false
+                          : element.name!.split('!')[1].trim() == "2")
+                  : selectedDescipline == "Students"
+                      ? section.where((element) =>
+                          element.name!.split('!').length == 1
+                              ? false
+                              : element.name!.split('!')[1].trim() == "1")
+                      : selectedDescipline == "Admin"
+                          ? section.where((element) =>
+                              element.name!.split('!').length == 1
+                                  ? false
+                                  : element.name!.split('!')[1].trim() == "3")
+                          : section.where((element) =>
+                              element.name!.split('!').length == 1
+                                  ? false
+                                  : element.name!.split('!')[1].trim() == "4")
+          : section;
+      items.addAll(v);
+    } catch (e) {
+      print(e);
+    }
+    return items;
   }
 
   getChats(id, fromGroup) async {

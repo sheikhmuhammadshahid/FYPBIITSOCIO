@@ -51,13 +51,18 @@ class _CalenderScreenState extends State<CalenderScreen> {
       cellBuilder: (date, events, isToday, isInMonth) {
         // Return your widget to display as month cell.
         return isToday
-            ? Column(
-                children: [
-                  Text(date.day.toString()),
-                  Text(events.isNotEmpty ? events[0].title : '')
-                ],
-              )
-            : const Text('');
+            ? events.isNotEmpty
+                ? Container(
+                    color: Colors.teal,
+                    child: Column(
+                      children: [
+                        Text(date.day.toString()),
+                        Text(events[0].title)
+                      ],
+                    ),
+                  )
+                : Text(date.day.toString())
+            : Text(date.day.toString());
       },
       minMonth: DateTime(DateTime.now().year),
       maxMonth: DateTime(DateTime.now().year + 1),
