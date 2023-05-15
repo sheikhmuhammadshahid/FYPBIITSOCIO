@@ -65,7 +65,10 @@ class FriendsStoriesController extends ChangeNotifier {
   sendFriendReques(to, context) async {
     try {
       FriendRequest f = FriendRequest(
-          RequestedBy: loggedInUser!.CNIC, RequestedTo: to, status: 'pending');
+          id: int.parse(loggedInUser!.userType!),
+          RequestedBy: loggedInUser!.CNIC,
+          RequestedTo: to,
+          status: 'pending');
       var response = await Dio().post('${ip}Friends/sendFriendRequest',
           data: f.toJson(), options: Options(headers: headers));
       if (response.statusCode == 200) {

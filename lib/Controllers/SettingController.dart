@@ -7,6 +7,8 @@ import '../models/User/UserModel.dart';
 
 class SettingController extends ChangeNotifier {
   int selectedIndex = 0;
+  ScrollController scrollController = ScrollController();
+  bool isAppBarVisible = true;
   String selectedIndexText = "BIIT";
   User? userToShow;
   bool isMuted = false;
@@ -63,7 +65,7 @@ class SettingController extends ChangeNotifier {
     getWidget1('BIIT', Icons.admin_panel_settings_sharp);
     getWidget1('Personal', Icons.person);
     getWidget1('Societies', Icons.theater_comedy);
-    getWidget1('Calender', Icons.calendar_month);
+    // getWidget1('Calender', Icons.calendar_month);
     getWidget1('Class', Icons.class_sharp);
     getWidget1('Student', Icons.person);
     getWidget1('Teacher', Icons.person_3);
@@ -82,12 +84,11 @@ class SettingController extends ChangeNotifier {
           const SizedBox(
             width: 4,
           ),
-          const Text(
-            '' //items[index].title,
-            ,
+          Text(
+            items[index].title,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(color: Colors.white
+            style: const TextStyle(color: Colors.white
                 //color: context.iconColor,
                 ),
           ),

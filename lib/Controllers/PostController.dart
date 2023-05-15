@@ -197,7 +197,7 @@ class PostController with ChangeNotifier {
       pageNumber++;
 
       String url =
-          "${ip}post/getPosts?cnic='3230440894009'&&pageNumber=$pageNumber&&fromWall=${context.selectedWall}";
+          "${ip}post/getPosts?cnic=${loggedInUser!.CNIC}&&pageNumber=$pageNumber&&fromWall=${context.selectedWall}";
       //var v = jsonEncode(post.toMap());
 
       print(url);

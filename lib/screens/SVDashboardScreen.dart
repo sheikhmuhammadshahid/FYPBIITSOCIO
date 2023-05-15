@@ -6,8 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:biit_social/utils/SVCommon.dart';
 import 'package:provider/provider.dart';
-
-import '../BottomNavigation/SvBottomNavigationBar.dart';
+import '../Test.dart';
 import 'fragments/SVHomeFragment.dart';
 
 class SVDashboardScreen extends StatefulWidget {
@@ -53,7 +52,7 @@ class _SVDashboardScreenState extends State<SVDashboardScreen>
   }
 
   late SettingController settingController;
-
+  final int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
     settingController = context.read<SettingController>();
@@ -64,7 +63,8 @@ class _SVDashboardScreenState extends State<SVDashboardScreen>
             ? const CalenderScreen()
             : const SVHomeFragment(),
         extendBody: true,
-        bottomNavigationBar: const Padding(
-            padding: EdgeInsets.only(bottom: 10), child: SvBottomNavigation()));
+        bottomNavigationBar: const ScrollHideNavigationBar());
+    // bottomNavigationBar: const Padding(
+    //     padding: EdgeInsets.only(bottom: 10), child: SvBottomNavigation()));
   }
 }
