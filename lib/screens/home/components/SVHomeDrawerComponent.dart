@@ -123,7 +123,7 @@ class _SVHomeDrawerComponentState extends State<SVHomeDrawerComponent> {
               }).toList(),
             ),
           ),
-          if (loggedInUser!.userType == "2")
+          if (loggedInUser!.userType == "2" || loggedInUser!.userType == "3")
             SettingItemWidget(
               title: 'Give Permissions',
               titleTextStyle: boldTextStyle(size: 14),

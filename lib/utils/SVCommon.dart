@@ -46,6 +46,8 @@ Future<String> getIp() async {
   return 'http://';
 }
 
+List<String> selecteds = [];
+
 getSelector(context, lable, List<Items> items) async {
   await showModalBottomSheet(
     isScrollControlled: true, // required for min/max child size
@@ -66,8 +68,10 @@ getSelector(context, lable, List<Items> items) async {
         // .toList(),
         onConfirm: (values) {
           selectedOptions = "";
+          selecteds.clear();
           for (Items i in values) {
             selectedOptions += "${i.name!}:";
+            selecteds.add(i.name!);
           }
           print(selectedOptions);
         },

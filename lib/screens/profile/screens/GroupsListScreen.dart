@@ -6,7 +6,6 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:biit_social/utils/SVCommon.dart';
 import 'package:provider/provider.dart';
 import '../../Chat/ChatScreen.dart';
-import '../../fragments/SVSearchFragment.dart';
 import 'SVGroupProfileScreen.dart';
 
 class GroupsListScreen extends StatefulWidget {
@@ -66,30 +65,24 @@ class _GroupsListScreenState extends State<GroupsListScreen> {
   init() async {
     try {
       friendsStoriesController = context.read<FriendsStoriesController>();
-      friendsStoriesController.getFriends();
 
-      if (toShow!.toLowerCase().contains('gro')) {
-        friendsStoriesController.getGroups();
-      }
+      friendsStoriesController.getGroups();
     } catch (e) {}
   }
 
   @override
   Widget build(BuildContext context) {
+    friendsStoriesController = context.read<FriendsStoriesController>();
     return Scaffold(
-      floatingActionButton: !toShow!.toLowerCase().contains('add')
-          ? FloatingActionButton(
-              backgroundColor: context.primaryColor,
-              onPressed: () {
-                toShow == 'Friends'
-                    ? const SVSearchFragment().launch(context)
-                    : const SvCreateGroupScreen().launch(context);
-              },
-              child: Icon(
-                Icons.add,
-                color: context.scaffoldBackgroundColor,
-              ))
-          : null,
+      floatingActionButton: FloatingActionButton(
+          backgroundColor: context.primaryColor,
+          onPressed: () {
+            const SvCreateGroupScreen().launch(context);
+          },
+          child: Icon(
+            Icons.add,
+            color: context.scaffoldBackgroundColor,
+          )),
       backgroundColor: svGetScaffoldColor(),
       appBar: AppBar(
         backgroundColor: svGetScaffoldColor(),
@@ -97,14 +90,7 @@ class _GroupsListScreenState extends State<GroupsListScreen> {
         title: Text('${widget.toShow}', style: boldTextStyle(size: 20)),
         elevation: 0,
         centerTitle: true,
-        actions: [
-          if (toShow!.toLowerCase().contains('add'))
-            TextButton(
-                onPressed: () {},
-                child: Text(
-                  'Create',
-                  style: boldTextStyle(size: 16),
-                )),
+        actions: const [
           //IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
         ],
         bottom: PreferredSize(
@@ -140,125 +126,87 @@ class _GroupsListScreenState extends State<GroupsListScreen> {
       ),
       body: SingleChildScrollView(
         child: Column(children: [
-          if (toShow!.toLowerCase().contains('add')) ...{
-            DropdownButtonFormField(
-              value: selectedDescipline,
-              hint: const Text("Select Descipline"),
-              items: desciplines.toList(),
-              onChanged: (value) {
-                selectedDescipline = value!;
-                selected = true;
-                getSections();
-              },
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            if (selected) ...{
-              //  Selector(items: selectedSections, lable: "Section")
-              TextFormField(
-                decoration: const InputDecoration(hintText: 'Select Sections'),
-                readOnly: true,
-                onTap: () async {
-                  await getSelector(
-                      context, 'Select Sections', selectedSections);
-                },
-              ),
-            },
-            const SizedBox(
-              height: 20,
-            )
-          },
-          Consumer<FriendsStoriesController>(
-            builder: (context, value, child) {
-              return SizedBox(
-                // flex: 4,
-                height: !toShow!.toLowerCase().contains('add')
-                    ? MediaQuery.of(context).size.height - 200
-                    : MediaQuery.of(context).size.height,
-                child: value.isStoriesLoading
-                    ? svGetUserShimmer()
-                    : ListView.builder(
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        itemCount: value.groups.length,
-                        itemBuilder: (context, index) {
-                          Group group = value.groups[index];
+          SizedBox(
+            // flex: 4,
+            height: MediaQuery.of(context).size.height,
+            child: context.watch<FriendsStoriesController>().isStoriesLoading
+                ? getNotificationShimmer(context)
+                : ListView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    itemCount: friendsStoriesController.groups.length,
+                    itemBuilder: (context, index) {
+                      Group group = friendsStoriesController.groups[index];
 
-                          return group.name
-                                  .toLowerCase()
-                                  .contains(value.tofilter.toLowerCase())
-                              ? GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => ChatScreen(
-                                            groupChat: true,
-                                            id: group.id.toString(),
-                                            profileScreen: group.profile,
-                                            name: group.name,
-                                            section: group.description,
-                                          ),
-                                        ));
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 10, right: 10),
-                                    child: Column(
-                                      children: [
-                                        ListTile(
-                                          leading: GestureDetector(
-                                            onTap: () {
-                                              SVGroupProfileScreen(
-                                                group: group,
-                                              ).launch(context);
-                                            },
-                                            child: group.profile == ''
-                                                ? Image.asset(
-                                                        group.isOfficial!
-                                                            ? 'images/socialv/gifs/BIITLOGO.png'
-                                                            : 'images/socialv/faces/face_2.png',
-                                                        height: 52,
-                                                        width: 52,
-                                                        fit: BoxFit.cover)
-                                                    .cornerRadiusWithClipRRect(
-                                                        100)
-                                                : Image.network(
-                                                        profileimageAddress +
-                                                            group.profile,
-                                                        errorBuilder: (context,
-                                                            error, stackTrace) {
-                                                    return Container(
-                                                      color: Colors.black,
-                                                      child: const Icon(
-                                                          Icons.no_backpack),
-                                                    );
-                                                  },
-                                                        height: 52,
-                                                        width: 52,
-                                                        fit: BoxFit.cover)
-                                                    .cornerRadiusWithClipRRect(
-                                                        100),
-                                          ),
-                                          title: Text(group.name),
-                                          subtitle: Text(group.description == ''
-                                              ? group.isOfficial!
-                                                  ? 'Official group'
-                                                  : 'non Official'
-                                              : group.description),
-                                        ),
-                                        const Divider(
-                                          thickness: 1,
-                                        )
-                                      ],
+                      return group.name.toLowerCase().contains(
+                              friendsStoriesController.tofilter.toLowerCase())
+                          ? GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ChatScreen(
+                                        groupChat: true,
+                                        id: group.id.toString(),
+                                        profileScreen: group.profile,
+                                        name: group.name,
+                                        section: group.description,
+                                      ),
+                                    ));
+                              },
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 10, right: 10),
+                                child: Column(
+                                  children: [
+                                    ListTile(
+                                      leading: GestureDetector(
+                                        onTap: () {
+                                          SVGroupProfileScreen(
+                                            group: group,
+                                          ).launch(context);
+                                        },
+                                        child: group.profile == ''
+                                            ? Image.asset(
+                                                    group.isOfficial!
+                                                        ? 'images/socialv/gifs/BIITLOGO.png'
+                                                        : 'images/socialv/faces/face_2.png',
+                                                    height: 52,
+                                                    width: 52,
+                                                    fit: BoxFit.cover)
+                                                .cornerRadiusWithClipRRect(100)
+                                            : Image.network(
+                                                    profileimageAddress +
+                                                        group.profile,
+                                                    errorBuilder: (context,
+                                                        error, stackTrace) {
+                                                return Container(
+                                                  color: Colors.black,
+                                                  child: const Icon(
+                                                      Icons.no_backpack),
+                                                );
+                                              },
+                                                    height: 52,
+                                                    width: 52,
+                                                    fit: BoxFit.cover)
+                                                .cornerRadiusWithClipRRect(100),
+                                      ),
+                                      title: Text(group.name),
+                                      subtitle: Text(group.description == ''
+                                          ? group.isOfficial!
+                                              ? 'Official group'
+                                              : 'non Official'
+                                          : group.description),
                                     ),
-                                  ))
-                              : const SizedBox.shrink();
-                        },
-                      ),
-              );
-            },
-          ),
+                                    const Divider(
+                                      thickness: 1,
+                                    )
+                                  ],
+                                ),
+                              ))
+                          : const SizedBox.shrink();
+                    },
+                  ),
+          )
         ]),
       ),
     );

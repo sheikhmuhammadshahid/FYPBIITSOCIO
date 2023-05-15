@@ -26,7 +26,6 @@ class _SVPostComponentState extends State<SVPostComponent> {
     getPosts();
   }
 
-  ScrollController? controller;
   late PostController postController;
   getPosts() async {
     try {
@@ -51,19 +50,73 @@ class _SVPostComponentState extends State<SVPostComponent> {
     bool isAdmin = settingController.selectedWall == "3";
     // var postController = Provider.of<PostController>(context, listen: false);
     return SafeArea(
-      child: Consumer<PostController>(
-        builder: (context, postController, child) {
-          if (postController.isLoading) {
-            return Center(child: getPostsShimmer(context));
-          } else {
-            return postController.posts.isNotEmpty
-                ? LazyLoadScrollView(
-                    onEndOfPage: () {
-                      postController.fromDiary
-                          ? {}
-                          : postController.getPosts(settingController);
-                    },
-                    child: RefreshIndicator(
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 40),
+        child: Consumer<PostController>(
+          builder: (context, postController, child) {
+            if (postController.isLoading) {
+              return Center(child: getPostsShimmer(context));
+            } else {
+              return postController.posts.isNotEmpty
+                  ? LazyLoadScrollView(
+                      onEndOfPage: () {
+                        postController.fromDiary
+                            ? {}
+                            : postController.getPosts(settingController);
+                      },
+                      child: RefreshIndicator(
+                        color: context.iconColor,
+                        onRefresh: () async {
+                          postController.fromDiary
+                              ? {}
+                              : {
+                                  postController.pageNumber = 0,
+                                  postController.getPosts(settingController)
+                                };
+                        },
+                        child: ListView.builder(
+                          controller: settingController.scrollController,
+                          itemCount: postController.fromDiary
+                              ? postController.pinedPosts.length + 1
+                              : isAdmin
+                                  ? postController.posts.length + 1
+                                  : postController.posts.length,
+                          itemBuilder: (context, index) {
+                            if ((index == 0 && isAdmin) ||
+                                (postController.fromDiary) && index == 0) {
+                              return settingController.selectedWall ==
+                                      loggedInUser!.userType
+                                  ? const TimeTableScreen()
+                                  : const SizedBox.shrink();
+                            }
+                            return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(context, MaterialPageRoute(
+                                    builder: (context) {
+                                      return TikTokView(
+                                          index: postController.fromDiary
+                                              ? index - 1
+                                              : isAdmin
+                                                  ? index - 1
+                                                  : index);
+                                    },
+                                  ));
+                                },
+                                child: getItem(
+                                    postController.fromDiary
+                                        ? postController.pinedPosts[index - 1]
+                                        : postController
+                                            .posts[isAdmin ? index - 1 : index],
+                                    postController,
+                                    index - 1,
+                                    context));
+                          },
+                          shrinkWrap: true,
+                          physics: const BouncingScrollPhysics(),
+                        ),
+                      ),
+                    )
+                  : RefreshIndicator(
                       color: context.iconColor,
                       onRefresh: () async {
                         postController.fromDiary
@@ -73,64 +126,13 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                 postController.getPosts(settingController)
                               };
                       },
-                      child: ListView.builder(
-                        controller: controller,
-                        itemCount: postController.fromDiary
-                            ? postController.pinedPosts.length + 1
-                            : isAdmin
-                                ? postController.posts.length + 1
-                                : postController.posts.length,
-                        itemBuilder: (context, index) {
-                          if ((index == 0 && isAdmin) ||
-                              (postController.fromDiary) && index == 0) {
-                            return settingController.selectedWall ==
-                                    loggedInUser!.userType
-                                ? const TimeTableScreen()
-                                : const SizedBox.shrink();
-                          }
-                          return GestureDetector(
-                              onTap: () {
-                                Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) {
-                                    return TikTokView(
-                                        index: postController.fromDiary
-                                            ? index - 1
-                                            : isAdmin
-                                                ? index - 1
-                                                : index);
-                                  },
-                                ));
-                              },
-                              child: getItem(
-                                  postController.fromDiary
-                                      ? postController.pinedPosts[index - 1]
-                                      : postController
-                                          .posts[isAdmin ? index - 1 : index],
-                                  postController,
-                                  index - 1,
-                                  context));
-                        },
-                        shrinkWrap: true,
-                        physics: const BouncingScrollPhysics(),
+                      child: const Center(
+                        child: Text('No posts found!'),
                       ),
-                    ),
-                  )
-                : RefreshIndicator(
-                    color: context.iconColor,
-                    onRefresh: () async {
-                      postController.fromDiary
-                          ? {}
-                          : {
-                              postController.pageNumber = 0,
-                              postController.getPosts(settingController)
-                            };
-                    },
-                    child: const Center(
-                      child: Text('No posts found!'),
-                    ),
-                  );
-          }
-        },
+                    );
+            }
+          },
+        ),
       ),
     );
   }

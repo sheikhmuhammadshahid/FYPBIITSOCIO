@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:biit_social/Controllers/PostController.dart';
 import 'package:biit_social/utils/SVCommon.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../Controllers/SettingController.dart';
@@ -67,53 +66,49 @@ class _SvBottomNavigationState extends State<SvBottomNavigation> {
     } catch (e) {}
     // settingController.getWidget(context);
 
-    return Container(
-      height: 40,
-      decoration: const BoxDecoration(
-        color: Colors.transparent,
-      ),
-      child: ReorderableListView(
-          proxyDecorator: (child, index, animation) {
-            return AnimatedBuilder(
-              animation: animation,
-              builder: (BuildContext context, Widget? child) {
-                final double animValue =
-                    Curves.easeInOut.transform(animation.value);
-                final double elevation = lerpDouble(0, 6, animValue)!;
-                return Material(
-                  elevation: elevation,
-                  color: Colors.transparent,
-                  shadowColor: Colors.black.withOpacity(0.5),
-                  child: child,
-                );
-              },
-              child: child,
-            );
-          },
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          onReorder: (oldIndex, newIndex) {
-            if (oldIndex < newIndex) newIndex--;
-            settingController.changeNavBar(oldIndex, newIndex);
-          },
-          children: [
-            for (int i = 0; i < settingController.items.length; i++)
-              GestureDetector(
-                  key: ValueKey(i),
-                  onTap: () {
-                    settingController.changeIndex(
-                        i,
-                        settingController.items[i].title,
-                        postController,
-                        settingController);
-                  },
-                  child: Padding(
-                      padding: const EdgeInsets.only(right: 7),
-                      child: GestureDetector(
-                        onLongPress: () => EasyLoading.showToast(
-                            settingController.items[i].title,
-                            dismissOnTap: true,
-                            toastPosition: EasyLoadingToastPosition.bottom),
+    return FittedBox(
+      child: Container(
+        height: context.height() * 0.06,
+        decoration: const BoxDecoration(
+          color: Colors.transparent,
+        ),
+        child: ReorderableListView(
+            proxyDecorator: (child, index, animation) {
+              return AnimatedBuilder(
+                animation: animation,
+                builder: (BuildContext context, Widget? child) {
+                  final double animValue =
+                      Curves.easeInOut.transform(animation.value);
+                  final double elevation = lerpDouble(0, 6, animValue)!;
+                  return Material(
+                    elevation: elevation,
+                    color: Colors.transparent,
+                    shadowColor: Colors.black.withOpacity(0.5),
+                    child: child,
+                  );
+                },
+                child: child,
+              );
+            },
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            onReorder: (oldIndex, newIndex) {
+              if (oldIndex < newIndex) newIndex--;
+              settingController.changeNavBar(oldIndex, newIndex);
+            },
+            children: [
+              for (int i = 0; i < settingController.items.length; i++)
+                GestureDetector(
+                    key: ValueKey(i),
+                    onTap: () {
+                      settingController.changeIndex(
+                          i,
+                          settingController.items[i].title,
+                          postController,
+                          settingController);
+                    },
+                    child: Padding(
+                        padding: const EdgeInsets.only(right: 7),
                         child: Chip(
                             visualDensity: VisualDensity.standard,
                             backgroundColor: context
@@ -122,9 +117,9 @@ class _SvBottomNavigationState extends State<SvBottomNavigation> {
                                     settingController.items[i].title
                                 ? context.primaryColor.withOpacity(0.9)
                                 : context.iconColor.withOpacity(0.5),
-                            label: settingController.getWidget(context, i)),
-                      )))
-          ]),
+                            label: settingController.getWidget(context, i))))
+            ]),
+      ),
     );
   }
 }

@@ -71,9 +71,9 @@ void main() async {
             channelGroupName: 'Group 1')
       ],
       debug: true);
-  await Firebase.initializeApp();
+  //await Firebase.initializeApp();
   print('initialized');
-  await setBackground();
+  //await setBackground();
   print('set');
   appStore.toggleDarkMode(value: false);
 
@@ -235,7 +235,7 @@ class _MyAppState extends State<MyApp> {
         }
       },
     );
-    init();
+    //init();
   }
 
   @override

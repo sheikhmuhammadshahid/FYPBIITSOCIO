@@ -33,8 +33,8 @@ class PostController with ChangeNotifier {
     try {
       isTimeTableLoading = true;
       setState();
-      var response = await Dio()
-          .get('${ip}post/getTimeTable?section=${loggedInUser!.section}');
+      var response = await Dio().get(
+          '${ip}post/getTimeTable?section=${loggedInUser!.userType == "1" ? loggedInUser!.section : loggedInUser!.CNIC}&userType=${loggedInUser!.userType}');
       if (response.statusCode == 200) {
         timeTable.clear();
 
@@ -197,7 +197,7 @@ class PostController with ChangeNotifier {
       pageNumber++;
 
       String url =
-          "${ip}post/getPosts?cnic='3230440894009'&&pageNumber=$pageNumber&&fromWall=${context.selectedWall}";
+          "${ip}post/getPosts?cnic=${loggedInUser!.CNIC}&&pageNumber=$pageNumber&&fromWall=${context.selectedWall}";
       //var v = jsonEncode(post.toMap());
 
       print(url);
