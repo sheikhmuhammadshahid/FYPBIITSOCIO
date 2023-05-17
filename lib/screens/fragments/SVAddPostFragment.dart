@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:biit_social/Controllers/DropDowncontroler.dart';
 import 'package:biit_social/Controllers/PostController.dart';
+import 'package:biit_social/Controllers/SettingController.dart';
 import 'package:biit_social/models/Post/PostModel.dart';
 import 'package:biit_social/models/Stories/Stories.dart';
 import 'package:biit_social/screens/FileUpload/UploadFile.dart';
@@ -63,11 +65,15 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
   bool selected = true;
   TextEditingController descriptionController = TextEditingController();
   late PostController postController;
+  late SettingController settingController;
   bool clicked = false;
+  late DropDownController dropDownController;
   @override
   Widget build(BuildContext context) {
     friendStoriesController = context.read<FriendsStoriesController>();
     postController = context.read<PostController>();
+    dropDownController = context.read<DropDownController>();
+    settingController = context.read<SettingController>();
     return Scaffold(
       backgroundColor: context.cardColor,
       appBar: AppBar(
@@ -102,35 +108,59 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
             text: 'Post',
             textStyle: secondaryTextStyle(color: Colors.white, size: 10),
             onTap: () async {
-              !widget.isStatus
-                  ? PostController().addPost(
-                      Post(
-                          fromWall: loggedInUser!.userType!,
-                          description: descriptionController.text,
-                          user: loggedInUser!.toJson().toString(),
-                          postFor: selectedOptions,
-                          dateTime: DateTime.now().toString(),
+              try {
+                selectedOptions = '';
+                for (var element in dropDownController.selectedList) {
+                  selectedOptions = "${selectedOptions + element.value},";
+                }
+                print(selectedOptions);
+                Post? p;
+                if (!widget.isStatus) {
+                  p = Post(
+                      fromWall: settingController.selectedWall,
+                      description: descriptionController.text,
+                      user: loggedInUser!.toJson().toString(),
+                      postFor: selectedOptions,
+                      dateTime: DateTime.now().toString(),
+                      type: isImagePicked == 1
+                          ? "image"
+                          : isImagePicked == 2
+                              ? 'video'
+                              : "text",
+                      text: isImagePicked != 0 ? path.path : "",
+                      postedBy: loggedInUser!.CNIC);
+                }
+                !widget.isStatus
+                    ? await PostController().addPost(p!, context)
+                    : await PostController().addStory(
+                        Stories(
+                          id: 0,
+                          societyId: 3,
                           type: isImagePicked == 1
                               ? "image"
                               : isImagePicked == 2
                                   ? 'video'
                                   : "text",
-                          text: isImagePicked != 0 ? path.path : "",
-                          postedBy: loggedInUser!.CNIC),
-                      context)
-                  : PostController().addStory(
-                      Stories(
-                        id: 0,
-                        societyId: 3,
-                        type: isImagePicked == 1
-                            ? "image"
-                            : isImagePicked == 2
-                                ? 'video'
-                                : "text",
-                        url: "",
-                        text: descriptionController.text,
-                      ),
-                      context);
+                          url: "",
+                          text: descriptionController.text,
+                        ),
+                        context);
+                if (!widget.isStatus) {
+                  postController.posts.add(Post(
+                      postedBy: p!.postedBy,
+                      dateTime: p.dateTime,
+                      description: p.description,
+                      text: p.text,
+                      user: loggedInUser!.toJson(),
+                      userPosted: loggedInUser,
+                      postFor: p.postFor,
+                      type: p.type,
+                      fromWall: p.fromWall));
+                  postController.notifyListeners();
+                }
+                // ignore: use_build_context_synchronously
+                Navigator.pop(context);
+              } catch (e) {}
             },
             elevation: 0,
             color: SVAppColorPrimary,

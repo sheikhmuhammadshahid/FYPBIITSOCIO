@@ -50,17 +50,14 @@ class _SVHomeFragmentState extends State<SVHomeFragment> {
         elevation: 0,
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(
-              settingController.selectedWall == loggedInUser!.userType &&
-                      context.watch<SettingController>().isAppBarVisible
+              context.watch<SettingController>().isAppBarVisible
                   ? context.height() * 0.06
                   : context.height() * 0.01),
           child: Consumer<SettingController>(
             builder: (context, value, child) {
               return Column(
                 children: [
-                  if (settingController.selectedWall ==
-                          loggedInUser!.userType &&
-                      settingController.isAppBarVisible) ...{
+                  if (settingController.isAppBarVisible) ...{
                     16.height,
                     SizedBox(
                       height: 50,
@@ -301,10 +298,7 @@ class _SVHomeFragmentState extends State<SVHomeFragment> {
                 SizedBox(
                     height: settingController.selectedWall == "6"
                         ? MediaQuery.of(context).size.height * 0.77
-                        : settingController.selectedWall ==
-                                loggedInUser!.userType
-                            ? MediaQuery.of(context).size.height * 0.9
-                            : MediaQuery.of(context).size.height * 0.98,
+                        : MediaQuery.of(context).size.height * 0.91,
                     child: const SVPostComponent()),
                 16.height,
               ],

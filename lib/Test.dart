@@ -81,6 +81,7 @@ class _ScrollHideNavigationBarState extends State<ScrollHideNavigationBar> {
 
   int _currentIndex = 0;
   late PostController postController;
+
   @override
   Widget build(BuildContext context) {
     postController = context.read<PostController>();
@@ -212,26 +213,35 @@ class _ScrollHideNavigationBarState extends State<ScrollHideNavigationBar> {
   dothis() {
     if (_currentIndex == 0) {
       settingController.selectedWall = '3';
+      notificationCountController.biitCount = 0;
     } else if (_currentIndex == 3) {
       settingController.selectedWall = '6';
+      notificationCountController.societiesCount = 0;
     } else if (_currentIndex == 4) {
       settingController.selectedWall = '5';
+      notificationCountController.classPostsCount = 0;
     } else if (_currentIndex == 1) {
       if (loggedInUser!.userType == '4') {
         settingController.selectedWall = '2';
+        notificationCountController.teacherCount = 0;
       } else {
         settingController.selectedWall = loggedInUser!.userType!;
+        notificationCountController.personalCount = 0;
       }
     } else if (_currentIndex == 2) {
       if (loggedInUser!.userType == '4') {
         settingController.selectedWall = '1';
+        notificationCountController.studentCount = 0;
       } else if (loggedInUser!.userType == '1') {
         settingController.selectedWall = '2';
+        notificationCountController.teacherCount = 0;
       } else if (loggedInUser!.userType == '2' ||
           loggedInUser!.userType == '3') {
+        notificationCountController.studentCount = 0;
         settingController.selectedWall = '1';
       }
     }
+    notificationCountController.notifyListeners();
     postController.pageNumber = 0;
     settingController.setState();
     postController.getPosts(settingController);
