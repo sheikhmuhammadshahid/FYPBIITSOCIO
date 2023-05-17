@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:biit_social/Controllers/PostController.dart';
 import 'package:biit_social/Controllers/SettingController.dart';
 import 'package:biit_social/utils/SVCommon.dart';
@@ -6,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
+
+import 'Controllers/NotificatinsCountController.dart';
 
 class ScrollHideNavigationBar extends StatefulWidget {
   const ScrollHideNavigationBar({super.key});
@@ -24,10 +28,26 @@ class _ScrollHideNavigationBarState extends State<ScrollHideNavigationBar> {
     super.initState();
     settingController = context.read<SettingController>();
     settingController.scrollController = ScrollController();
+    notificationCountController = context.read<NotificationCountController>();
     settingController.scrollController.addListener(_scrollListener);
+    setTimerForNotifications();
     setState(() {});
   }
 
+  setTimerForNotifications() {
+    if (!notificationCountController.timerRunning) {
+      notificationCountController.getData(settingController);
+      print(DateTime.now().toString());
+      Timer.periodic(const Duration(minutes: 2), (timer) {
+        try {
+          notificationCountController.getData(settingController);
+          print(DateTime.now().toString());
+        } catch (e) {}
+      });
+    }
+  }
+
+  late NotificationCountController notificationCountController;
   @override
   void dispose() {
     settingController.scrollController.removeListener(_scrollListener);
@@ -79,21 +99,40 @@ class _ScrollHideNavigationBarState extends State<ScrollHideNavigationBar> {
               items: [
                 if (loggedInUser!.userType != '3')
                   CustomNavigationBarItem(
-                    //   selectedTitle: const Text('BIIT'),
-                    icon: const Icon(Icons.admin_panel_settings),
+                    badgeCount:
+                        context.watch<NotificationCountController>().biitCount,
+                    showBadge: context
+                            .watch<NotificationCountController>()
+                            .biitCount !=
+                        0,
+                    selectedTitle: const Text('BIIT'),
+                    icon: const ImageIcon(AssetImage('images/BIIT.png')),
                     //  title: const Text("BIIT"),
                   ),
                 if (loggedInUser!.userType != '4')
                   CustomNavigationBarItem(
-                    // selectedTitle: const Text('personal'),
+                    badgeCount: context
+                        .watch<NotificationCountController>()
+                        .personalCount,
+                    showBadge: context
+                            .watch<NotificationCountController>()
+                            .personalCount !=
+                        0,
+                    selectedTitle: const Text('personal'),
                     icon: const Icon(Icons.person),
                     //  title: const Text("Student"),
                   ),
                 if (loggedInUser!.userType != '2')
                   CustomNavigationBarItem(
-                    badgeCount: 1,
-                    //selectedTitle: const Text('Teacher'),
-                    showBadge: true,
+                    badgeCount: context
+                        .watch<NotificationCountController>()
+                        .teacherCount,
+                    showBadge: context
+                            .watch<NotificationCountController>()
+                            .teacherCount !=
+                        0,
+                    selectedTitle: const Text('Teacher'),
+                    //showBadge: true,
                     icon: const ImageIcon(
                       AssetImage(
                         'images/teacher.png',
@@ -104,7 +143,14 @@ class _ScrollHideNavigationBarState extends State<ScrollHideNavigationBar> {
                   ),
                 if (loggedInUser!.userType != '1')
                   CustomNavigationBarItem(
-                    //selectedTitle: const Text('student'),
+                    showBadge: context
+                            .watch<NotificationCountController>()
+                            .studentCount !=
+                        0,
+                    badgeCount: context
+                        .watch<NotificationCountController>()
+                        .studentCount,
+                    selectedTitle: const Text('student'),
                     icon: const ImageIcon(
                       AssetImage(
                         'images/studentLogo.png',
@@ -114,7 +160,14 @@ class _ScrollHideNavigationBarState extends State<ScrollHideNavigationBar> {
                     // title: const Text("Societies"),
                   ),
                 CustomNavigationBarItem(
-                  // selectedTitle: const Text('societies'),
+                  showBadge: context
+                          .watch<NotificationCountController>()
+                          .societiesCount !=
+                      0,
+                  badgeCount: context
+                      .watch<NotificationCountController>()
+                      .societiesCount,
+                  selectedTitle: const Text('societies'),
                   icon: const ImageIcon(
                     AssetImage(
                       'images/society.png',
@@ -124,7 +177,14 @@ class _ScrollHideNavigationBarState extends State<ScrollHideNavigationBar> {
                   // title: const Text("Societies"),
                 ),
                 CustomNavigationBarItem(
-                  //  selectedTitle: const Text('Class'),
+                  badgeCount: context
+                      .watch<NotificationCountController>()
+                      .classPostsCount,
+                  showBadge: context
+                          .watch<NotificationCountController>()
+                          .classPostsCount !=
+                      0,
+                  selectedTitle: const Text('Class'),
                   icon: const ImageIcon(
                     AssetImage(
                       'images/class.png',

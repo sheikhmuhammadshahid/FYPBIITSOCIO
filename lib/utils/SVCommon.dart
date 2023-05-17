@@ -17,7 +17,7 @@ import 'package:shimmer/shimmer.dart';
 FriendsStoriesController? friendsStoriesController;
 
 User? loggedInUser;
-String ippp = '192.168.220.231';
+String ippp = '192.168.9.231';
 String ip = "http://$ippp/BiitSocioApis/api/";
 String imageAddress = "http://$ippp/BiitSocioApis/postImages/";
 String profileimageAddress = "http://$ippp/BiitSocioApis/Images/";

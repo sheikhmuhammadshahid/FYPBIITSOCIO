@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:biit_social/Controllers/NotificatinsCountController.dart';
 import 'package:biit_social/Controllers/SettingController.dart';
 import 'package:biit_social/screens/fragments/SVNotificationFragment.dart';
 import 'package:biit_social/screens/fragments/SVProfileFragment.dart';
@@ -183,7 +184,14 @@ class _SVHomeFragmentState extends State<SVHomeFragment> {
               backgroundColor: context.scaffoldBackgroundColor,
               radius: 20,
               child: Badge(
-                label: const Text("1"),
+                isLabelVisible: context
+                        .watch<NotificationCountController>()
+                        .notificationsCount !=
+                    0,
+                label: Text(context
+                    .watch<NotificationCountController>()
+                    .notificationsCount
+                    .toString()),
                 child: Icon(
                   Icons.notifications,
                   color: context.iconColor,
