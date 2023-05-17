@@ -1,14 +1,16 @@
 import 'dart:io';
 
 import 'package:biit_social/Client.dart';
+import 'package:biit_social/Controllers/DropDowncontroler.dart';
 import 'package:biit_social/Controllers/FriendsStoriesController.dart';
 import 'package:biit_social/Controllers/PostController.dart';
 import 'package:biit_social/Controllers/SettingController.dart';
+import 'package:biit_social/screens/DropDown/CustomDropDown.dart';
+import 'package:biit_social/screens/SVSplashScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:biit_social/screens/SVSplashScreen.dart';
 import 'package:biit_social/store/AppStore.dart';
 import 'package:biit_social/utils/AppTheme.dart';
 import 'package:provider/provider.dart';
@@ -85,6 +87,9 @@ void main() async {
     ),
     ChangeNotifierProvider(
       create: (_) => FriendsStoriesController(),
+    ),
+    ChangeNotifierProvider(
+      create: (_) => DropDownController(),
     ),
     ChangeNotifierProvider(
       create: (_) => SettingController(),
@@ -251,16 +256,15 @@ class _MyAppState extends State<MyApp> {
       splitScreenMode: true,
       builder: (context, child) => Observer(
         builder: (_) => MaterialApp(
-          builder: EasyLoading.init(),
-          scrollBehavior: SBehavior(),
-          navigatorKey: navigatorKey,
-          title: 'BIIT SOCIO',
-          debugShowCheckedModeBanner: false,
-          theme: AppTheme.lightTheme,
-          darkTheme: AppTheme.darkTheme,
-          themeMode: appStore.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-          home: const SVSplashScreen(),
-        ),
+            builder: EasyLoading.init(),
+            scrollBehavior: SBehavior(),
+            navigatorKey: navigatorKey,
+            title: 'BIIT SOCIO',
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: appStore.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+            home: const SVSplashScreen()),
       ),
     );
   }

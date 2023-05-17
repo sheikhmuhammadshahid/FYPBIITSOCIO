@@ -16,6 +16,8 @@ import '../../utils/FilesPicker.dart';
 import '../../utils/SVConstants.dart';
 import 'package:provider/provider.dart';
 
+import '../DropDown/CustomDropDown.dart';
+
 class SVAddPostFragment extends StatefulWidget {
   bool isStatus = false;
   SVAddPostFragment({Key? key, required this.isStatus}) : super(key: key);
@@ -34,7 +36,7 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
     afterBuildCreated(() {
       setStatusBarColor(context.cardColor);
     });
-    context.read<FriendsStoriesController>().getSectionAndDesciplines();
+    //context.read<FriendsStoriesController>().getSectionAndDesciplines();
   }
 
   @override
@@ -58,7 +60,7 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
   List<Items> selectedSections = [];
   String? selectedDescipline;
   late FriendsStoriesController friendStoriesController;
-  bool selected = false;
+  bool selected = true;
   TextEditingController descriptionController = TextEditingController();
   late PostController postController;
   bool clicked = false;
@@ -179,52 +181,58 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
                           const SizedBox(
                             height: 10,
                           ),
-                          !context
-                                  .watch<FriendsStoriesController>()
-                                  .isSectionsLoading
-                              ? DropdownButtonFormField(
-                                  value: selectedDescipline,
-                                  hint: const Text("Select Descipline"),
-                                  items: friendStoriesController.desciplines,
-                                  onChanged: (value) {
-                                    selectedDescipline = value!;
-                                    selected = true;
-                                    selectedSections = friendStoriesController
-                                        .getSections(selectedDescipline!);
-                                    print(selectedSections);
-                                    setState(() {});
-                                  },
-                                )
-                              : const SizedBox(),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          if (selected) ...{
-                            //  Selector(items: selectedSections, lable: "Section")
-                            TextFormField(
-                              decoration: const InputDecoration(
-                                  hintText: 'Select Sections'),
-                              readOnly: true,
-                              onTap: () async {
-                                await getSelector(context, 'Select Sections',
-                                    selectedSections);
-                                setState(() {});
-                              },
-                            )
-                          },
-                          if (selected) ...{
-                            const SizedBox(
-                              height: 10,
+                          if (!selected)
+                            CustomExample0(
+                              scrollController: ScrollController(),
                             ),
-                            //  Selector(items: selectedSections, lable: "Section")
-                            Wrap(
-                              children: [
-                                for (int i = 0; i < selecteds.length; i++) ...{
-                                  Chip(label: Text(selecteds[i]))
-                                }
-                              ],
-                            )
-                          }
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Container(
+                              width: context.width() * 0.4,
+                              decoration: boxDecorationDefault(),
+                              child: Center(
+                                child: FittedBox(
+                                  child: Row(
+                                    children: [
+                                      svRobotoText(text: 'public'),
+                                      Switch(
+                                        value: selected,
+                                        onChanged: (value) => setState(() {
+                                          selected = !selected;
+                                        }),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              )),
+
+                          // if (selected) ...{
+                          //   //  Selector(items: selectedSections, lable: "Section")
+                          //   TextFormField(
+                          //     decoration: const InputDecoration(
+                          //         hintText: 'Select Sections'),
+                          //     readOnly: true,
+                          //     onTap: () async {
+                          //       await getSelector(context, 'Select Sections',
+                          //           selectedSections);
+                          //       setState(() {});
+                          //     },
+                          //   )
+                          // },
+                          // if (selected) ...{
+                          //   const SizedBox(
+                          //     height: 10,
+                          //   ),
+                          //   //  Selector(items: selectedSections, lable: "Section")
+                          //   Wrap(
+                          //     children: [
+                          //       for (int i = 0; i < selecteds.length; i++) ...{
+                          //         Chip(label: Text(selecteds[i]))
+                          //       }
+                          //     ],
+                          //   )
+                          // }
                         ],
                       ),
                     ),

@@ -1000,6 +1000,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.0"
+  select2dot1:
+    dependency: "direct main"
+    description:
+      name: select2dot1
+      sha256: "94ecd3fd4e8c199b9592d29de1030a76a92221e2daf4a825fda3873bccffd573"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.7"
   shared_preferences:
     dependency: transitive
     description:
