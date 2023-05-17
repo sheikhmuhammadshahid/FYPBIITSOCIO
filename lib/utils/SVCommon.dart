@@ -193,8 +193,8 @@ getNotificationShimmer(context) {
 }
 
 class Items {
-  final int? id;
-  final String? name;
+  int? id;
+  String? name;
 
   Items({
     this.id,

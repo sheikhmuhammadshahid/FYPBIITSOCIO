@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:biit_social/Controllers/NotificatinsCountController.dart';
 import 'package:biit_social/Controllers/SettingController.dart';
+import 'package:biit_social/TimeTable/TimeTableScreen.dart';
 import 'package:biit_social/screens/fragments/SVNotificationFragment.dart';
 import 'package:biit_social/screens/fragments/SVProfileFragment.dart';
 import 'package:flutter/material.dart';
@@ -261,6 +262,42 @@ class _SVHomeFragmentState extends State<SVHomeFragment> {
                     );
                   },
                 ),
+                if (settingController.selectedWall ==
+                    loggedInUser!.userType) ...{
+                  ExpansionTile(
+                      iconColor: context.iconColor,
+                      title: Text(
+                        'TimeTable',
+                        style: TextStyle(color: context.iconColor),
+                      ),
+                      children: [
+                        SizedBox(
+                          height: context.height() * 0.4,
+                          child: const TimeTableScreen(),
+                        ),
+                      ]),
+                } else ...{
+                  if (settingController.selectedWall == '3') ...{
+                    Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                              onPressed: () {}, child: const Text('DateSheet')),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          ElevatedButton(
+                              onPressed: () {
+                                settingController.selectedWall = '7';
+                                settingController.notifyListeners();
+                              },
+                              child: const Text('Callender'))
+                        ],
+                      ),
+                    )
+                  }
+                },
                 SizedBox(
                     height: settingController.selectedWall == "6"
                         ? MediaQuery.of(context).size.height * 0.77
