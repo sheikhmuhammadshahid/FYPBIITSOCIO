@@ -8,8 +8,6 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:biit_social/utils/SVCommon.dart';
 import 'package:provider/provider.dart';
 
-import '../../../TimeTable/TimeTableScreen.dart';
-
 class SVPostComponent extends StatefulWidget {
   const SVPostComponent({super.key});
 
@@ -77,36 +75,21 @@ class _SVPostComponentState extends State<SVPostComponent> {
                         child: ListView.builder(
                           controller: settingController.scrollController,
                           itemCount: postController.fromDiary
-                              ? postController.pinedPosts.length + 1
-                              : isAdmin
-                                  ? postController.posts.length + 1
-                                  : postController.posts.length,
+                              ? postController.pinedPosts.length
+                              : postController.posts.length,
                           itemBuilder: (context, index) {
-                            if ((index == 0 && isAdmin) ||
-                                (postController.fromDiary) && index == 0) {
-                              return settingController.selectedWall ==
-                                      loggedInUser!.userType
-                                  ? const TimeTableScreen()
-                                  : const SizedBox.shrink();
-                            }
                             return GestureDetector(
                                 onTap: () {
                                   Navigator.push(context, MaterialPageRoute(
                                     builder: (context) {
-                                      return TikTokView(
-                                          index: postController.fromDiary
-                                              ? index - 1
-                                              : isAdmin
-                                                  ? index - 1
-                                                  : index);
+                                      return TikTokView(index: index);
                                     },
                                   ));
                                 },
                                 child: getItem(
                                     postController.fromDiary
-                                        ? postController.pinedPosts[index - 1]
-                                        : postController
-                                            .posts[isAdmin ? index - 1 : index],
+                                        ? postController.pinedPosts[index]
+                                        : postController.posts[index],
                                     postController,
                                     index - 1,
                                     context));

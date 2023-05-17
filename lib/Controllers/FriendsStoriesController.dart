@@ -193,9 +193,13 @@ class FriendsStoriesController extends ChangeNotifier {
     } catch (e) {}
   }
 
+  bool isSectionsLoading = true;
   getSectionAndDesciplines() async {
     try {
-      var response = await Dio().get('${ip}user/getDescipline');
+      var response =
+          await Dio().get('${ip}user/getDescipline?cnic=${loggedInUser!.CNIC}');
+      isSectionsLoading = true;
+      setState();
       if (response.statusCode == 200) {
         section.clear();
         desciplines.clear();
@@ -203,6 +207,8 @@ class FriendsStoriesController extends ChangeNotifier {
         desciplines.add(
           const DropdownMenuItem(value: 'All', child: Text("All")),
         );
+        print('sections');
+        print(response.data['sections']);
         section.add(Items(name: 'All', id: 0));
         for (var element in response.data['sections']) {
           if (element != '' && element != null) {
@@ -211,6 +217,8 @@ class FriendsStoriesController extends ChangeNotifier {
           i++;
         }
         i = 1;
+        print('diinm');
+        print(response.data['desciplines']);
         for (var element in response.data['desciplines']) {
           desciplines.add(
             DropdownMenuItem(value: element, child: Text(element)),
@@ -218,7 +226,9 @@ class FriendsStoriesController extends ChangeNotifier {
         }
       }
     } catch (e) {}
-    notifyListeners();
+    isSectionsLoading = false;
+
+    setState();
   }
 
   getSections(String selectedDescipline) {
@@ -228,32 +238,58 @@ class FriendsStoriesController extends ChangeNotifier {
       var v = selectedDescipline != "All"
           ? selectedDescipline != "Parents" &&
                   selectedDescipline != "Students" &&
-                  selectedDescipline != "Teachers"
+                  selectedDescipline != "Teachers" &&
+                  selectedDescipline != "Courses" &&
+                  selectedDescipline != 'Friends'
               ? section
                   .where((element) => element.name!
                       .toLowerCase()
                       .startsWith(selectedDescipline.toLowerCase()))
                   .toList()
               : selectedDescipline == "Teachers"
-                  ? section.where((element) =>
-                      element.name!.split('!').length == 1
+                  ? section
+                      .where((element) => element.name!.split('!').length == 1
                           ? false
                           : element.name!.split('!')[1].trim() == "2")
+                      .toList()
                   : selectedDescipline == "Students"
-                      ? section.where((element) =>
-                          element.name!.split('!').length == 1
+                      ? section
+                          .where((element) => element.name!.split('!').length == 1
                               ? false
                               : element.name!.split('!')[1].trim() == "1")
-                      : selectedDescipline == "Admin"
-                          ? section.where((element) =>
-                              element.name!.split('!').length == 1
+                          .toList()
+                      : selectedDescipline == "Friends"
+                          ? section
+                              .where((element) => element.name!.split('!').length == 1
                                   ? false
-                                  : element.name!.split('!')[1].trim() == "3")
-                          : section.where((element) =>
-                              element.name!.split('!').length == 1
-                                  ? false
-                                  : element.name!.split('!')[1].trim() == "4")
+                                  : element.name!.split('!')[1].trim() == "f")
+                              .toList()
+                          : selectedDescipline == "Courses"
+                              ? section
+                                  .where((element) =>
+                                      element.name!.split('!').length == 1
+                                          ? false
+                                          : element.name!.split('!')[1].trim() ==
+                                              "co")
+                                  .toList()
+                              : selectedDescipline == "Admin"
+                                  ? section
+                                      .where((element) =>
+                                          element.name!.split('!').length == 1
+                                              ? false
+                                              : element.name!.split('!')[1].trim() ==
+                                                  "3")
+                                      .toList()
+                                  : section
+                                      .where((element) => element.name!.split('!').length == 1 ? false : element.name!.split('!')[1].trim() == "4")
+                                      .toList()
           : section;
+      for (int i = 0; i < v.length; i++) {
+        if (v[i].name!.split('!').length > 1) {
+          v[i].name = v[i].name!.split('!')[0];
+        }
+      }
+
       items.addAll(v);
     } catch (e) {
       print(e);

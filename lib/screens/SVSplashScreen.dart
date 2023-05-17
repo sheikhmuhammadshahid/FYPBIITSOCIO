@@ -1,4 +1,5 @@
 import 'package:biit_social/Controllers/AuthController.dart';
+import 'package:biit_social/utils/SVConstants.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
@@ -39,19 +40,23 @@ class _SVSplashScreenState extends State<SVSplashScreen> {
             width: context.width(),
             fit: BoxFit.fill,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset('images/socialv/svAppIcon.png',
-                  height: 50,
-                  width: 52,
-                  fit: BoxFit.cover,
-                  color: Colors.white),
-              8.width,
-              Text("BIIT SOCIO",
-                  style: primaryTextStyle(
-                      color: Colors.white, size: 40, weight: FontWeight.w500)),
-            ],
+          FittedBox(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset('images/socialv/svAppIcon.png',
+                    height: 50,
+                    width: 52,
+                    fit: BoxFit.cover,
+                    color: Colors.white),
+                8.width,
+                Text(svAppName,
+                    style: primaryTextStyle(
+                        color: Colors.white,
+                        size: 40,
+                        weight: FontWeight.w500)),
+              ],
+            ),
           ),
         ],
       ),

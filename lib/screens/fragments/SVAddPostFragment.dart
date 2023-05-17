@@ -179,10 +179,9 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
                           const SizedBox(
                             height: 10,
                           ),
-                          context
+                          !context
                                   .watch<FriendsStoriesController>()
-                                  .desciplines
-                                  .isNotEmpty
+                                  .isSectionsLoading
                               ? DropdownButtonFormField(
                                   value: selectedDescipline,
                                   hint: const Text("Select Descipline"),
