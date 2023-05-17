@@ -75,6 +75,7 @@ dependencies:
   flutter_screenutil: ^5.7.0
   scroll_bottom_navigation_bar: ^4.0.0
   custom_navigation_bar: ^0.8.2
+  select2dot1: ^2.0.7
  
  
 dev_dependencies:
