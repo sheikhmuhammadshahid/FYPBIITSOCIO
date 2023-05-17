@@ -21,6 +21,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 
+import 'Controllers/NotificatinsCountController.dart';
+
 AppStore appStore = AppStore();
 late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 AndroidNotificationChannel channel = const AndroidNotificationChannel(
@@ -92,6 +94,9 @@ void main() async {
     ),
     ChangeNotifierProvider(
       create: (_) => ServerClient(),
+    ),
+    ChangeNotifierProvider(
+      create: (_) => NotificationCountController(),
     )
   ], child: const MyApp()));
   configLoading();
