@@ -91,7 +91,7 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                         ? postController.pinedPosts[index]
                                         : postController.posts[index],
                                     postController,
-                                    index - 1,
+                                    index,
                                     context));
                           },
                           shrinkWrap: true,

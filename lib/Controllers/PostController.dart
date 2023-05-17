@@ -275,7 +275,7 @@ class PostController with ChangeNotifier {
   removeFromDiary(index) async {
     try {
       var response = await Dio().get(
-        "${ip}Post/unPinPosts?user_id=${loggedInUser!.CNIC}&&post_id=${posts[index].id}",
+        "${ip}Post/unPinPosts?user_id=${loggedInUser!.CNIC}&&post_id=${pinedPosts[index].id}",
       );
       if (response.statusCode == 200) {
         pinedPosts[index].isPinned = false;
@@ -284,6 +284,7 @@ class PostController with ChangeNotifier {
         if (res != -1) {
           posts[res].isPinned = false;
         }
+        print('done');
         setState();
         // var p = posts.removeAt(index);
         // posts.insert(0, p);

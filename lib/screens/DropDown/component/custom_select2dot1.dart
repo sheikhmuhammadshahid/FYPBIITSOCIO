@@ -1,5 +1,7 @@
-    import 'package:flutter/material.dart';
+import 'package:biit_social/Controllers/DropDowncontroler.dart';
+import 'package:flutter/material.dart';
 import 'package:select2dot1/select2dot1.dart';
+import 'package:provider/provider.dart';
 
 class CustomSelect2dot1 extends StatelessWidget {
   final String title;
@@ -20,18 +22,20 @@ class CustomSelect2dot1 extends StatelessWidget {
     required this.extraInfoInDropdown,
     required this.scrollController,
   });
-
   @override
   Widget build(BuildContext context) {
+    DropDownController dropDownController = context.read<DropDownController>();
     return Container(
       constraints: const BoxConstraints(
         maxWidth: 300,
       ),
       child: Select2dot1(
-        selectDataController: SelectDataController(
-          isMultiSelect: isMultiSelect,
-          data: data,
-        ),
+        onChanged: (value) {
+          dropDownController.selectedList = value;
+          dropDownController.notifyListeners();
+        },
+        selectDataController:
+            SelectDataController(data: data, isMultiSelect: isMultiSelect),
         pillboxTitleSettings: PillboxTitleSettings(
           title: title,
           titlePadding: EdgeInsets.zero,

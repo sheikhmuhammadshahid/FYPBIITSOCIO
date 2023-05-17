@@ -1,7 +1,10 @@
 import 'package:biit_social/Controllers/DropDowncontroler.dart';
+import 'package:biit_social/Controllers/SettingController.dart';
 import 'package:flutter/material.dart';
-import 'package:biit_social/screens/DropDown/component/custom_select2dot1';
 import 'package:provider/provider.dart';
+import 'package:select2dot1/select2dot1.dart';
+
+import 'component/custom_select2dot1.dart';
 
 class CustomExample0 extends StatefulWidget {
   final ScrollController scrollController;
@@ -18,13 +21,15 @@ class _CustomExample0State extends State<CustomExample0> {
     // TODO: implement initState
     super.initState();
     dropDownController ??= context.read<DropDownController>();
-    dropDownController!.getData();
+    dropDownController!.getData(context.read<SettingController>());
   }
 
   DropDownController? dropDownController;
+  late SelectDataController selectDataController;
   @override
   Widget build(BuildContext context) {
     dropDownController ??= context.read<DropDownController>();
+
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: CustomSelect2dot1(

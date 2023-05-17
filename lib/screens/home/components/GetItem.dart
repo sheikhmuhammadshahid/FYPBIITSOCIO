@@ -48,7 +48,7 @@ Widget getItem(
                             ));
                       })
                     : Image.network(
-                        '${profileimageAddress}3230440894009.jpg',
+                        profileimageAddress + post.userPosted!.profileImage,
                         // post
                         //     .userPosted!.profileImage
                         //     .validate(),
@@ -113,7 +113,8 @@ Widget getItem(
                       //             ),
                       //           ],
                       //         ))),
-                      if (post.postedBy == loggedInUser!.CNIC)
+                      if (post.postedBy == loggedInUser!.CNIC &&
+                          !postController.fromDiary)
                         PopupMenuItem(
                             child: TextButton(
                                 onPressed: () {
@@ -143,6 +144,7 @@ Widget getItem(
                                 post.isPinned!
                                     ? postController.removeFromDiary(index)
                                     : postController.addToDiary(index);
+
                                 Navigator.pop(context);
                               },
                               child: Row(

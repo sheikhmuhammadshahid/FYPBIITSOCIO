@@ -1,3 +1,4 @@
+import 'package:biit_social/Controllers/SettingController.dart';
 import 'package:biit_social/models/DropDownModel.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -7,11 +8,12 @@ import '../utils/SVCommon.dart';
 
 class DropDownController extends ChangeNotifier {
   List<SingleCategoryModel> items = [];
+  List<SingleItemCategoryModel> selectedList = [];
   bool isGetting = true;
-  getData() async {
+  getData(SettingController settingController) async {
     try {
-      var response =
-          await Dio().get('${ip}user/getDescipline?cnic=${loggedInUser!.CNIC}');
+      var response = await Dio().get(
+          '${ip}user/getDescipline?cnic=${loggedInUser!.CNIC}&fromWall=${settingController.selectedWall}');
       if (response.statusCode == 200) {
         items.clear();
         List<DropDownModel> data = [];
