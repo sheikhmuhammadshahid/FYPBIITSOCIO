@@ -93,10 +93,10 @@ class _ScrollHideNavigationBarState extends State<ScrollHideNavigationBar> {
               borderRadius: const Radius.circular(10),
               isFloating: true,
               //blurEffect: true,
-              selectedColor: context.iconColor,
-              strokeColor: context.iconColor,
-              unSelectedColor: const Color(0xffacacac),
-              backgroundColor: context.cardColor,
+              selectedColor: context.primaryColor.withOpacity(.8),
+              strokeColor: context.primaryColor.withOpacity(.5),
+              unSelectedColor: context.primaryColor.withOpacity(.4),
+              backgroundColor: context.scaffoldBackgroundColor,
               items: [
                 if (loggedInUser!.userType != '3')
                   CustomNavigationBarItem(
@@ -224,9 +224,12 @@ class _ScrollHideNavigationBarState extends State<ScrollHideNavigationBar> {
       if (loggedInUser!.userType == '4') {
         settingController.selectedWall = '2';
         notificationCountController.teacherCount = 0;
-      } else {
+      } else if (loggedInUser!.userType != '3') {
         settingController.selectedWall = loggedInUser!.userType!;
         notificationCountController.personalCount = 0;
+      } else if (loggedInUser!.userType == '3') {
+        settingController.selectedWall = '2';
+        notificationCountController.teacherCount = 0;
       }
     } else if (_currentIndex == 2) {
       if (loggedInUser!.userType == '4') {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nb_utils/nb_utils.dart' as util;
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:wechat_camera_picker/wechat_camera_picker.dart';
@@ -8,13 +9,13 @@ import '../screens/fragments/SVAddPostFragment.dart';
 int isImagePicked = 0;
 
 var path;
-pickFile(context, int fromCamera) async {
+pickFile(BuildContext context, int fromCamera) async {
   if (fromCamera == 0) {
     await AwesomeDialog(
       context: context,
-      dialogType: DialogType.info,
-      borderSide: const BorderSide(
-        color: Colors.green,
+      dialogType: DialogType.noHeader,
+      borderSide: BorderSide(
+        color: context.dividerColor,
         width: 2,
       ),
       btnCancelText: "Camera",

@@ -163,7 +163,7 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
               } catch (e) {}
             },
             elevation: 0,
-            color: SVAppColorPrimary,
+            color: context.primaryColor,
             width: 50,
             padding: const EdgeInsets.all(0),
           ).paddingAll(16),
@@ -220,7 +220,9 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
                           ),
                           Container(
                               width: context.width() * 0.4,
-                              decoration: boxDecorationDefault(),
+                              decoration: boxDecorationDefault(
+                                color: context.cardColor,
+                              ),
                               child: Center(
                                 child: FittedBox(
                                   child: Row(

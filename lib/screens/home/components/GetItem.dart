@@ -126,15 +126,15 @@ Widget getItem(
                                   children: [
                                     Icon(
                                       Icons.delete,
-                                      color: context.iconColor,
+                                      color:
+                                          context.primaryColor.withOpacity(.8),
                                     ),
                                     const SizedBox(
                                       width: 5,
                                     ),
                                     Text(
                                       'Delete',
-                                      style: boldTextStyle(
-                                          color: context.iconColor),
+                                      style: boldTextStyle(),
                                     ),
                                   ],
                                 ))),
@@ -150,12 +150,11 @@ Widget getItem(
                               child: Row(
                                 children: [
                                   Icon(
-                                      post.isPinned!
-                                          ? Icons.bookmark_remove
-                                          : Icons.bookmark_add,
-                                      color:
-                                          context.iconColor //svGetBodyColor(),
-                                      ),
+                                    post.isPinned!
+                                        ? Icons.bookmark_remove
+                                        : Icons.bookmark_add,
+                                    color: context.primaryColor.withOpacity(.8),
+                                  ),
                                   const SizedBox(
                                     width: 5,
                                   ),

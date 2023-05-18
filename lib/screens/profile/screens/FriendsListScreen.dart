@@ -131,7 +131,7 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                 return Padding(
                   padding: const EdgeInsets.only(left: 12.0, right: 12),
                   child: value.isStoriesLoading
-                      ? svGetUserShimmer()
+                      ? svGetUserShimmer(context)
                       : Column(
                           children: [
                             DropdownButtonFormField(

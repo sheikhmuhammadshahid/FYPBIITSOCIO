@@ -1,18 +1,13 @@
 import 'dart:io';
 
-import 'package:biit_social/Controllers/NotificatinsCountController.dart';
+import 'package:biit_social/Controllers/PostController.dart';
 import 'package:biit_social/Controllers/SettingController.dart';
 import 'package:biit_social/TimeTable/TimeTableScreen.dart';
-import 'package:biit_social/screens/fragments/SVNotificationFragment.dart';
-import 'package:biit_social/screens/fragments/SVProfileFragment.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:biit_social/screens/home/components/SVHomeDrawerComponent.dart';
 import 'package:biit_social/screens/home/components/SVPostComponent.dart';
 import 'package:biit_social/utils/SVCommon.dart';
 import '../home/components/SVStoryComponent.dart';
-import 'SVAddPostFragment.dart';
-import 'SVSearchFragment.dart';
 import 'package:provider/provider.dart';
 
 class SVHomeFragment extends StatefulWidget {
@@ -25,8 +20,6 @@ class SVHomeFragment extends StatefulWidget {
 }
 
 class _SVHomeFragmentState extends State<SVHomeFragment> {
-  var scaffoldKey = GlobalKey<ScaffoldState>();
-
   File? image;
 
   @override
@@ -43,204 +36,7 @@ class _SVHomeFragmentState extends State<SVHomeFragment> {
   Widget build(BuildContext context) {
     settingController = context.read<SettingController>();
     return Scaffold(
-      key: scaffoldKey,
       backgroundColor: svGetScaffoldColor(),
-      appBar: AppBar(
-        backgroundColor: context.scaffoldBackgroundColor,
-        elevation: 0,
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(
-              context.watch<SettingController>().isAppBarVisible
-                  ? context.height() * 0.06
-                  : context.height() * 0.01),
-          child: Consumer<SettingController>(
-            builder: (context, value, child) {
-              return Column(
-                children: [
-                  if (settingController.isAppBarVisible) ...{
-                    16.height,
-                    SizedBox(
-                      height: 50,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(context, MaterialPageRoute(
-                                builder: (context) {
-                                  return SVProfileFragment(
-                                    id: loggedInUser!.CNIC,
-                                    user: true,
-                                  );
-                                },
-                              ));
-                            },
-                            child: loggedInUser!.profileImage != ""
-                                ? CircleAvatar(
-                                    radius: 30,
-                                    backgroundImage: NetworkImage(
-                                        profileimageAddress +
-                                            loggedInUser!.profileImage))
-                                : const CircleAvatar(
-                                    radius: 30,
-                                    backgroundImage: AssetImage(
-                                        'images/socialv/faces/face_5.png'),
-                                  ),
-                          ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width / 2 + 50,
-                            height: 40,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  shape: StadiumBorder(
-                                      side:
-                                          BorderSide(color: context.iconColor)),
-                                  backgroundColor:
-                                      context.scaffoldBackgroundColor),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          SVAddPostFragment(isStatus: false),
-                                    ));
-                              },
-                              child: Text("What's on your mind?",
-                                  style: secondaryTextStyle(
-                                    size: 16,
-                                    color: context.iconColor,
-                                  )),
-                            ),
-                          ),
-                          IconButton(
-                            icon: Image.asset(
-                              'images/socialv/icons/ic_Camera.png',
-                              width: 44,
-                              height: 40,
-                              fit: BoxFit.fill,
-                              color: context.iconColor,
-                            ),
-                            onPressed: () async {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        SVAddPostFragment(isStatus: false),
-                                  ));
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  },
-                ],
-              );
-            },
-          ),
-        ),
-        leading: IconButton(
-          icon: Image.asset(
-            'images/socialv/icons/ic_More.png',
-            width: 18,
-            height: 18,
-            fit: BoxFit.cover,
-            color: context.iconColor,
-          ),
-          onPressed: () {
-            scaffoldKey.currentState?.openDrawer();
-          },
-        ),
-        title: Text(loggedInUser!.name!, style: boldTextStyle(size: 18)),
-        actions: [
-          GestureDetector(
-            onTap: () {
-              const SVSearchFragment().launch(context);
-            },
-            child: CircleAvatar(
-              backgroundColor: context.scaffoldBackgroundColor,
-
-              radius: 10,
-              // backgroundImage:
-              //     const AssetImage('images/socialv/icons/ic_Search.png'),
-              child: Image.asset(
-                'images/socialv/icons/ic_Search.png',
-                color: context.iconColor,
-              ),
-            ),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          //IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return const SVNotificationFragment();
-              }));
-            },
-            child: CircleAvatar(
-              backgroundColor: context.scaffoldBackgroundColor,
-              radius: 20,
-              child: Badge(
-                isLabelVisible: context
-                        .watch<NotificationCountController>()
-                        .notificationsCount !=
-                    0,
-                label: Text(context
-                    .watch<NotificationCountController>()
-                    .notificationsCount
-                    .toString()),
-                child: Icon(
-                  Icons.notifications,
-                  color: context.iconColor,
-                ),
-              ),
-
-              // backgroundImage: AssetImage('images/socialv/icons/ic_User.png'),
-            ),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          Consumer<SettingController>(
-            builder: (context, value, child) {
-              return (settingController.selectedWall != loggedInUser!.userType)
-                  ? GestureDetector(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) {
-                            return SVProfileFragment(
-                              id: loggedInUser!.CNIC,
-                              user: true,
-                            );
-                          },
-                        ));
-                      },
-                      child: loggedInUser!.profileImage != ""
-                          ? CircleAvatar(
-                              radius: 15,
-                              backgroundImage: NetworkImage(
-                                  profileimageAddress +
-                                      loggedInUser!.profileImage))
-                          : const CircleAvatar(
-                              radius: 15,
-                              backgroundImage:
-                                  AssetImage('images/socialv/faces/face_5.png'),
-                            ),
-                    )
-                  : const SizedBox.shrink();
-            },
-          ),
-
-          const SizedBox(
-            width: 10,
-          )
-        ],
-      ),
-      drawer: Drawer(
-        backgroundColor: context.cardColor,
-        child: const SVHomeDrawerComponent(),
-      ),
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -259,8 +55,8 @@ class _SVHomeFragmentState extends State<SVHomeFragment> {
                     );
                   },
                 ),
-                if (settingController.selectedWall ==
-                    loggedInUser!.userType) ...{
+                if (settingController.selectedWall == loggedInUser!.userType &&
+                    loggedInUser!.userType != '3') ...{
                   ExpansionTile(
                       iconColor: context.iconColor,
                       title: Text(
@@ -269,22 +65,35 @@ class _SVHomeFragmentState extends State<SVHomeFragment> {
                       ),
                       children: [
                         SizedBox(
-                          height: context.height() * 0.4,
+                          height: context
+                                  .watch<PostController>()
+                                  .timeTable
+                                  .isNotEmpty
+                              ? context.height() * 0.4
+                              : context.height() * 0.15,
                           child: const TimeTableScreen(),
                         ),
                       ]),
                 } else ...{
-                  if (settingController.selectedWall == '3') ...{
+                  if (context.watch<SettingController>().selectedWall ==
+                      '3') ...{
                     Center(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ElevatedButton(
-                              onPressed: () {}, child: const Text('DateSheet')),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: context.primaryColor,
+                              ),
+                              onPressed: () {},
+                              child: const Text('DateSheet')),
                           const SizedBox(
                             width: 20,
                           ),
                           ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: context.primaryColor,
+                              ),
                               onPressed: () {
                                 settingController.selectedWall = '7';
                                 settingController.notifyListeners();
