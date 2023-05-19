@@ -7,6 +7,7 @@ import '../models/User/UserModel.dart';
 
 class SettingController extends ChangeNotifier {
   int selectedIndex = 0;
+  bool expansionChanged = false;
   ScrollController scrollController = ScrollController();
   bool isAppBarVisible = true;
   String selectedIndexText = "BIIT";

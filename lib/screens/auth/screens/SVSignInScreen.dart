@@ -51,6 +51,7 @@ class _SVSignInScreenState extends State<SVSignInScreen> {
     super.dispose();
   }
 
+  TextEditingController ipController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +60,37 @@ class _SVSignInScreenState extends State<SVSignInScreen> {
         children: [
           SizedBox(height: context.statusBarHeight + 50),
           Image.asset('images/socialv/gifs/BIITLOGO.png',
-              height: 150, width: 150, fit: BoxFit.cover),
+                  height: 150, width: 150, fit: BoxFit.cover)
+              .onTap(() async {
+            ipController.text = ippp;
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Text('Enter ip to update'),
+                  content: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: TextFormField(
+                        controller: ipController,
+                        decoration: const InputDecoration(
+                            hintText: 'Enter ip', border: OutlineInputBorder()),
+                      )),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          if (ipController.text.isNotEmpty) {
+                            setState(() {
+                              ippp = ipController.text.trim();
+                            });
+                            Navigator.pop(context);
+                          }
+                        },
+                        child: const Text('Save'))
+                  ],
+                );
+              },
+            );
+          }),
           5.height,
           Text(svAppName,
               style: primaryTextStyle(

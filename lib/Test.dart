@@ -85,129 +85,114 @@ class _ScrollHideNavigationBarState extends State<ScrollHideNavigationBar> {
   @override
   Widget build(BuildContext context) {
     postController = context.read<PostController>();
-    return settingController.isAppBarVisible
-        ? Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: CustomNavigationBar(
-              iconSize: 30.0,
-              borderRadius: const Radius.circular(10),
-              isFloating: true,
-              //blurEffect: true,
-              selectedColor: context.iconColor,
-              strokeColor: context.iconColor,
-              unSelectedColor: const Color(0xffacacac),
-              backgroundColor: context.cardColor,
-              items: [
-                if (loggedInUser!.userType != '3')
-                  CustomNavigationBarItem(
-                    badgeCount:
-                        context.watch<NotificationCountController>().biitCount,
-                    showBadge: context
-                            .watch<NotificationCountController>()
-                            .biitCount !=
-                        0,
-                    selectedTitle: const Text('BIIT'),
-                    icon: const ImageIcon(AssetImage('images/BIIT.png')),
-                    //  title: const Text("BIIT"),
-                  ),
-                if (loggedInUser!.userType != '4')
-                  CustomNavigationBarItem(
-                    badgeCount: context
-                        .watch<NotificationCountController>()
-                        .personalCount,
-                    showBadge: context
-                            .watch<NotificationCountController>()
-                            .personalCount !=
-                        0,
-                    selectedTitle: const Text('personal'),
-                    icon: const Icon(Icons.person),
-                    //  title: const Text("Student"),
-                  ),
-                if (loggedInUser!.userType != '2')
-                  CustomNavigationBarItem(
-                    badgeCount: context
-                        .watch<NotificationCountController>()
-                        .teacherCount,
-                    showBadge: context
-                            .watch<NotificationCountController>()
-                            .teacherCount !=
-                        0,
-                    selectedTitle: const Text('Teacher'),
-                    //showBadge: true,
-                    icon: const ImageIcon(
-                      AssetImage(
-                        'images/teacher.png',
-                        //color: Colors.black,
-                      ),
-                    ),
-                    // title: const Text("Teacher"),
-                  ),
-                if (loggedInUser!.userType != '1')
-                  CustomNavigationBarItem(
-                    showBadge: context
-                            .watch<NotificationCountController>()
-                            .studentCount !=
-                        0,
-                    badgeCount: context
-                        .watch<NotificationCountController>()
-                        .studentCount,
-                    selectedTitle: const Text('student'),
-                    icon: const ImageIcon(
-                      AssetImage(
-                        'images/studentLogo.png',
-                        //color: Colors.black,
-                      ),
-                    ),
-                    // title: const Text("Societies"),
-                  ),
-                CustomNavigationBarItem(
-                  showBadge: context
-                          .watch<NotificationCountController>()
-                          .societiesCount !=
-                      0,
-                  badgeCount: context
-                      .watch<NotificationCountController>()
-                      .societiesCount,
-                  selectedTitle: const Text('societies'),
-                  icon: const ImageIcon(
-                    AssetImage(
-                      'images/society.png',
-                      //color: Colors.black,
-                    ),
-                  ),
-                  // title: const Text("Societies"),
-                ),
-                CustomNavigationBarItem(
-                  badgeCount: context
-                      .watch<NotificationCountController>()
-                      .classPostsCount,
-                  showBadge: context
-                          .watch<NotificationCountController>()
-                          .classPostsCount !=
-                      0,
-                  selectedTitle: const Text('Class'),
-                  icon: const ImageIcon(
-                    AssetImage(
-                      'images/class.png',
-                      //color: Colors.black,
-                    ),
-                  ),
-                  //title: const Text("Class"),
-                ),
-              ],
-              currentIndex: _currentIndex,
-              onTap: (index) {
-                if (index != _currentIndex ||
-                    settingController.selectedWall == '7') {
-                  setState(() {
-                    _currentIndex = index;
-                  });
-                  dothis();
-                }
-              },
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: CustomNavigationBar(
+        iconSize: 30.0,
+        borderRadius: const Radius.circular(10),
+        isFloating: true,
+        //blurEffect: true,
+        selectedColor: context.primaryColor.withOpacity(.8),
+        strokeColor: context.primaryColor.withOpacity(.5),
+        unSelectedColor: context.primaryColor.withOpacity(.4),
+        backgroundColor: context.scaffoldBackgroundColor,
+        items: [
+          if (loggedInUser!.userType != '3')
+            CustomNavigationBarItem(
+              badgeCount:
+                  context.watch<NotificationCountController>().biitCount,
+              showBadge:
+                  context.watch<NotificationCountController>().biitCount != 0,
+              selectedTitle: const Text('BIIT'),
+              icon: const ImageIcon(AssetImage('images/BIIT.png')),
+              //  title: const Text("BIIT"),
             ),
-          )
-        : const SizedBox.shrink();
+          if (loggedInUser!.userType != '4')
+            CustomNavigationBarItem(
+              badgeCount:
+                  context.watch<NotificationCountController>().personalCount,
+              showBadge:
+                  context.watch<NotificationCountController>().personalCount !=
+                      0,
+              selectedTitle: const Text('personal'),
+              icon: const Icon(Icons.person),
+              //  title: const Text("Student"),
+            ),
+          if (loggedInUser!.userType != '2')
+            CustomNavigationBarItem(
+              badgeCount:
+                  context.watch<NotificationCountController>().teacherCount,
+              showBadge:
+                  context.watch<NotificationCountController>().teacherCount !=
+                      0,
+              selectedTitle: const Text('Teacher'),
+              //showBadge: true,
+              icon: const ImageIcon(
+                AssetImage(
+                  'images/teacher.png',
+                  //color: Colors.black,
+                ),
+              ),
+              // title: const Text("Teacher"),
+            ),
+          if (loggedInUser!.userType != '1')
+            CustomNavigationBarItem(
+              showBadge:
+                  context.watch<NotificationCountController>().studentCount !=
+                      0,
+              badgeCount:
+                  context.watch<NotificationCountController>().studentCount,
+              selectedTitle: const Text('student'),
+              icon: const ImageIcon(
+                AssetImage(
+                  'images/studentLogo.png',
+                  //color: Colors.black,
+                ),
+              ),
+              // title: const Text("Societies"),
+            ),
+          CustomNavigationBarItem(
+            showBadge:
+                context.watch<NotificationCountController>().societiesCount !=
+                    0,
+            badgeCount:
+                context.watch<NotificationCountController>().societiesCount,
+            selectedTitle: const Text('societies'),
+            icon: const ImageIcon(
+              AssetImage(
+                'images/society.png',
+                //color: Colors.black,
+              ),
+            ),
+            // title: const Text("Societies"),
+          ),
+          CustomNavigationBarItem(
+            badgeCount:
+                context.watch<NotificationCountController>().classPostsCount,
+            showBadge:
+                context.watch<NotificationCountController>().classPostsCount !=
+                    0,
+            selectedTitle: const Text('Class'),
+            icon: const ImageIcon(
+              AssetImage(
+                'images/class.png',
+                //color: Colors.black,
+              ),
+            ),
+            //title: const Text("Class"),
+          ),
+        ],
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          if (index != _currentIndex || settingController.selectedWall == '7') {
+            setState(() {
+              _currentIndex = index;
+            });
+            dothis();
+          }
+        },
+      ),
+    ); // : const SizedBox.shrink();
   }
 
   dothis() {
@@ -224,9 +209,12 @@ class _ScrollHideNavigationBarState extends State<ScrollHideNavigationBar> {
       if (loggedInUser!.userType == '4') {
         settingController.selectedWall = '2';
         notificationCountController.teacherCount = 0;
-      } else {
+      } else if (loggedInUser!.userType != '3') {
         settingController.selectedWall = loggedInUser!.userType!;
         notificationCountController.personalCount = 0;
+      } else if (loggedInUser!.userType == '3') {
+        settingController.selectedWall = '2';
+        notificationCountController.teacherCount = 0;
       }
     } else if (_currentIndex == 2) {
       if (loggedInUser!.userType == '4') {

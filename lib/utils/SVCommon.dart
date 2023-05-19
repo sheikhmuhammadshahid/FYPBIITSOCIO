@@ -96,10 +96,10 @@ getSnackBar(
   ));
 }
 
-getPostsShimmer(context) {
+getPostsShimmer(BuildContext context) {
   return Shimmer.fromColors(
-      baseColor: Colors.grey[300]!,
-      highlightColor: Colors.grey,
+      baseColor: context.primaryColor.withOpacity(.2),
+      highlightColor: context.primaryColor.withOpacity(.1),
       child: ListView.builder(
         itemCount: 10,
         itemBuilder: (context, index) {
@@ -136,10 +136,10 @@ getPostsShimmer(context) {
       ));
 }
 
-svGetUserShimmer() {
+svGetUserShimmer(BuildContext context) {
   return Shimmer.fromColors(
-      baseColor: Colors.grey[300]!,
-      highlightColor: Colors.grey,
+      baseColor: context.primaryColor.withOpacity(.2),
+      highlightColor: context.primaryColor.withOpacity(.1),
       child: ListView.builder(
         itemCount: 10,
         shrinkWrap: true,
@@ -162,10 +162,10 @@ svGetUserShimmer() {
       ));
 }
 
-getNotificationShimmer(context) {
+getNotificationShimmer(BuildContext context) {
   return Shimmer.fromColors(
-      baseColor: Colors.grey[300]!,
-      highlightColor: Colors.grey,
+      baseColor: context.primaryColor.withOpacity(.2),
+      highlightColor: context.primaryColor.withOpacity(.1),
       child: ListView.builder(
         itemCount: 10,
         itemBuilder: (context, index) {

@@ -1,5 +1,6 @@
 import 'package:biit_social/Controllers/DropDowncontroler.dart';
 import 'package:flutter/material.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:select2dot1/select2dot1.dart';
 import 'package:provider/provider.dart';
 
@@ -30,6 +31,10 @@ class CustomSelect2dot1 extends StatelessWidget {
         maxWidth: 300,
       ),
       child: Select2dot1(
+        selectChipSettings: SelectChipSettings(
+          iconColor: context.primaryColor,
+          dividerColor: context.dividerColor,
+        ),
         onChanged: (value) {
           dropDownController.selectedList = value;
           dropDownController.notifyListeners();
@@ -49,40 +54,42 @@ class CustomSelect2dot1 extends StatelessWidget {
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
-          titleStyleFocus: const TextStyle(
-            color: Color(0xFF1DEDB2),
+          titleStyleFocus: TextStyle(
+            color: context.primaryColor,
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
         ),
-        pillboxSettings: const PillboxSettings(
+        pillboxSettings: PillboxSettings(
           padding: null,
           defaultDecoration: BoxDecoration(
             border: Border(
-              bottom: BorderSide(color: Color(0xFF202E50)),
+              bottom: BorderSide(color: context.primaryColor),
             ),
           ),
           activeDecoration: BoxDecoration(
             border: Border(
-              bottom: BorderSide(color: Color(0xFF1DEDB2)),
+              bottom: BorderSide(
+                color: context.dividerColor,
+              ),
             ),
           ),
-          hoverDecoration: BoxDecoration(
+          hoverDecoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(color: Colors.white),
             ),
           ),
-          focusDecoration: BoxDecoration(
+          focusDecoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(color: Color(0xFF1DEDB2)),
             ),
           ),
         ),
-        pillboxIconSettings: const PillboxIconSettings(
+        pillboxIconSettings: PillboxIconSettings(
           padding: null,
-          defaultColor: Color(0xFF99A5C1),
+          defaultColor: const Color(0xFF99A5C1),
           hoverColor: Colors.white,
-          focusColor: Color(0xFF1DEDB2),
+          focusColor: context.primaryColor,
         ),
         selectEmptyInfoSettings: const SelectEmptyInfoSettings(
           padding: EdgeInsets.zero,
@@ -102,7 +109,7 @@ class CustomSelect2dot1 extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             constraints: const BoxConstraints(maxWidth: 200),
             decoration: BoxDecoration(
-              color: const Color(0xFF001029),
+              color: context.primaryColor,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: Colors.white),
             ),
@@ -142,11 +149,11 @@ class CustomSelect2dot1 extends StatelessWidget {
         },
         dropdownOverlaySettings: DropdownOverlaySettings(
           maxHeight: 330,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             borderRadius: BorderRadius.zero,
-            color: Color(0xFF001029),
-            border: Border(),
-            boxShadow: [],
+            color: context.dividerColor,
+            border: const Border(),
+            boxShadow: const [],
           ),
           animationBuilder: (context, child, animationController) {
             return Container(
@@ -176,7 +183,7 @@ class CustomSelect2dot1 extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             margin: const EdgeInsets.only(top: 9, left: 5, right: 5, bottom: 2),
             decoration: BoxDecoration(
-              color: const Color(0xFF00183D),
+              color: const Color.fromARGB(255, 149, 176, 215),
               borderRadius: BorderRadius.circular(24),
             ),
             child: Row(
@@ -196,10 +203,10 @@ class CustomSelect2dot1 extends StatelessWidget {
                     style: const TextStyle(
                       color: Colors.white,
                     ),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       isDense: true,
                       hintText: 'Search',
-                      hintStyle: TextStyle(color: Color(0xFF202E50)),
+                      hintStyle: TextStyle(color: context.accentColor),
                       border: InputBorder.none,
                     ),
                   ),
@@ -220,7 +227,7 @@ class CustomSelect2dot1 extends StatelessWidget {
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
-          defaultDecoration: const BoxDecoration(color: Colors.transparent),
+          defaultDecoration: const BoxDecoration(color: Colors.red),
           hoverDecoration:
               BoxDecoration(color: const Color(0xFF00183D).withOpacity(0.5)),
         ),
@@ -250,7 +257,7 @@ class CustomSelect2dot1 extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             margin: const EdgeInsets.only(top: 9, bottom: 2),
             decoration: BoxDecoration(
-              color: const Color(0xFF00183D),
+              color: context.cardColor,
               borderRadius: BorderRadius.circular(24),
             ),
             child: Row(
@@ -285,8 +292,8 @@ class CustomSelect2dot1 extends StatelessWidget {
         searchEmptyInfoModalSettings: const SearchEmptyInfoModalSettings(
           textStyle: TextStyle(color: Colors.white),
         ),
-        dropdownModalSettings: const DropdownModalSettings(
-          backgroundColor: Color(0xff001029),
+        dropdownModalSettings: DropdownModalSettings(
+          backgroundColor: context.scaffoldBackgroundColor,
         ),
         categoryNameModalSettings: const CategoryNameModalSettings(
           textStyle: TextStyle(
@@ -296,36 +303,39 @@ class CustomSelect2dot1 extends StatelessWidget {
           ),
         ),
         categoryItemModalSettings: CategoryItemModalSettings(
-          defaultTextStyle: const TextStyle(
-            color: Colors.white,
+          defaultTextStyle: TextStyle(
+            color: context.iconColor,
             fontSize: 18,
             fontWeight: FontWeight.w500,
           ),
-          selectedTextStyle: const TextStyle(
-            color: Color(0xFF1DEDB2),
+          selectedTextStyle: TextStyle(
+            color: context.primaryColor,
             fontSize: 18,
             fontWeight: FontWeight.w500,
           ),
           // ignore: avoid_redundant_argument_values
           iconSize: 18,
-          iconSelectedColor: const Color(0xFF1DEDB2),
+          iconSelectedColor: context.primaryColor,
           showExtraInfo: extraInfoInDropdown,
         ),
         titleModalSettings: TitleModalSettings(
           title: title,
-          titleTextStyle: const TextStyle(
-            color: Color(0xFF1DEDB2),
+          titleTextStyle: TextStyle(
+            color: context.iconColor,
             fontSize: 18,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w800,
           ),
         ),
         doneButtonModalSettings: DoneButtonModalSettings(
           buttonDecoration: BoxDecoration(
-            border: Border.all(color: const Color(0xFF1DEDB2)),
-            color: const Color(0xff001029),
+            border: Border.all(color: context.primaryColor),
+            color: context.cardColor.withOpacity(.5),
             borderRadius: BorderRadius.circular(24),
           ),
-          textStyle: const TextStyle(color: Color(0xFF1DEDB2)),
+          textStyle: TextStyle(
+            color: context.iconColor,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         selectOverloadInfoSettings: const SelectOverloadInfoSettings(
           textStyle: TextStyle(color: Colors.white),

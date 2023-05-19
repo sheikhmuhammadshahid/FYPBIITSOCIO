@@ -57,7 +57,7 @@ class AppTheme {
     ),
     primaryColor: color_primary_black,
     dividerColor: const Color(0xFFDADADA).withOpacity(0.3),
-    primaryColorDark: color_primary_black,
+    primaryColorDark: appColorPrimaryDarkLight,
     textSelectionTheme: const TextSelectionThemeData(cursorColor: Colors.white),
     hoverColor: Colors.black12,
     fontFamily: GoogleFonts.inter().fontFamily,

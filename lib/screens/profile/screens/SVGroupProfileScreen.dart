@@ -204,7 +204,7 @@ class _SVGroupProfileScreenState extends State<SVGroupProfileScreen> {
             // ),
 
             context.watch<FriendsStoriesController>().isStoriesLoading
-                ? svGetUserShimmer()
+                ? svGetUserShimmer(context)
                 : SizedBox(
                     width: context.width(),
                     child: Column(
