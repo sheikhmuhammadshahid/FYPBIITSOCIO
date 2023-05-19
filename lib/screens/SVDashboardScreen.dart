@@ -71,14 +71,14 @@ class _SVDashboardScreenState extends State<SVDashboardScreen>
           elevation: 0,
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(
-                context.watch<SettingController>().isAppBarVisible
+                check() && context.watch<SettingController>().isAppBarVisible
                     ? context.height() * 0.06
                     : context.height() * 0.01),
             child: Consumer<SettingController>(
               builder: (context, value, child) {
                 return Column(
                   children: [
-                    if (settingController.isAppBarVisible) ...{
+                    if (settingController.isAppBarVisible && check()) ...{
                       16.height,
                       SizedBox(
                         height: 50,
@@ -279,5 +279,25 @@ class _SVDashboardScreenState extends State<SVDashboardScreen>
         bottomNavigationBar: const ScrollHideNavigationBar());
     // bottomNavigationBar: const Padding(
     //     padding: EdgeInsets.only(bottom: 10), child: SvBottomNavigation()));
+  }
+
+  bool check() {
+    if ((settingController.selectedWall == loggedInUser!.userType ||
+            settingController.selectedWall == '5' ||
+            settingController.selectedWall == '2' ||
+            settingController.selectedWall == '1') &&
+        loggedInUser!.userType == '3') {
+      return true;
+    } else if ((settingController.selectedWall == loggedInUser!.userType ||
+            settingController.selectedWall == '5' ||
+            settingController.selectedWall == '1') &&
+        loggedInUser!.userType == '2') {
+      return true;
+    } else if ((settingController.selectedWall == loggedInUser!.userType ||
+            settingController.selectedWall == '5') &&
+        loggedInUser!.userType == "1") {
+      return true;
+    }
+    return false;
   }
 }

@@ -8,6 +8,7 @@ import 'package:biit_social/models/Stories/Stories.dart';
 import 'package:biit_social/screens/FileUpload/UploadFile.dart';
 import 'package:biit_social/utils/getVideoItem.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:biit_social/main.dart';
 import 'package:biit_social/screens/addPost/components/SVPostTextComponent.dart';
@@ -109,57 +110,67 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
             textStyle: secondaryTextStyle(color: Colors.white, size: 10),
             onTap: () async {
               try {
-                selectedOptions = '';
-                for (var element in dropDownController.selectedList) {
-                  selectedOptions = "${selectedOptions + element.value},";
+                if (descriptionController.text.isNotEmpty ||
+                    isImagePicked != 0) {
+                  if (selected || dropDownController.selectedList.isEmpty) {
+                    selectedOptions = 'All';
+                  } else {
+                    selectedOptions = '';
+                    for (var element in dropDownController.selectedList) {
+                      selectedOptions = "${selectedOptions + element.value},";
+                    }
+                  }
+
+                  print(selectedOptions);
+                  Post? p;
+                  if (!widget.isStatus) {
+                    p = Post(
+                        fromWall: settingController.selectedWall,
+                        description: descriptionController.text,
+                        user: loggedInUser!.toJson().toString(),
+                        postFor: selectedOptions,
+                        dateTime: DateTime.now().toString(),
+                        type: isImagePicked == 1
+                            ? "image"
+                            : isImagePicked == 2
+                                ? 'video'
+                                : "text",
+                        text: isImagePicked != 0 ? path.path : "",
+                        postedBy: loggedInUser!.CNIC);
+                  }
+                  !widget.isStatus
+                      ? await PostController().addPost(p!, context)
+                      : await PostController().addStory(
+                          Stories(
+                            id: 0,
+                            societyId: 3,
+                            type: isImagePicked == 1
+                                ? "image"
+                                : isImagePicked == 2
+                                    ? 'video'
+                                    : "text",
+                            url: "",
+                            text: descriptionController.text,
+                          ),
+                          context);
+                  if (!widget.isStatus) {
+                    postController.posts.add(Post(
+                        postedBy: p!.postedBy,
+                        dateTime: p.dateTime,
+                        description: p.description,
+                        text: p.text,
+                        user: loggedInUser!.toJson(),
+                        userPosted: loggedInUser,
+                        postFor: p.postFor,
+                        type: p.type,
+                        fromWall: p.fromWall));
+                    postController.notifyListeners();
+                  }
+                  // ignore: use_build_context_synchronously
+                  Navigator.pop(context);
+                } else {
+                  EasyLoading.showToast('Please write something');
                 }
-                print(selectedOptions);
-                Post? p;
-                if (!widget.isStatus) {
-                  p = Post(
-                      fromWall: settingController.selectedWall,
-                      description: descriptionController.text,
-                      user: loggedInUser!.toJson().toString(),
-                      postFor: selectedOptions,
-                      dateTime: DateTime.now().toString(),
-                      type: isImagePicked == 1
-                          ? "image"
-                          : isImagePicked == 2
-                              ? 'video'
-                              : "text",
-                      text: isImagePicked != 0 ? path.path : "",
-                      postedBy: loggedInUser!.CNIC);
-                }
-                !widget.isStatus
-                    ? await PostController().addPost(p!, context)
-                    : await PostController().addStory(
-                        Stories(
-                          id: 0,
-                          societyId: 3,
-                          type: isImagePicked == 1
-                              ? "image"
-                              : isImagePicked == 2
-                                  ? 'video'
-                                  : "text",
-                          url: "",
-                          text: descriptionController.text,
-                        ),
-                        context);
-                if (!widget.isStatus) {
-                  postController.posts.add(Post(
-                      postedBy: p!.postedBy,
-                      dateTime: p.dateTime,
-                      description: p.description,
-                      text: p.text,
-                      user: loggedInUser!.toJson(),
-                      userPosted: loggedInUser,
-                      postFor: p.postFor,
-                      type: p.type,
-                      fromWall: p.fromWall));
-                  postController.notifyListeners();
-                }
-                // ignore: use_build_context_synchronously
-                Navigator.pop(context);
               } catch (e) {}
             },
             elevation: 0,

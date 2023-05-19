@@ -32,8 +32,10 @@ class _SVHomeFragmentState extends State<SVHomeFragment> {
 
   final GlobalKey _parentKey = GlobalKey();
   late SettingController settingController;
+  late PostController postController;
   @override
   Widget build(BuildContext context) {
+    postController = context.read<PostController>();
     settingController = context.read<SettingController>();
     return Scaffold(
       backgroundColor: svGetScaffoldColor(),
@@ -58,6 +60,10 @@ class _SVHomeFragmentState extends State<SVHomeFragment> {
                 if (settingController.selectedWall == loggedInUser!.userType &&
                     loggedInUser!.userType != '3') ...{
                   ExpansionTile(
+                      onExpansionChanged: (value) {
+                        settingController.expansionChanged = value;
+                        settingController.notifyListeners();
+                      },
                       iconColor: context.iconColor,
                       title: Text(
                         'TimeTable',
@@ -107,7 +113,12 @@ class _SVHomeFragmentState extends State<SVHomeFragment> {
                 SizedBox(
                     height: settingController.selectedWall == "6"
                         ? MediaQuery.of(context).size.height * 0.77
-                        : MediaQuery.of(context).size.height * 0.91,
+                        : context.watch<SettingController>().expansionChanged &&
+                                settingController.selectedWall ==
+                                    loggedInUser!.userType &&
+                                postController.timeTable.isNotEmpty
+                            ? MediaQuery.of(context).size.height * 0.4
+                            : MediaQuery.of(context).size.height * 0.91,
                     child: const SVPostComponent()),
                 16.height,
               ],
