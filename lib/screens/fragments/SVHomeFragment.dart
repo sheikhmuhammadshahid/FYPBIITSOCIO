@@ -1,12 +1,15 @@
 import 'dart:io';
 
+import 'package:biit_social/Controllers/DropDowncontroler.dart';
 import 'package:biit_social/Controllers/PostController.dart';
 import 'package:biit_social/Controllers/SettingController.dart';
 import 'package:biit_social/TimeTable/TimeTableScreen.dart';
+import 'package:biit_social/utils/SVConstants.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:biit_social/screens/home/components/SVPostComponent.dart';
 import 'package:biit_social/utils/SVCommon.dart';
+import '../DropDown/CustomDropDown.dart';
 import '../home/components/SVStoryComponent.dart';
 import 'package:provider/provider.dart';
 
@@ -57,6 +60,45 @@ class _SVHomeFragmentState extends State<SVHomeFragment> {
                     );
                   },
                 ),
+                if (settingController.selectedWall == "5") ...{
+                  Container(
+                      alignment: Alignment.centerRight,
+                      margin: const EdgeInsets.only(
+                          left: 10, right: 10, top: 10, bottom: 10),
+                      decoration: boxDecorationDefault(),
+                      height: context.height() * 0.1,
+                      child: FittedBox(
+                        child: Row(
+                          children: [
+                            Text(
+                              'All',
+                              style: TextStyle(
+                                  fontSize: 20, fontFamily: svFontRoboto),
+                            ),
+                            SizedBox(
+                              height: context
+                                      .watch<DropDownController>()
+                                      .selectedList
+                                      .isEmpty
+                                  ? 120
+                                  : 200,
+                              child: CustomExample0(
+                                scrollController: ScrollController(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                      // child: ListTile(
+                      //   trailing: const Icon(Icons.filter_alt_outlined),
+                      //   title: Text(
+                      //     settingController.classWallFilter,
+                      //     maxLines: 2,
+                      //     overflow: TextOverflow.ellipsis,
+                      //   ),
+                      // ),
+                      )
+                },
                 if (settingController.selectedWall == loggedInUser!.userType &&
                     loggedInUser!.userType != '3') ...{
                   ExpansionTile(
@@ -91,7 +133,10 @@ class _SVHomeFragmentState extends State<SVHomeFragment> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: context.primaryColor,
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                settingController.selectedWall = '9';
+                                settingController.notifyListeners();
+                              },
                               child: const Text('DateSheet')),
                           const SizedBox(
                             width: 20,

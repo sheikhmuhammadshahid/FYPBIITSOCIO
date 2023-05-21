@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:provider/provider.dart';
@@ -96,6 +97,9 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                     color: context.scaffoldBackgroundColor,
                     height: value.timeTable.isEmpty ? 100 : 300,
                     child: PlutoGrid(
+                      onSelected: (event) =>
+                          event.cell!.value ??
+                          EasyLoading.showToast(event.cell!.value),
                       mode: PlutoGridMode.readOnly,
                       configuration: PlutoGridConfiguration(
                         style: PlutoGridStyleConfig(

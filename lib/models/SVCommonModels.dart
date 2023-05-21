@@ -18,8 +18,8 @@ List<SVDrawerModel> getDrawerOptions() {
 
     list.add(SVDrawerModel(
         image: 'images/socialv/icons/ic_3User.png', title: 'Groups'));
-    list.add(SVDrawerModel(
-        image: 'images/socialv/icons/ic_Image.png', title: 'Gallery'));
+    // list.add(SVDrawerModel(
+    //     image: 'images/socialv/icons/ic_Image.png', title: 'Gallery'));
     list.add(SVDrawerModel(
         image: 'images/socialv/icons/ic_Document.png', title: 'Diary'));
     // list.add(SVDrawerModel(image: 'images/socialv/icons/ic_Send.png', title: 'Share App'));

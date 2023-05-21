@@ -33,7 +33,7 @@ class _CustomExample0State extends State<CustomExample0> {
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: CustomSelect2dot1(
-        title: 'Select',
+        title: 'Seslect',
         data: context.watch<DropDownController>().items,
         isMultiSelect: true,
         avatarInSingleSelect: false,

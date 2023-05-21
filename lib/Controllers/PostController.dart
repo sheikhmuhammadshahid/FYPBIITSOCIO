@@ -231,13 +231,11 @@ class PostController with ChangeNotifier {
     setState();
   }
 
-  uploadFile(path, context) async {
+  uploadFile(path, context, toupload) async {
     try {
       EasyLoading.show(status: 'Please wait...', dismissOnTap: false);
-      var formData = FormData.fromMap({
-        'file': await MultipartFile.fromFile(path),
-        'toUpload': 'timeTable'
-      });
+      var formData = FormData.fromMap(
+          {'file': await MultipartFile.fromFile(path), 'toUpload': toupload});
       var response = await Dio().post('${ip}post/uploadFile',
           data: formData,
           options: Options(headers: {

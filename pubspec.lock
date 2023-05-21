@@ -337,6 +337,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.3"
+  equatable:
+    dependency: transitive
+    description:
+      name: equatable
+      sha256: c2b87cb7756efdf69892005af546c56c0b5037f54d2a88269b4f347a505e3ca2
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.5"
+  excel:
+    dependency: "direct main"
+    description:
+      name: excel
+      sha256: f6a76fff6ac14f48fd44a6528e72705965e02cbc593e00427ab1d9a9f5d3bffa
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   extended_image:
     dependency: transitive
     description:
@@ -616,6 +632,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
+  image:
+    dependency: transitive
+    description:
+      name: image
+      sha256: a72242c9a0ffb65d03de1b7113bc4e189686fc07c7147b8b41811d0dd0e0d9bf
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.17"
   image_picker:
     dependency: "direct main"
     description:
@@ -664,6 +688,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.18.0"
+  jiffy:
+    dependency: transitive
+    description:
+      name: jiffy
+      sha256: "9d1ea8fa2955d62d3fd5f83317db4d565350deea13d7884212aa7d0ddb1c9982"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.1.0"
   js:
     dependency: transitive
     description:
@@ -768,54 +800,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.2"
-  package_info_plus:
-    dependency: "direct main"
-    description:
-      name: package_info_plus
-      sha256: a6eb9db6f8bfadcc95b04f53c9f6ba2b112b8e8fbf430ae34a0aa0a64b1022c8
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
-  package_info_plus_linux:
-    dependency: transitive
-    description:
-      name: package_info_plus_linux
-      sha256: "15a66f80b52245e14af7be939bbd1959961f09cfc1d58523cc4e8d5b740efb21"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
-  package_info_plus_macos:
-    dependency: transitive
-    description:
-      name: package_info_plus_macos
-      sha256: b774a2d8b31c4575a9a9c56f86a2cb542f0ef1d08be8623b94af0f7c962a2845
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
-  package_info_plus_platform_interface:
-    dependency: transitive
-    description:
-      name: package_info_plus_platform_interface
-      sha256: "9bc8ba46813a4cc42c66ab781470711781940780fd8beddd0c3da62506d3a6c6"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.1"
-  package_info_plus_web:
-    dependency: transitive
-    description:
-      name: package_info_plus_web
-      sha256: fb408fed17c00ed4b4b963d124a83bcbf25de990dea0c43a73d48b20339f62a4
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
-  package_info_plus_windows:
-    dependency: transitive
-    description:
-      name: package_info_plus_windows
-      sha256: ffb1f96a57ff7680c06a66ae12f62140350beddc5478ef18494901c74067f122
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.0"
   path:
     dependency: transitive
     description:
@@ -1141,6 +1125,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  syncfusion_flutter_core:
+    dependency: transitive
+    description:
+      name: syncfusion_flutter_core
+      sha256: b2ad1c93239b094d6de1b4679c1835b1bc4332e6c6548bd2da44bd2594e6cdc5
+      url: "https://pub.dev"
+    source: hosted
+    version: "21.2.5"
+  syncfusion_flutter_xlsio:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_xlsio
+      sha256: "82ec78ddb79ad7d21887664895bf3ffa0409c50dfc7ed88524b329fcfef697bd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "21.2.5"
+  syncfusion_officecore:
+    dependency: transitive
+    description:
+      name: syncfusion_officecore
+      sha256: cdf6f252f4eb32706d9aea4803bdc1966f828a780b6831ab33a7c757021cccce
+      url: "https://pub.dev"
+    source: hosted
+    version: "21.2.5"
   synchronized:
     dependency: transitive
     description:

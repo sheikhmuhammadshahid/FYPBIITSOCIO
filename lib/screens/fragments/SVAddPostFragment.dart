@@ -96,11 +96,7 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
             ),
             IconButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context) {
-                      return const UploadFile();
-                    },
-                  ));
+                  const UploadFile().launch(context);
                 },
                 icon: const Icon(Icons.calendar_month)),
           },

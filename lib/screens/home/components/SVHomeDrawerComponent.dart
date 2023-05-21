@@ -98,7 +98,7 @@ class _SVHomeDrawerComponentState extends State<SVHomeDrawerComponent> {
 
                     if (selectedIndex == options.length - 1) {
                       const SVSignInScreen().launch(context, isNewTask: true);
-                    } else if (selectedIndex == 4) {
+                    } else if (selectedIndex == 3) {
                       finish(context);
                       const SVDiarScreen().launch(context);
                     } else if (selectedIndex == 1) {

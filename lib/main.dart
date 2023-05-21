@@ -5,7 +5,6 @@ import 'package:biit_social/Controllers/DropDowncontroler.dart';
 import 'package:biit_social/Controllers/FriendsStoriesController.dart';
 import 'package:biit_social/Controllers/PostController.dart';
 import 'package:biit_social/Controllers/SettingController.dart';
-import 'package:biit_social/screens/DropDown/CustomDropDown.dart';
 import 'package:biit_social/screens/SVSplashScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -23,6 +22,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 
+import 'Controllers/DateSheetAndCallender.dart';
 import 'Controllers/NotificatinsCountController.dart';
 
 AppStore appStore = AppStore();
@@ -99,6 +99,9 @@ void main() async {
     ),
     ChangeNotifierProvider(
       create: (_) => ServerClient(),
+    ),
+    ChangeNotifierProvider(
+      create: (_) => DateSheetCallender(),
     ),
     ChangeNotifierProvider(
       create: (_) => NotificationCountController(),

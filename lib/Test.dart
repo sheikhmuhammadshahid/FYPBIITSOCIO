@@ -184,7 +184,9 @@ class _ScrollHideNavigationBarState extends State<ScrollHideNavigationBar> {
         ],
         currentIndex: _currentIndex,
         onTap: (index) {
-          if (index != _currentIndex || settingController.selectedWall == '7') {
+          if (index != _currentIndex ||
+              settingController.selectedWall == '7' ||
+              settingController.selectedWall == '9') {
             setState(() {
               _currentIndex = index;
             });

@@ -130,10 +130,12 @@ class CustomSelect2dot1 extends StatelessWidget {
                     cursor: SystemMouseCursors.click,
                     child: GestureDetector(
                       onTap: () {
+                        var v = selectChipDetails.singleItemCategory;
                         selectChipDetails.selectDataController
-                            .removeSingleSelectedChip(
-                          selectChipDetails.singleItemCategory,
-                        );
+                            .removeSingleSelectedChip(v);
+                        dropDownController.selectedList
+                            .removeWhere((element) => element == v.value);
+                        dropDownController.notifyListeners();
                       },
                       child: const Icon(
                         Icons.clear,

@@ -7,6 +7,8 @@ import '../models/User/UserModel.dart';
 
 class SettingController extends ChangeNotifier {
   int selectedIndex = 0;
+  String classWallFilter =
+      'Allsdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd';
   bool expansionChanged = false;
   ScrollController scrollController = ScrollController();
   bool isAppBarVisible = true;
