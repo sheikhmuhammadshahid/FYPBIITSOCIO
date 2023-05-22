@@ -43,7 +43,7 @@ class _SVStoryScreenState extends State<SVStoryScreen>
   late FriendsStoriesController provier;
   @override
   Widget build(BuildContext context) {
-    provier = Provider.of<FriendsStoriesController>(listen: false, context);
+    provier = context.read<FriendsStoriesController>();
     return WillPopScope(
       onWillPop: () async {
         provier.index = 0;
@@ -66,8 +66,6 @@ class _SVStoryScreenState extends State<SVStoryScreen>
                 },
                 onComplete: () {
                   storyController = StoryController();
-
-                  provier.increment();
                 },
                 storyItems: List.generate(
                     provier.societies[provier.index].stories!.length, (index) {

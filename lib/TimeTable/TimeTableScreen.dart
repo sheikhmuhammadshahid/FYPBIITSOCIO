@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:biit_social/TimeTable/TimeTableModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -28,6 +29,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
           type: PlutoColumnType.text(),
           enableColumnDrag: false),
     );
+
     return _columns.add(PlutoColumn(
         backgroundColor: context.scaffoldBackgroundColor,
         enableColumnDrag: false,
@@ -51,27 +53,31 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
   // }
 
   getRows(PostController value) {
+    if (value.timeTable == null) {
+      return _rows.clear();
+    }
     String day = getWeekday(DateTime.now().weekday);
     _rows.clear();
+    List<TimeTableSlot> data = [];
+    if (day.toLowerCase().contains('fri')) {
+      data = value.timeTable!.friday;
+    } else if (day.toLowerCase().contains('mon')) {
+      data = value.timeTable!.monday;
+    } else if (day.toLowerCase().contains('tue')) {
+      data = value.timeTable!.tuesday;
+    } else if (day.toLowerCase().contains('wedn')) {
+      data = value.timeTable!.wednesday;
+    } else if (day.toLowerCase().contains('thur')) {
+      data = value.timeTable!.thursday;
+    }
 
-    for (var ele in value.timeTable) {
+    for (var ele in data) {
       _rows.add(PlutoRow(
         cells: {
           '1': PlutoCell(
             value: ele.slot,
           ),
-          '2': PlutoCell(
-              value: day.toLowerCase().contains('fri')
-                  ? ele.friday
-                  : day.toLowerCase().contains('mon')
-                      ? ele.monday
-                      : day.toLowerCase().contains('tue')
-                          ? ele.tuesday
-                          : day.toLowerCase().contains('wed')
-                              ? ele.wednesday
-                              : day.toLowerCase().contains('thu')
-                                  ? ele.thursday
-                                  : ''),
+          '2': PlutoCell(value: ele.data),
         },
       ));
     }
@@ -95,7 +101,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                   // const OfficersScreen(),
                   Container(
                     color: context.scaffoldBackgroundColor,
-                    height: value.timeTable.isEmpty ? 100 : 300,
+                    height: value.timeTable == null ? 100 : 300,
                     child: PlutoGrid(
                       onSelected: (event) =>
                           event.cell!.value ??

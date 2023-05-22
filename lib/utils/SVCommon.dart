@@ -24,6 +24,30 @@ String profileimageAddress = "http://$ippp/BiitSocioApis/Images/";
 String storyAddress = 'http://$ippp/BiitSocioApis/Status/';
 var headers = {"Content-Type": "application/json"};
 String selectedOptions = "";
+
+final List<Color> colorCollection = <Color>[
+  const Color(0xFF0F8644),
+  const Color(0xFF8B1FA9),
+  const Color(0xFFD20100),
+  const Color(0xFF01A1EF),
+  const Color(0xFFFC571D),
+  const Color(0xFF0A8043),
+  const Color(0xFF36B37B),
+  const Color(0xFF3D4FB5),
+  const Color(0xFFE47C73),
+  const Color(0xFF636363)
+];
+//colorCollection.add();
+//colorCollection.add(const );
+//colorCollection.add(const );
+// colorCollection.add(const );
+// colorCollection.add(const );
+// colorCollection.add(const );
+// colorCollection.add(const );
+// colorCollection.add(const );
+// colorCollection.add(const );
+// colorCollection.add(const );
+
 Future<String> getIp() async {
   try {
     // Get a list of network interfaces

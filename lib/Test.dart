@@ -231,6 +231,7 @@ class _ScrollHideNavigationBarState extends State<ScrollHideNavigationBar> {
         settingController.selectedWall = '1';
       }
     }
+    settingController.expansionChanged = false;
     notificationCountController.notifyListeners();
     postController.pageNumber = 0;
     settingController.setState();

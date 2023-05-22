@@ -1,12 +1,9 @@
-import 'dart:io';
-
 import 'package:biit_social/Controllers/PostController.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
-import 'package:excel/excel.dart' as ex;
 
 class UploadFile extends StatefulWidget {
   const UploadFile({super.key});
@@ -19,29 +16,6 @@ class _UploadFileState extends State<UploadFile> {
   String? path = "1";
   String status = "No file attached...";
   PlatformFile? file;
-  get() async {
-    try {
-      FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['xlsx', 'xls', 'xml'],
-        allowMultiple: false,
-      );
-
-      /// file might be picked
-
-      var bytes = await File(pickedFile!.files[0].path!).readAsBytes();
-      var excel = ex.Excel.createExcel();
-      for (var table in excel.tables.keys) {
-        print(table); //sheet Name
-
-        for (var row in excel.tables[table]!.rows) {
-          for (var element in row) {
-            print(element.toString());
-          }
-        }
-      }
-    } catch (e) {}
-  }
 
   getFile() async {
     try {

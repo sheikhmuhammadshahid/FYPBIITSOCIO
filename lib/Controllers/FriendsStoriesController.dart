@@ -22,6 +22,7 @@ class FriendsStoriesController extends ChangeNotifier {
   int selectedIndex = -1;
   TextEditingController filterController = TextEditingController();
   bool isStoriesLoading = true;
+  bool storiesLoading = true;
   Duration duration = const Duration(seconds: 3);
   List<Society> societies = [];
   List<User> groupUsers = [];
@@ -172,7 +173,7 @@ class FriendsStoriesController extends ChangeNotifier {
 
   getSocietiesDetail() async {
     try {
-      isStoriesLoading = true;
+      storiesLoading = true;
       setState();
 
       var response = await Dio().get('${ip}Post/getSocietiesDetail');
@@ -181,9 +182,12 @@ class FriendsStoriesController extends ChangeNotifier {
         for (var element in response.data) {
           societies.add(Society.fromMap(element));
         }
+        print("${societies.length}sdsd");
       }
     } catch (e) {}
-    isStoriesLoading = false;
+    print('done');
+    storiesLoading = false;
+
     setState();
   }
 

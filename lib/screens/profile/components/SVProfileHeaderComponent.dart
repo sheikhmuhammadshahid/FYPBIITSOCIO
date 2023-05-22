@@ -1,4 +1,5 @@
 import 'package:biit_social/Controllers/SettingController.dart';
+import 'package:biit_social/screens/auth/screens/updateProfile.dart';
 import 'package:biit_social/utils/SVCommon.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -56,22 +57,40 @@ class SVProfileHeaderComponent extends StatelessWidget {
                         )),
                   Positioned(
                     bottom: 0,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.white, width: 2),
-                          borderRadius: radius(18)),
-                      child: !controller.isGettingUser
-                          ? getProfileImage(controller)
-                          : Shimmer.fromColors(
-                              //period: const Duration(milliseconds: 100),
-                              loop: 10,
-                              baseColor: Colors.white.withOpacity(0.5),
-                              highlightColor: Colors.white,
-                              child: Container(
-                                width: 88,
-                                height: 88,
-                                color: Colors.white,
-                              )),
+                    child: Stack(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.white, width: 2),
+                              borderRadius: radius(18)),
+                          child: !controller.isGettingUser
+                              ? getProfileImage(controller)
+                              : Shimmer.fromColors(
+                                  //period: const Duration(milliseconds: 100),
+                                  loop: 10,
+                                  baseColor: Colors.white.withOpacity(0.5),
+                                  highlightColor: Colors.white,
+                                  child: Container(
+                                    width: 88,
+                                    height: 88,
+                                    color: Colors.white,
+                                  )),
+                        ),
+                        if (user!)
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: IconButton(
+                                onPressed: () {
+                                  const UpdateProfileScreen().launch(context);
+                                },
+                                icon: Icon(
+                                  Icons.edit,
+                                  size: 20,
+                                  color: context.cardColor,
+                                )),
+                          )
+                      ],
                     ),
                   ),
                 ],

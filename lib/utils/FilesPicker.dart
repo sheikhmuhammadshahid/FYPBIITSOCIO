@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:nb_utils/nb_utils.dart' as util;
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
@@ -44,6 +45,7 @@ pickFile(BuildContext context, int fromCamera) async {
   List<AssetEntity>? result = [];
   AssetEntity? entity;
   if (fromCamera == 2) {
+    // ignore: use_build_context_synchronously
     result = await AssetPicker.pickAssets(context,
         pickerConfig: const AssetPickerConfig());
     if (result != null) {
@@ -53,11 +55,12 @@ pickFile(BuildContext context, int fromCamera) async {
         isImagePicked = 1;
         // SVAddPostFragment.assetEntity = await f.readAsBytes();
       } else {
-        isImagePicked = 2;
+        EasyLoading.showToast('Select Image');
       }
       SVAddPostFragment.isImage = true;
     }
   } else if (fromCamera == 1) {
+    // ignore: use_build_context_synchronously
     entity = await CameraPicker.pickFromCamera(
       context,
       pickerConfig: CameraPickerConfig(

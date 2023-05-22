@@ -337,22 +337,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.3"
-  equatable:
-    dependency: transitive
-    description:
-      name: equatable
-      sha256: c2b87cb7756efdf69892005af546c56c0b5037f54d2a88269b4f347a505e3ca2
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.5"
-  excel:
-    dependency: "direct main"
-    description:
-      name: excel
-      sha256: f6a76fff6ac14f48fd44a6528e72705965e02cbc593e00427ab1d9a9f5d3bffa
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
   extended_image:
     dependency: transitive
     description:
@@ -632,14 +616,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
-  image:
-    dependency: transitive
-    description:
-      name: image
-      sha256: a72242c9a0ffb65d03de1b7113bc4e189686fc07c7147b8b41811d0dd0e0d9bf
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.17"
   image_picker:
     dependency: "direct main"
     description:
@@ -688,14 +664,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.18.0"
-  jiffy:
-    dependency: transitive
-    description:
-      name: jiffy
-      sha256: "9d1ea8fa2955d62d3fd5f83317db4d565350deea13d7884212aa7d0ddb1c9982"
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.1.0"
   js:
     dependency: transitive
     description:
@@ -800,6 +768,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.2"
+  omni_datetime_picker:
+    dependency: "direct main"
+    description:
+      name: omni_datetime_picker
+      sha256: c70ca19eba89b7ed3663ae8eab2e7922c12b443826cf06c841a7f0a19e22870d
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.7"
   path:
     dependency: transitive
     description:
@@ -1125,30 +1101,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  syncfusion_flutter_calendar:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_calendar
+      sha256: "19d0f36bdf0eae65b0be6fe7f0a280c0a6eeb017517ccc41b79923726063b66f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "20.3.47"
   syncfusion_flutter_core:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
-      sha256: b2ad1c93239b094d6de1b4679c1835b1bc4332e6c6548bd2da44bd2594e6cdc5
+      sha256: "3979f0b1c5a97422cadae52d476c21fa3e0fb671ef51de6cae1d646d8b99fe1f"
       url: "https://pub.dev"
     source: hosted
-    version: "21.2.5"
-  syncfusion_flutter_xlsio:
-    dependency: "direct main"
-    description:
-      name: syncfusion_flutter_xlsio
-      sha256: "82ec78ddb79ad7d21887664895bf3ffa0409c50dfc7ed88524b329fcfef697bd"
-      url: "https://pub.dev"
-    source: hosted
-    version: "21.2.5"
-  syncfusion_officecore:
+    version: "20.4.54"
+  syncfusion_flutter_datepicker:
     dependency: transitive
     description:
-      name: syncfusion_officecore
-      sha256: cdf6f252f4eb32706d9aea4803bdc1966f828a780b6831ab33a7c757021cccce
+      name: syncfusion_flutter_datepicker
+      sha256: e4d4794d54f3a315046031d431a27e0d7350544b1bef0bcd1d2acf58f940dd37
       url: "https://pub.dev"
     source: hosted
-    version: "21.2.5"
+    version: "20.4.54"
   synchronized:
     dependency: transitive
     description:
@@ -1366,5 +1342,5 @@ packages:
     source: hosted
     version: "6.2.2"
 sdks:
-  dart: ">=2.19.0 <3.0.0"
+  dart: ">=2.19.2 <3.0.0"
   flutter: ">=3.7.0"

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:biit_social/Client.dart';
 import 'package:biit_social/Controllers/DropDowncontroler.dart';
+import 'package:biit_social/Controllers/EventsController.dart';
 import 'package:biit_social/Controllers/FriendsStoriesController.dart';
 import 'package:biit_social/Controllers/PostController.dart';
 import 'package:biit_social/Controllers/SettingController.dart';
@@ -99,6 +100,9 @@ void main() async {
     ),
     ChangeNotifierProvider(
       create: (_) => ServerClient(),
+    ),
+    ChangeNotifierProvider(
+      create: (_) => EventsController(),
     ),
     ChangeNotifierProvider(
       create: (_) => DateSheetCallender(),

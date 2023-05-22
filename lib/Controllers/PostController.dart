@@ -13,9 +13,11 @@ import '../utils/FilesPicker.dart';
 import '../utils/SVCommon.dart';
 
 class PostController with ChangeNotifier {
+  String classWallFilter = '';
+
   List<Post> posts = [];
   List<Post> pinedPosts = [];
-  List<TimeTableModel> timeTable = [];
+  TimeTableModel? timeTable;
   bool isLoading = false;
   bool isLazyLoading = false;
   int pageNumber = 0;
@@ -36,11 +38,7 @@ class PostController with ChangeNotifier {
       var response = await Dio().get(
           '${ip}post/getTimeTable?section=${loggedInUser!.userType == "1" ? loggedInUser!.section : loggedInUser!.CNIC}&userType=${loggedInUser!.userType}');
       if (response.statusCode == 200) {
-        timeTable.clear();
-
-        for (var element1 in response.data) {
-          timeTable.add(TimeTableModel.fromMap(element1));
-        }
+        timeTable = TimeTableModel.fromMap(response.data);
       }
     } catch (e) {
       print(e);
