@@ -183,6 +183,26 @@ class AuthController extends ChangeNotifier {
     return false;
   }
 
+  updateProfile(FormData data) async {
+    try {
+      var response = await Dio().post('${ip}Post/updateProfile',
+          data: data,
+          options: Options(headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          }));
+      if (response.statusCode == 200) {
+        if (response.data != "-1") {
+          loggedInUser!.profileImage = response.data;
+          return true;
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+    return false;
+  }
+
   setState() {
     try {
       notifyListeners();

@@ -12,7 +12,7 @@ class ServerClient with ChangeNotifier {
   connectWithServer() async {
     try {
       // String ip = await getIp(context);
-      String ipp = ip.split('/')[2];
+      String ipp = ippp;
       socket = await Socket.connect(ipp, 5000);
       startListening();
     } catch (e) {

@@ -86,13 +86,20 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                     },
                                   ));
                                 },
-                                child: getItem(
-                                    postController.fromDiary
-                                        ? postController.pinedPosts[index]
-                                        : postController.posts[index],
-                                    postController,
-                                    index,
-                                    context));
+                                child: postController.fromDiary ||
+                                        postController.posts[index].postFor
+                                            .toLowerCase()
+                                            .contains(postController
+                                                .classWallFilter
+                                                .toLowerCase())
+                                    ? getItem(
+                                        postController.fromDiary
+                                            ? postController.pinedPosts[index]
+                                            : postController.posts[index],
+                                        postController,
+                                        index,
+                                        context)
+                                    : const SizedBox.shrink());
                           },
                           shrinkWrap: true,
                           physics: const BouncingScrollPhysics(),

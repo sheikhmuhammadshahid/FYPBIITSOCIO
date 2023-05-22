@@ -96,11 +96,7 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
             ),
             IconButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context) {
-                      return const UploadFile();
-                    },
-                  ));
+                  const UploadFile().launch(context);
                 },
                 icon: const Icon(Icons.calendar_month)),
           },
@@ -109,6 +105,8 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
             text: 'Post',
             textStyle: secondaryTextStyle(color: Colors.white, size: 10),
             onTap: () async {
+              FocusScope.of(context).requestFocus(FocusNode());
+
               try {
                 if (descriptionController.text.isNotEmpty ||
                     isImagePicked != 0) {
@@ -217,7 +215,13 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
                                             'images/socialv/posts/post_one.png');
                                   },
                                 ),
-                              ),
+                              ).onTap(() async {
+                                FocusScope.of(context)
+                                    .requestFocus(FocusNode());
+
+                                await pickFile(context, 0);
+                                setState(() {});
+                              }),
                             ),
                           const SizedBox(
                             height: 10,
@@ -314,6 +318,8 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
               children: [
                 GestureDetector(
                   onTap: (() async {
+                    FocusScope.of(context).requestFocus(FocusNode());
+
                     // postController
                     //     .controller.flickVideoManager!.videoPlayerController!
                     //     .pause();

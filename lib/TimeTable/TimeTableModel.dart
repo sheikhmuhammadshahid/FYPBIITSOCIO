@@ -1,17 +1,67 @@
 import 'dart:convert';
 
-class TimeTableModel {
-  String slot;
-  String monday;
-  String tuesday;
-  String wednesday;
-  String thursday;
-  String friday;
+import 'package:flutter/foundation.dart';
 
-  String section;
-  String teacherName;
-  String courseName;
-  int id;
+class TimeTableSlot {
+  String data;
+  String slot;
+  TimeTableSlot({
+    required this.data,
+    required this.slot,
+  });
+
+  TimeTableSlot copyWith({
+    String? data,
+    String? slot,
+  }) {
+    return TimeTableSlot(
+      data: data ?? this.data,
+      slot: slot ?? this.slot,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    final result = <String, dynamic>{};
+
+    result.addAll({'data': data});
+    result.addAll({'slot': slot});
+
+    return result;
+  }
+
+  factory TimeTableSlot.fromMap(Map<String, dynamic> map) {
+    return TimeTableSlot(
+      data: map['data'] ?? '',
+      slot: map['slot'] ?? '',
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory TimeTableSlot.fromJson(String source) =>
+      TimeTableSlot.fromMap(json.decode(source));
+
+  @override
+  String toString() => 'TimeTableSlot(data: $data, slot: $slot)';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is TimeTableSlot && other.data == data && other.slot == slot;
+  }
+
+  @override
+  int get hashCode => data.hashCode ^ slot.hashCode;
+}
+
+class TimeTableModel {
+  List<String> slot = [];
+  List<TimeTableSlot> monday = [];
+  List<TimeTableSlot> tuesday = [];
+  List<TimeTableSlot> wednesday = [];
+  List<TimeTableSlot> thursday = [];
+  List<TimeTableSlot> friday = [];
   TimeTableModel({
     required this.slot,
     required this.monday,
@@ -19,23 +69,15 @@ class TimeTableModel {
     required this.wednesday,
     required this.thursday,
     required this.friday,
-    required this.section,
-    required this.teacherName,
-    required this.courseName,
-    required this.id,
   });
 
   TimeTableModel copyWith({
-    String? slot,
-    String? monday,
-    String? tuesday,
-    String? wednesday,
-    String? thursday,
-    String? friday,
-    String? section,
-    String? teacherName,
-    String? courseName,
-    int? id,
+    List<String>? slot,
+    List<TimeTableSlot>? monday,
+    List<TimeTableSlot>? tuesday,
+    List<TimeTableSlot>? wednesday,
+    List<TimeTableSlot>? thursday,
+    List<TimeTableSlot>? friday,
   }) {
     return TimeTableModel(
       slot: slot ?? this.slot,
@@ -44,10 +86,6 @@ class TimeTableModel {
       wednesday: wednesday ?? this.wednesday,
       thursday: thursday ?? this.thursday,
       friday: friday ?? this.friday,
-      section: section ?? this.section,
-      teacherName: teacherName ?? this.teacherName,
-      courseName: courseName ?? this.courseName,
-      id: id ?? this.id,
     );
   }
 
@@ -55,31 +93,28 @@ class TimeTableModel {
     final result = <String, dynamic>{};
 
     result.addAll({'slot': slot});
-    result.addAll({'monday': monday});
-    result.addAll({'tuesday': tuesday});
-    result.addAll({'wednesday': wednesday});
-    result.addAll({'thursday': thursday});
-    result.addAll({'friday': friday});
-    result.addAll({'section': section});
-    result.addAll({'teacherName': teacherName});
-    result.addAll({'courseName': courseName});
-    result.addAll({'id': id});
+    result.addAll({'monday': monday.map((x) => x.toMap()).toList()});
+    result.addAll({'tuesday': tuesday.map((x) => x.toMap()).toList()});
+    result.addAll({'wednesday': wednesday.map((x) => x.toMap()).toList()});
+    result.addAll({'thursday': thursday.map((x) => x.toMap()).toList()});
+    result.addAll({'friday': friday.map((x) => x.toMap()).toList()});
 
     return result;
   }
 
   factory TimeTableModel.fromMap(Map<String, dynamic> map) {
     return TimeTableModel(
-      slot: map['slot'] ?? '',
-      monday: map['monday'] ?? '',
-      tuesday: map['tuesday'] ?? '',
-      wednesday: map['wednesday'] ?? '',
-      thursday: map['thursday'] ?? '',
-      friday: map['friday'] ?? '',
-      section: map['section'] ?? '',
-      teacherName: map['teacherName'] ?? '',
-      courseName: map['courseName'] ?? '',
-      id: map['id']?.toInt() ?? 0,
+      slot: List<String>.from(map['slot']),
+      monday: List<TimeTableSlot>.from(
+          map['monday']?.map((x) => TimeTableSlot.fromMap(x))),
+      tuesday: List<TimeTableSlot>.from(
+          map['tuesday']?.map((x) => TimeTableSlot.fromMap(x))),
+      wednesday: List<TimeTableSlot>.from(
+          map['wednesday']?.map((x) => TimeTableSlot.fromMap(x))),
+      thursday: List<TimeTableSlot>.from(
+          map['thursday']?.map((x) => TimeTableSlot.fromMap(x))),
+      friday: List<TimeTableSlot>.from(
+          map['friday']?.map((x) => TimeTableSlot.fromMap(x))),
     );
   }
 
@@ -90,7 +125,7 @@ class TimeTableModel {
 
   @override
   String toString() {
-    return 'TimeTableModel(slot: $slot, monday: $monday, tuesday: $tuesday, wednesday: $wednesday, thursday: $thursday, friday: $friday, section: $section, teacherName: $teacherName, courseName: $courseName, id: $id)';
+    return 'TimeTableModel(slot: $slot, monday: $monday, tuesday: $tuesday, wednesday: $wednesday, thursday: $thursday, friday: $friday)';
   }
 
   @override
@@ -98,16 +133,12 @@ class TimeTableModel {
     if (identical(this, other)) return true;
 
     return other is TimeTableModel &&
-        other.slot == slot &&
-        other.monday == monday &&
-        other.tuesday == tuesday &&
-        other.wednesday == wednesday &&
-        other.thursday == thursday &&
-        other.friday == friday &&
-        other.section == section &&
-        other.teacherName == teacherName &&
-        other.courseName == courseName &&
-        other.id == id;
+        listEquals(other.slot, slot) &&
+        listEquals(other.monday, monday) &&
+        listEquals(other.tuesday, tuesday) &&
+        listEquals(other.wednesday, wednesday) &&
+        listEquals(other.thursday, thursday) &&
+        listEquals(other.friday, friday);
   }
 
   @override
@@ -117,10 +148,6 @@ class TimeTableModel {
         tuesday.hashCode ^
         wednesday.hashCode ^
         thursday.hashCode ^
-        friday.hashCode ^
-        section.hashCode ^
-        teacherName.hashCode ^
-        courseName.hashCode ^
-        id.hashCode;
+        friday.hashCode;
   }
 }

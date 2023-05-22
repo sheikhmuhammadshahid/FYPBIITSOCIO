@@ -49,7 +49,7 @@ class _SVGivePermissionState extends State<SVGivePermission> {
               decoration: const InputDecoration(hintText: 'Select Teacher'),
               readOnly: true,
               onTap: () async {
-                await getSelector(context, 'Select Teacher', items);
+                //  await getSelector(context, 'Select Teacher', items);
               },
             ),
             const SizedBox(
@@ -59,7 +59,7 @@ class _SVGivePermissionState extends State<SVGivePermission> {
               decoration: const InputDecoration(hintText: 'Select Students'),
               readOnly: true,
               onTap: () async {
-                await getSelector(context, 'Select permissons', items1);
+                // await getSelector(context, 'Select permissons', items1);
               },
             ),
             //ElevatedButton(onPressed: () {}, child: const Text('Save'))

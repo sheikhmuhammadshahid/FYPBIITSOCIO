@@ -8,6 +8,7 @@ import 'package:biit_social/utils/SVCommon.dart';
 import 'package:provider/provider.dart';
 import '../Controllers/NotificatinsCountController.dart';
 import '../Test.dart';
+import '../TimeTable/DateSheetScree.dart';
 import 'fragments/SVAddPostFragment.dart';
 import 'fragments/SVHomeFragment.dart';
 import 'fragments/SVNotificationFragment.dart';
@@ -274,7 +275,9 @@ class _SVDashboardScreenState extends State<SVDashboardScreen>
         backgroundColor: svGetScaffoldColor(),
         body: context.watch<SettingController>().selectedWall == '7'
             ? const CalenderScreen()
-            : const SVHomeFragment(),
+            : context.watch<SettingController>().selectedWall == '9'
+                ? const DateSheetScreen()
+                : const SVHomeFragment(),
         extendBody: true,
         bottomNavigationBar: const ScrollHideNavigationBar());
     // bottomNavigationBar: const Padding(

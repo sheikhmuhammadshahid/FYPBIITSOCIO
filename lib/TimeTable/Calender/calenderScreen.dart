@@ -1,5 +1,9 @@
+import 'package:biit_social/Controllers/EventsController.dart';
+import 'package:biit_social/utils/SVConstants.dart';
 import 'package:flutter/material.dart';
 import 'package:calendar_view/calendar_view.dart';
+import 'package:nb_utils/nb_utils.dart';
+import 'package:provider/provider.dart';
 
 class CalenderScreen extends StatefulWidget {
   const CalenderScreen({super.key});
@@ -11,14 +15,20 @@ class CalenderScreen extends StatefulWidget {
 class _CalenderScreenState extends State<CalenderScreen> {
   getDayView() {
     return DayView(
-      controller: EventController(),
+      controller: eventsController!.eventController,
       eventTileBuilder: (date, events, boundry, start, end) {
         // Return your widget to display as event tile.
-        return Container();
+        return Container(
+          height: 100,
+          color: Colors.red,
+        );
       },
+
       fullDayEventBuilder: (events, date) {
         // Return your widget to display full day event view.
-        return Container();
+        return Container(
+          color: Colors.red,
+        );
       },
       showVerticalLine: true, // To display live time line in day view.
       showLiveTimeLineInAllDays:
@@ -29,40 +39,51 @@ class _CalenderScreenState extends State<CalenderScreen> {
       heightPerMinute: 1, // height occupied by 1 minute time span.
       eventArranger:
           const SideEventArranger(), // To define how simultaneous events will be arranged.
-      onEventTap: (events, date) => print(events),
+      onEventTap: (events, date) {
+        if (events.isNotEmpty) {
+          eventsController!.eventsCopy.clear();
+          eventsController!.eventsCopy.addAll(events);
+          eventsController!.setState();
+        }
+      },
       onDateLongPress: (date) => print(date),
     );
   }
 
   getMonthVIew() {
     return MonthView(
-      controller: EventController(
-        eventFilter: (date, events) => [
-          CalendarEventData(
-              title: 'data',
-              date: DateTime(2023, 1, 3, 3, 3, 4),
-              startTime: DateTime(2023, 1, 3, 3, 3, 4),
-              endDate: DateTime(2023, 1, 5, 3),
-              endTime: DateTime(2023, 1, 5, 3))
-        ],
-      ),
+      controller: eventsController!.eventController,
+
       pageTransitionCurve: Curves.easeInCirc,
+      cellAspectRatio: 12 / 9,
       // to provide custom UI for month cells.
       cellBuilder: (date, events, isToday, isInMonth) {
-        // Return your widget to display as month cell.
-        return isToday
-            ? events.isNotEmpty
-                ? Container(
-                    color: Colors.teal,
-                    child: Column(
-                      children: [
-                        Text(date.day.toString()),
-                        Text(events[0].title)
-                      ],
-                    ),
-                  )
-                : Text(date.day.toString())
-            : Text(date.day.toString());
+        bool hasEvents = events.isNotEmpty;
+
+        return Container(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Text(
+                  '${date.day}', // Display the day of the month
+                  style: TextStyle(
+                    color: context.iconColor,
+                    fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
+                  ),
+                ),
+                if (hasEvents) ...{
+                  for (int i = 0; i < events.length; i++) ...{
+                    Container(
+                      margin: const EdgeInsets.only(top: 2),
+                      height: 12,
+                      color: events[i].color,
+                    )
+                  }
+                }
+              ],
+            ),
+          ),
+        );
       },
       minMonth: DateTime(DateTime.now().year),
       maxMonth: DateTime(DateTime.now().year + 1),
@@ -71,7 +92,13 @@ class _CalenderScreenState extends State<CalenderScreen> {
       onPageChange: (date, pageIndex) => print("$date, $pageIndex"),
       onCellTap: (events, date) {
         // Implement callback when user taps on a cell.
-        print(events);
+        eventsController!.selectedDate = date;
+        eventsController!.eventsCopy.clear();
+        if (events.isNotEmpty) {
+          eventsController!.eventsCopy.addAll(events);
+        } else {}
+
+        eventsController!.setState();
       },
       startDay: WeekDays.sunday, // To change the first day of the week.
       // This callback will only work if cellBuilder is null.
@@ -82,7 +109,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
 
   getWeekView() {
     return WeekView(
-      controller: EventController(),
+      controller: eventsController!.eventController,
       eventTileBuilder: (date, events, boundry, start, end) {
         // Return your widget to display as event tile.
         return Container();
@@ -109,9 +136,31 @@ class _CalenderScreenState extends State<CalenderScreen> {
   List<String> toFilter = ['Monthly', 'Weekly', 'Daily'];
   int selectedIndex = 0;
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    eventsController ??= context.read<EventsController>();
+    getEventss();
+  }
+
+  getEventss() async {
+    try {
+      await eventsController!.getEvents();
+    } catch (e) {}
+  }
+
+  EventsController? eventsController;
+
+  @override
   Widget build(BuildContext context) {
+    eventsController ??= context.read<EventsController>();
     return SafeArea(
       child: Scaffold(
+        // appBar: AppBar(
+        //   elevation: 0,
+        //   title: Text('Event Calendar',
+        //       style: TextStyle(color: context.iconColor)),
+        // ),
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -119,41 +168,88 @@ class _CalenderScreenState extends State<CalenderScreen> {
               const SizedBox(
                 height: 10,
               ),
-              Center(
-                child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.05,
-                    width: MediaQuery.of(context).size.width,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        for (int i = 0; i < toFilter.length; i++) ...{
-                          ElevatedButton(
-                              onPressed: () {
-                                setState(() {
-                                  selectedIndex = i;
-                                });
-                              },
-                              child: Text(toFilter[i])),
-                          const SizedBox(
-                            width: 10,
-                          )
-                        }
-                      ],
-                    )),
-              ),
+              // Center(
+              //   child: SizedBox(
+              //       height: MediaQuery.of(context).size.height * 0.05,
+              //       width: MediaQuery.of(context).size.width,
+              //       child: Row(
+              //         mainAxisAlignment: MainAxisAlignment.center,
+              //         children: [
+              //           for (int i = 0; i < toFilter.length; i++) ...{
+              //             ElevatedButton(
+              //                 onPressed: () {
+              //                   setState(() {
+              //                     selectedIndex = i;
+              //                   });
+              //                 },
+              //                 child: Text(toFilter[i])),
+              //             const SizedBox(
+              //               width: 10,
+              //             )
+              //           }
+              //         ],
+              //       )),
+              // ),
               const SizedBox(
                 height: 10,
               ),
-              FittedBox(
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.9,
-                  child: selectedIndex == 0
-                      ? getMonthVIew()
-                      : selectedIndex == 1
-                          ? getWeekView()
-                          : getDayView(),
-                ),
+              SizedBox(
+                height: context.height() * 0.4,
+                child: context.watch<EventsController>().gettingEvents
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : selectedIndex == 0
+                        ? getMonthVIew()
+                        : selectedIndex == 1
+                            ? getWeekView()
+                            : getDayView(),
               ),
+              if (eventsController!.selectedDate != null)
+                Text(
+                  'Events for ${eventsController!.selectedDate!.day}/${eventsController!.selectedDate!.month}/${eventsController!.selectedDate!.year}:',
+                  style: TextStyle(
+                      color: context.iconColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold),
+                ),
+              if (eventsController!.eventsCopy.isNotEmpty)
+                SizedBox(
+                  height: context.height() * 0.4,
+                  child: context.watch<EventsController>().eventsCopy.isEmpty
+                      ? Center(
+                          child: Text(
+                            'No events found!',
+                            style: TextStyle(
+                                color: context.iconColor,
+                                fontFamily: svFontRoboto),
+                          ),
+                        )
+                      : ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: eventsController!.eventsCopy.length,
+                          itemBuilder: (context, index) {
+                            return ClipRRect(
+                              borderRadius: BorderRadius.circular(30),
+                              child: Card(
+                                color:
+                                    eventsController!.eventsCopy[index].color,
+                                child: ListTile(
+                                  title: Text(
+                                    eventsController!.eventsCopy[index].title,
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                  subtitle: Text(
+                                      '${eventsController!.eventsCopy[index].startTime!.hour}:${eventsController!.eventsCopy[index].startTime!.minute} - ${eventsController!.eventsCopy[index].endTime!.hour}:${eventsController!.eventsCopy[index].endTime!.minute}',
+                                      style:
+                                          const TextStyle(color: Colors.white)),
+                                  dense: true,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                ),
             ],
           ),
         ),

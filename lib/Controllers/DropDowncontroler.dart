@@ -35,7 +35,7 @@ class DropDownController extends ChangeNotifier {
                           value: e.CNIC,
                           avatarSingleItem: sVProfileImageProvider(
                               profileimageAddress + e.profileImage, 30, 30),
-                          extraInfoSingleItem: e.userType == "1" ? e.CNIC : '',
+                          extraInfoSingleItem: e.name,
                           nameSingleItem:
                               e.userType == "1" ? e.aridNo : e.CNIC))
                       .toList()));
