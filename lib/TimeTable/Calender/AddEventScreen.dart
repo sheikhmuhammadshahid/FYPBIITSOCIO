@@ -1,6 +1,7 @@
 import 'package:biit_social/Controllers/EventsController.dart';
 import 'package:biit_social/models/EventModel.dart';
 import 'package:biit_social/utils/SVConstants.dart';
+import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
@@ -334,7 +335,9 @@ class _AddEventsScreenState extends State<AddEventsScreen> {
                         if (value != null && value != '') {
                           if (startDate.text.isNotEmpty) {
                             if (DateTime.parse(startDate.text)
-                                .isBefore(DateTime.parse(endDate.text))) {
+                                    .isBefore(DateTime.parse(endDate.text)) ||
+                                DateTime.parse(startDate.text).dateYMD ==
+                                    (DateTime.parse(endDate.text)).dateYMD) {
                               return null;
                             }
                             return 'End date must be greater than start date!';

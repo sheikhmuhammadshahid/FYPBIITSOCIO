@@ -3,8 +3,9 @@ import 'package:calendar_view/calendar_view.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 
-import '../TimeTable/Calender/SyncfusionCallender.dart';
+import '../TimeTable/Calender/SyncfusionCallender.dart' as syn;
 import '../utils/SVCommon.dart';
 
 class EventsController extends ChangeNotifier {
@@ -12,8 +13,9 @@ class EventsController extends ChangeNotifier {
   List<EventModel> events = [];
   DateTime? selectedDate;
   EventController? eventController = EventController();
-  List<Appointment> appointments = <Appointment>[];
+  List<syn.Appointment> appointments = <syn.Appointment>[];
   bool gettingEvents = true;
+  List<TimeRegion> timeRegions = [];
   setState() {
     try {
       notifyListeners();
@@ -32,14 +34,21 @@ class EventsController extends ChangeNotifier {
         for (var element in response.data) {
           EventModel ev = EventModel.fromMap(element);
           events.add(ev);
+
           try {
+            DateTime dt1 = DateTime.parse(ev.startDate.replaceAll('T', ' '));
+            DateTime dt2 = DateTime.parse(ev.endDate.replaceAll('T', ' '));
+            print(dt1.toString());
+            print(dt1.subtract(const Duration(days: 2)).toString());
             eventsCopy.add(CalendarEventData(
-                startTime: DateTime.parse(ev.startDate.replaceAll('T', ' ')),
-                endTime: DateTime.parse(ev.endDate.replaceAll('T', ' ')),
+                startTime: dt1,
+                endTime: dt2,
                 title: ev.Name,
-                color: getRandomColor(),
-                endDate: DateTime.parse(ev.endDate.replaceAll('T', ' ')),
-                date: DateTime.parse(ev.startDate.replaceAll('T', ' '))));
+                color: syn.getRandomColor(),
+                endDate: dt2,
+                date: dt2.dateYMD == dt1.dateYMD
+                    ? dt1
+                    : dt1.subtract(const Duration(days: 1))));
           } catch (e) {}
         }
         eventController!.addAll(eventsCopy);

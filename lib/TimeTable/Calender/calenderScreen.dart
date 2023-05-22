@@ -60,34 +60,33 @@ class _CalenderScreenState extends State<CalenderScreen> {
       cellBuilder: (date, events, isToday, isInMonth) {
         bool hasEvents = events.isNotEmpty;
 
-        return Container(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Text(
-                  '${date.day}', // Display the day of the month
-                  style: TextStyle(
-                    color: context.iconColor,
-                    fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
-                  ),
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              Text(
+                '${date.day}', // Display the day of the month
+                style: TextStyle(
+                  color: isToday ? Colors.red : context.iconColor,
+                  fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
                 ),
-                if (hasEvents) ...{
-                  for (int i = 0; i < events.length; i++) ...{
-                    Container(
-                      margin: const EdgeInsets.only(top: 2),
-                      height: 12,
-                      color: events[i].color,
-                    )
-                  }
+              ),
+              if (hasEvents) ...{
+                for (int i = 0; i < events.length; i++) ...{
+                  Container(
+                    margin: const EdgeInsets.only(top: 2),
+                    height: 12,
+                    color: events[i].color,
+                  )
                 }
-              ],
-            ),
+              }
+            ],
           ),
         );
       },
       minMonth: DateTime(DateTime.now().year),
       maxMonth: DateTime(DateTime.now().year + 1),
       initialMonth: DateTime.now(),
+
       // /cellAspectRatio: 1,
       onPageChange: (date, pageIndex) => print("$date, $pageIndex"),
       onCellTap: (events, date) {
@@ -207,7 +206,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
               ),
               if (eventsController!.selectedDate != null)
                 Text(
-                  'Events for ${eventsController!.selectedDate!.day}/${eventsController!.selectedDate!.month}/${eventsController!.selectedDate!.year}:',
+                  'Events for ${eventsController!.selectedDate!.day}/${eventsController!.selectedDate!.month}/${eventsController!.selectedDate!.year}',
                   style: TextStyle(
                       color: context.iconColor,
                       fontSize: 16,
@@ -240,7 +239,19 @@ class _CalenderScreenState extends State<CalenderScreen> {
                                     style: const TextStyle(color: Colors.white),
                                   ),
                                   subtitle: Text(
-                                      '${eventsController!.eventsCopy[index].startTime!.hour}:${eventsController!.eventsCopy[index].startTime!.minute} - ${eventsController!.eventsCopy[index].endTime!.hour}:${eventsController!.eventsCopy[index].endTime!.minute}',
+                                      eventsController!
+                                                  .eventsCopy[index].startTime
+                                                  .toString()
+                                                  .splitBefore(' ') !=
+                                              eventsController!
+                                                  .eventsCopy[index].endDate
+                                                  .toString()
+                                                  .splitBefore(' ')
+                                          ? '${eventsController!.eventsCopy[index].startTime!.toString().splitBefore(' ')} - ${eventsController!.eventsCopy[index].endDate.toString().splitBefore(' ')}'
+                                          : eventsController!
+                                              .eventsCopy[index].startTime
+                                              .toString()
+                                              .splitBefore(' '),
                                       style:
                                           const TextStyle(color: Colors.white)),
                                   dense: true,

@@ -57,61 +57,67 @@ class _SVCommentScreenState extends State<SVCommentScreen> {
           IconButton(onPressed: () {}, icon: const Icon(Icons.more_horiz)),
         ],
       ),
-      body: Column(
-        ///alignment: Alignment.bottomCenter,
-        children: [
-          SingleChildScrollView(
-              child: Consumer<FriendsStoriesController>(
-            builder: (context, value, child) => SizedBox(
-                height: value.isCLicked
-                    ? context.height() * 0.87
-                    : context.height() * 0.79,
-                child: !friendsStoriesController!.isStoriesLoading
-                    ? friendsStoriesController!.comments.isEmpty
-                        ? const Center(
-                            child: Text('No comments yet!'),
-                          )
-                        : ListView.builder(
-                            physics: const BouncingScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount:
-                                friendsStoriesController!.comments.length,
-                            itemBuilder: (context, index) => Column(
-                              children: [
-                                SVCommentComponent(
-                                    PostId: widget.postId,
-                                    comment: friendsStoriesController!
-                                        .comments[index]),
-                                for (int i = 0;
-                                    i <
-                                        friendsStoriesController!
-                                            .comments[index].replies!.length;
-                                    i++) ...{
+      body: SizedBox(
+        height: context.height(),
+        child: Stack(
+          ///alignment: Alignment.bottomCenter,
+          children: [
+            SingleChildScrollView(
+                child: Consumer<FriendsStoriesController>(
+              builder: (context, value, child) => SizedBox(
+                  height: value.isCLicked
+                      ? context.height() * 0.87
+                      : context.height() * 0.79,
+                  child: !friendsStoriesController!.isStoriesLoading
+                      ? friendsStoriesController!.comments.isEmpty
+                          ? const Center(
+                              child: Text('No comments yet!'),
+                            )
+                          : ListView.builder(
+                              physics: const BouncingScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount:
+                                  friendsStoriesController!.comments.length,
+                              itemBuilder: (context, index) => Column(
+                                children: [
                                   SVCommentComponent(
                                       PostId: widget.postId,
                                       comment: friendsStoriesController!
-                                          .comments[index].replies![i]),
-                                }
-                              ],
-                            ),
-                          )
-                    : const Center(
-                        child: SizedBox(
-                          height: 50,
-                          width: 50,
-                          child: CircularProgressIndicator(),
-                        ),
-                      )),
-          )),
-          Consumer<FriendsStoriesController>(
-            builder: (context, value, child) => value.isCLicked
-                ? const SizedBox.shrink()
-                : SVCommentReplyComponent(
-                    postId: widget.postId,
-                    repLiedOn: 0,
-                  ),
-          )
-        ],
+                                          .comments[index]),
+                                  // for (int i = 0;
+                                  //     i <
+                                  //         friendsStoriesController!
+                                  //             .comments[index].replies!.length;
+                                  //     i++) ...{
+                                  //   SVCommentComponent(
+                                  //       PostId: widget.postId,
+                                  //       comment: friendsStoriesController!
+                                  //           .comments[index].replies![i]),
+                                  // }
+                                ],
+                              ),
+                            )
+                      : const Center(
+                          child: SizedBox(
+                            height: 50,
+                            width: 50,
+                            child: CircularProgressIndicator(),
+                          ),
+                        )),
+            )),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Consumer<FriendsStoriesController>(
+                builder: (context, value, child) => value.isCLicked
+                    ? const SizedBox.shrink()
+                    : SVCommentReplyComponent(
+                        postId: widget.postId,
+                        repLiedOn: 0,
+                      ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
