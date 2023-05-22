@@ -47,6 +47,7 @@ class _EventCalendarState extends State<EventCalendar> {
             : Column(
                 children: [
                   SfCalendar(
+                    specialRegions: _getTimeRegion(),
                     view: CalendarView.month,
                     allowAppointmentResize: true,
                     showNavigationArrow: true,
@@ -108,12 +109,6 @@ class _EventCalendarState extends State<EventCalendar> {
   }
 
   _getCalendarDataSource() {
-    Appointment(
-      startTime: DateTime(2023, 5, 1, 9),
-      endTime: DateTime(2023, 5, 1, 10),
-      subject: 'Meeting 1',
-      color: Colors.blue,
-    );
     eventsController.appointments.clear();
     for (EventModel element in eventsController.events) {
       eventsController.appointments.add(Appointment(
@@ -124,6 +119,20 @@ class _EventCalendarState extends State<EventCalendar> {
     }
 
     return AppointmentDataSource(eventsController.appointments);
+  }
+
+  _getTimeRegion() {
+    eventsController.timeRegions.clear();
+    for (EventModel element in eventsController.events) {
+      eventsController.timeRegions.add(TimeRegion(
+        startTime: DateTime.parse(element.startDate.replaceAll('T', ' ')),
+        endTime: DateTime.parse(element.endDate.replaceAll('T', ' ')),
+        enablePointerInteraction:
+            false, // Set this to false to disable interaction with the range
+        color: getRandomColor(), // Set the desired color for the range
+      ));
+    }
+    return eventsController.timeRegions;
   }
 }
 

@@ -43,12 +43,11 @@ class SVCommentReplyComponent extends StatelessWidget {
                   width: context.width() * 0.6,
                   child: AppTextField(
                     controller: commentControlelr,
-                    textFieldType: TextFieldType.OTHER,
+                    textFieldType: TextFieldType.NAME,
                     decoration: InputDecoration(
                       hintText: 'Write A Comment',
                       hintStyle: secondaryTextStyle(color: svGetBodyColor()),
                       border: InputBorder.none,
-                      focusedBorder: InputBorder.none,
                       enabledBorder: InputBorder.none,
                     ),
                   ),
@@ -65,16 +64,8 @@ class SVCommentReplyComponent extends StatelessWidget {
                           profileImage: loggedInUser!.profileImage,
                           replies: [],
                           time: DateTime.now().toString());
-                      if (repLiedOn != 0) {
-                        var res = friendsStoriesController.comments
-                            .where((element) => element.id == repLiedOn)
-                            .toList();
-                        if (res.isNotEmpty) {
-                          res[0].replies!.add(v);
-                        }
-                      } else {
-                        friendsStoriesController.comments.add(v);
-                      }
+
+                      friendsStoriesController.comments.add(v);
 
                       friendsStoriesController.addComment(postId, repLiedOn);
                     },

@@ -17,7 +17,7 @@ class Post {
   bool? isLiked = false;
   String type;
   int? likesCount;
-  int? commentsCount;
+  int? CommentsCount;
   String fromWall;
   Post({
     this.id,
@@ -34,7 +34,7 @@ class Post {
     this.isLiked,
     required this.type,
     this.likesCount,
-    this.commentsCount,
+    this.CommentsCount,
     required this.fromWall,
   });
 
@@ -53,7 +53,7 @@ class Post {
     bool? isLiked,
     String? type,
     int? likesCount,
-    int? commentsCount,
+    int? CommentsCount,
     String? fromWall,
   }) {
     return Post(
@@ -71,7 +71,7 @@ class Post {
       isLiked: isLiked ?? this.isLiked,
       type: type ?? this.type,
       likesCount: likesCount ?? this.likesCount,
-      commentsCount: commentsCount ?? this.commentsCount,
+      CommentsCount: CommentsCount ?? this.CommentsCount,
       fromWall: fromWall ?? this.fromWall,
     );
   }
@@ -107,8 +107,8 @@ class Post {
     if (likesCount != null) {
       result.addAll({'likesCount': likesCount});
     }
-    if (commentsCount != null) {
-      result.addAll({'commentsCount': commentsCount});
+    if (CommentsCount != null) {
+      result.addAll({'CommentsCount': CommentsCount});
     }
     result.addAll({'fromWall': fromWall});
 
@@ -124,14 +124,15 @@ class Post {
       text: map['text'] ?? '',
       likes: map['likes']?.toInt(),
       user: map['user'] ?? '',
-      userPosted: map['user'] != null ? User.fromJson(map['user']) : null,
+      userPosted:
+          map['userPosted'] != null ? User.fromMap(map['userPosted']) : null,
       isPinned: map['isPinned'],
       postFor: map['postFor'] ?? '',
       isFriend: map['isFriend'],
       isLiked: map['isLiked'],
       type: map['type'] ?? '',
       likesCount: map['likesCount']?.toInt(),
-      commentsCount: map['commentsCount']?.toInt(),
+      CommentsCount: map['CommentsCount']?.toInt(),
       fromWall: map['fromWall'] ?? '',
     );
   }
@@ -142,7 +143,7 @@ class Post {
 
   @override
   String toString() {
-    return 'Post(id: $id, postedBy: $postedBy, dateTime: $dateTime, description: $description, text: $text, likes: $likes, user: $user, userPosted: $userPosted, isPinned: $isPinned, postFor: $postFor, isFriend: $isFriend, isLiked: $isLiked, type: $type, likesCount: $likesCount, commentsCount: $commentsCount, fromWall: $fromWall)';
+    return 'Post(id: $id, postedBy: $postedBy, dateTime: $dateTime, description: $description, text: $text, likes: $likes, user: $user, userPosted: $userPosted, isPinned: $isPinned, postFor: $postFor, isFriend: $isFriend, isLiked: $isLiked, type: $type, likesCount: $likesCount, CommentsCount: $CommentsCount, fromWall: $fromWall)';
   }
 
   @override
@@ -164,7 +165,7 @@ class Post {
         other.isLiked == isLiked &&
         other.type == type &&
         other.likesCount == likesCount &&
-        other.commentsCount == commentsCount &&
+        other.CommentsCount == CommentsCount &&
         other.fromWall == fromWall;
   }
 
@@ -184,7 +185,7 @@ class Post {
         isLiked.hashCode ^
         type.hashCode ^
         likesCount.hashCode ^
-        commentsCount.hashCode ^
+        CommentsCount.hashCode ^
         fromWall.hashCode;
   }
 }
