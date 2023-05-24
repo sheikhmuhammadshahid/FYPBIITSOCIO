@@ -1,5 +1,4 @@
 import 'package:biit_social/Controllers/SettingController.dart';
-import 'package:biit_social/TimeTable/Calender/AddEventScreen.dart';
 import 'package:biit_social/screens/auth/screens/SVSignInScreen.dart';
 import 'package:biit_social/screens/profile/screens/FriendsListScreen.dart';
 import 'package:flutter/material.dart';
@@ -120,7 +119,7 @@ class _SVHomeDrawerComponentState extends State<SVHomeDrawerComponent> {
                       ).launch(context);
                     } else if (selectedIndex == 4) {
                       finish(context);
-                      const AddEventsScreen().launch(context);
+                      // const AddEventsScreen().launch(context);
                     }
                   },
                 );
