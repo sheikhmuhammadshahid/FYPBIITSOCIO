@@ -118,12 +118,14 @@ class _CalenderScreenState extends State<CalenderScreen> {
       // This callback will only work if cellBuilder is null.
       onEventTap: (event, date) => print(event),
       onDateLongPress: (date) async {
-        colorSelected = -1;
-        eventsController!.colorSelected = Colors.black;
-        startDate.text = date.toString();
-        endDate.text = date.toString();
+        if (loggedInUser!.userType == '3') {
+          colorSelected = -1;
+          eventsController!.colorSelected = Colors.black;
+          startDate.text = date.toString();
+          endDate.text = date.toString();
 
-        await SelectEvent(context, 0);
+          await SelectEvent(context, 0);
+        }
       },
     );
   }
