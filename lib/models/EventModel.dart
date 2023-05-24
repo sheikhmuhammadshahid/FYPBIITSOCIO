@@ -8,12 +8,14 @@ class EventModel {
   String endDate;
   String Name;
   Color? color;
+  int colorId;
   EventModel({
     required this.startDate,
     required this.id,
     required this.endDate,
     required this.Name,
     this.color,
+    required this.colorId,
   });
 
   EventModel copyWith({
@@ -21,12 +23,16 @@ class EventModel {
     int? id,
     String? endDate,
     String? Name,
+    Color? color,
+    int? colorId,
   }) {
     return EventModel(
       startDate: startDate ?? this.startDate,
       id: id ?? this.id,
       endDate: endDate ?? this.endDate,
       Name: Name ?? this.Name,
+      color: color ?? this.color,
+      colorId: colorId ?? this.colorId,
     );
   }
 
@@ -37,6 +43,10 @@ class EventModel {
     result.addAll({'id': id});
     result.addAll({'endDate': endDate});
     result.addAll({'Name': Name});
+    if (color != null) {
+      result.addAll({'color': color!.value});
+    }
+    result.addAll({'colorId': colorId});
 
     return result;
   }
@@ -47,6 +57,8 @@ class EventModel {
       id: map['id']?.toInt() ?? 0,
       endDate: map['endDate'] ?? '',
       Name: map['Name'] ?? '',
+      color: map['color'] != null ? Color(map['color']) : null,
+      colorId: map['colorId']?.toInt() ?? 0,
     );
   }
 
@@ -57,7 +69,7 @@ class EventModel {
 
   @override
   String toString() {
-    return 'EventModel(startDate: $startDate, id: $id, endDate: $endDate, Name: $Name)';
+    return 'EventModel(startDate: $startDate, id: $id, endDate: $endDate, Name: $Name, color: $color, colorId: $colorId)';
   }
 
   @override
@@ -68,11 +80,18 @@ class EventModel {
         other.startDate == startDate &&
         other.id == id &&
         other.endDate == endDate &&
-        other.Name == Name;
+        other.Name == Name &&
+        other.color == color &&
+        other.colorId == colorId;
   }
 
   @override
   int get hashCode {
-    return startDate.hashCode ^ id.hashCode ^ endDate.hashCode ^ Name.hashCode;
+    return startDate.hashCode ^
+        id.hashCode ^
+        endDate.hashCode ^
+        Name.hashCode ^
+        color.hashCode ^
+        colorId.hashCode;
   }
 }

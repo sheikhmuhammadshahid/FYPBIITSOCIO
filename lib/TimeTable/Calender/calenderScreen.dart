@@ -2,8 +2,13 @@ import 'package:biit_social/Controllers/EventsController.dart';
 import 'package:biit_social/utils/SVConstants.dart';
 import 'package:flutter/material.dart';
 import 'package:calendar_view/calendar_view.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:provider/provider.dart';
+
+import '../../models/EventModel.dart';
+import '../../utils/SVCommon.dart';
 
 class CalenderScreen extends StatefulWidget {
   const CalenderScreen({super.key});
@@ -13,6 +18,13 @@ class CalenderScreen extends StatefulWidget {
 }
 
 class _CalenderScreenState extends State<CalenderScreen> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController startDate = TextEditingController();
+  TextEditingController endDate = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  EventsController? eventsController;
+  bool toUpdate = false;
+  int colorSelected = -1;
   getDayView() {
     return DayView(
       controller: eventsController!.eventController,
@@ -92,6 +104,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
       onCellTap: (events, date) {
         // Implement callback when user taps on a cell.
         eventsController!.selectedDate = date;
+        toUpdate = false;
         eventsController!.eventsCopy.clear();
         if (events.isNotEmpty) {
           eventsController!.eventsCopy.addAll(events);
@@ -99,10 +112,18 @@ class _CalenderScreenState extends State<CalenderScreen> {
 
         eventsController!.setState();
       },
+
       startDay: WeekDays.sunday, // To change the first day of the week.
       // This callback will only work if cellBuilder is null.
       onEventTap: (event, date) => print(event),
-      onDateLongPress: (date) => print(date),
+      onDateLongPress: (date) async {
+        colorSelected = -1;
+        eventsController!.colorSelected = Colors.black;
+        startDate.text = date.toString();
+        endDate.text = date.toString();
+
+        await SelectEvent(context, 0);
+      },
     );
   }
 
@@ -147,8 +168,6 @@ class _CalenderScreenState extends State<CalenderScreen> {
       await eventsController!.getEvents();
     } catch (e) {}
   }
-
-  EventsController? eventsController;
 
   @override
   Widget build(BuildContext context) {
@@ -228,12 +247,129 @@ class _CalenderScreenState extends State<CalenderScreen> {
                           shrinkWrap: true,
                           itemCount: eventsController!.eventsCopy.length,
                           itemBuilder: (context, index) {
+                            // ev = eventsController!.eventsCopy[index];
                             return ClipRRect(
                               borderRadius: BorderRadius.circular(30),
                               child: Card(
                                 color:
                                     eventsController!.eventsCopy[index].color,
                                 child: ListTile(
+                                  trailing: loggedInUser!.userType != '3'
+                                      ? const SizedBox.shrink()
+                                      : PopupMenuButton(
+                                          color: context.iconColor,
+                                          itemBuilder: (context) {
+                                            return [
+                                              PopupMenuItem(
+                                                  child: TextButton(
+                                                      onPressed: () {
+                                                        eventsController!
+                                                            .deleteEvent(int.parse(
+                                                                eventsController!
+                                                                    .eventsCopy[
+                                                                        index]
+                                                                    .description));
+                                                        nameController.text =
+                                                            '';
+                                                        startDate.text = '';
+                                                        endDate.text = '';
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: Row(
+                                                        children: [
+                                                          Icon(
+                                                            Icons.delete,
+                                                            color: context
+                                                                .primaryColor
+                                                                .withOpacity(
+                                                                    .8),
+                                                          ),
+                                                          const SizedBox(
+                                                            width: 5,
+                                                          ),
+                                                          Text(
+                                                            'Delete',
+                                                            style:
+                                                                boldTextStyle(),
+                                                          ),
+                                                        ],
+                                                      ))),
+                                              PopupMenuItem(
+                                                  child: TextButton(
+                                                      onPressed: () async {
+                                                        nameController.text =
+                                                            eventsController!
+                                                                .eventsCopy[
+                                                                    index]
+                                                                .title;
+                                                        startDate.text =
+                                                            eventsController!
+                                                                .eventsCopy[
+                                                                    index]
+                                                                .startTime
+                                                                .toString()
+                                                                .replaceAll(
+                                                                    'T', ' ');
+                                                        endDate.text =
+                                                            eventsController!
+                                                                .eventsCopy[
+                                                                    index]
+                                                                .endDate
+                                                                .toString()
+                                                                .replaceAll(
+                                                                    'T', ' ');
+                                                        colorSelected =
+                                                            colorCollection.indexOf(
+                                                                eventsController!
+                                                                    .eventsCopy[
+                                                                        index]
+                                                                    .color);
+                                                        eventsController!
+                                                                .colorSelected =
+                                                            eventsController!
+                                                                .eventsCopy[
+                                                                    index]
+                                                                .color;
+                                                        print(colorSelected);
+                                                        eventsController!
+                                                            .setState();
+                                                        toUpdate = true;
+                                                        await SelectEvent(
+                                                            context,
+                                                            int.parse(
+                                                                eventsController!
+                                                                    .eventsCopy[
+                                                                        index]
+                                                                    .description));
+                                                        nameController.text =
+                                                            '';
+                                                        startDate.text = '';
+                                                        endDate.text = '';
+                                                        toUpdate = false;
+                                                      },
+                                                      child: Row(
+                                                        children: [
+                                                          Icon(
+                                                            Icons.edit,
+                                                            color: context
+                                                                .primaryColor
+                                                                .withOpacity(
+                                                                    .8),
+                                                          ),
+                                                          const SizedBox(
+                                                            width: 5,
+                                                          ),
+                                                          Text(
+                                                            'Edit',
+                                                            style: boldTextStyle(
+                                                                color: context
+                                                                    .iconColor),
+                                                          ),
+                                                        ],
+                                                      ))),
+                                            ];
+                                          },
+                                        ),
                                   title: Text(
                                     eventsController!.eventsCopy[index].title,
                                     style: const TextStyle(color: Colors.white),
@@ -264,6 +400,204 @@ class _CalenderScreenState extends State<CalenderScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  selectDate(BuildContext context, TextEditingController controller) async {
+    DateTime? dt = await showOmniDateTimePicker(
+      context: context,
+      initialDate: controller.text.isNotEmpty
+          ? DateTime.parse(controller.text.trim())
+          : DateTime.now(),
+      firstDate: DateTime(1600).subtract(const Duration(days: 3652)),
+      lastDate: DateTime.now().add(
+        const Duration(days: 3652),
+      ),
+      is24HourMode: false,
+      isShowSeconds: false,
+      minutesInterval: 1,
+      secondsInterval: 1,
+      borderRadius: const BorderRadius.all(Radius.circular(16)),
+      constraints: const BoxConstraints(
+        maxWidth: 350,
+        maxHeight: 650,
+      ),
+      transitionBuilder: (context, anim1, anim2, child) {
+        return FadeTransition(
+          opacity: anim1.drive(
+            Tween(
+              begin: 0,
+              end: 1,
+            ),
+          ),
+          child: child,
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 200),
+      barrierDismissible: true,
+      selectableDayPredicate: (dateTime) {
+        // Disable 25th Feb 2023
+        if (dateTime == DateTime(2023, 2, 25)) {
+          return false;
+        } else {
+          return true;
+        }
+      },
+    );
+    if (dt != null) {
+      controller.text = dt.toString();
+    }
+  }
+
+  Future<dynamic> SelectEvent(BuildContext context, int id) {
+    return showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => AlertDialog(
+        icon: Align(
+          alignment: Alignment.topRight,
+          child: IconButton(
+              icon: Icon(
+                Icons.cancel,
+                color: context.iconColor,
+              ),
+              onPressed: () {
+                context.pop();
+              }),
+        ),
+        backgroundColor: context.cardColor,
+        title: Text(toUpdate ? 'Edit Event' : 'Add Event',
+            style:
+                TextStyle(fontFamily: svFontRoboto, color: context.iconColor)),
+        content: SizedBox(
+          height: context.height() * 0.3,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 5, right: 5),
+            child: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    TextFormField(
+                      validator: (value) {
+                        if (value != null && value != '') {
+                          return null;
+                        }
+                        return 'Please enter name';
+                      },
+                      controller: nameController,
+                      decoration: const InputDecoration(
+                          label: Text('Name'), hintText: 'Enter event name'),
+                    ),
+                    10.height,
+                    TextFormField(
+                      readOnly: true,
+                      controller: startDate,
+                      onTap: () {
+                        selectDate(context, startDate);
+                      },
+                      validator: (value) {
+                        if (value != null && value != '') {
+                          return null;
+                        }
+                        return 'Please select start date!';
+                      },
+                      decoration: const InputDecoration(
+                          label: Text('Start date'), hintText: 'Start date'),
+                    ),
+                    10.height,
+                    TextFormField(
+                      readOnly: true,
+                      onTap: () {
+                        selectDate(context, endDate);
+                      },
+                      validator: (value) {
+                        if (value != null && value != '') {
+                          if (startDate.text.isNotEmpty) {
+                            if (DateTime.parse(startDate.text)
+                                    .isBefore(DateTime.parse(endDate.text)) ||
+                                DateTime.parse(startDate.text).dateYMD ==
+                                    (DateTime.parse(endDate.text)).dateYMD) {
+                              return null;
+                            }
+                            return 'End date must be greater than start date!';
+                          }
+                        }
+                        return 'Please select end date!';
+                      },
+                      controller: endDate,
+                      decoration: const InputDecoration(
+                          label: Text('end date'), hintText: 'end date'),
+                    ),
+                    10.height,
+                    Wrap(
+                        children: colorCollection
+                            .map((e) => Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: Container(
+                                    height: 50,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                        color: e,
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                            color: context
+                                                        .watch<
+                                                            EventsController>()
+                                                        .colorSelected ==
+                                                    e
+                                                ? Colors.red
+                                                : e,
+                                            width: 2)),
+                                  ).onTap(() {
+                                    colorSelected = colorCollection.indexOf(e);
+                                    eventsController!.colorSelected = e;
+                                    eventsController!.setState();
+                                  }),
+                                ))
+                            .toList()),
+                    10.height,
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        actions: [
+          ElevatedButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  if (colorSelected != -1) {
+                    EventModel event = EventModel(
+                        colorId: colorSelected,
+                        id: id,
+                        startDate: startDate.text,
+                        endDate: endDate.text,
+                        Name: nameController.text);
+                    if (toUpdate) {
+                      eventsController!.updateEvent(event);
+                    } else {
+                      eventsController!.addEvent(event);
+                    }
+                    colorSelected = -1;
+                    nameController.text = '';
+                    startDate.text = '';
+                    endDate.text = '';
+                    context.pop();
+                  } else {
+                    EasyLoading.showToast('Please select color ',
+                        dismissOnTap: true);
+                  }
+                }
+              },
+              child: Text(
+                toUpdate ? 'Update' : 'Add',
+                style: TextStyle(
+                    color: context.scaffoldBackgroundColor,
+                    fontFamily: svFontRoboto),
+              ))
+        ],
       ),
     );
   }

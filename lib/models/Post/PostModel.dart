@@ -125,7 +125,7 @@ class Post {
       likes: map['likes']?.toInt(),
       user: map['user'] ?? '',
       userPosted:
-          map['userPosted'] != null ? User.fromMap(map['userPosted']) : null,
+          map['user'] != null ? User.fromMap(jsonDecode(map['user'])) : null,
       isPinned: map['isPinned'],
       postFor: map['postFor'] ?? '',
       isFriend: map['isFriend'],
