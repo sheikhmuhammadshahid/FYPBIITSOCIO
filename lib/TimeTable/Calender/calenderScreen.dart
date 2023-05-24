@@ -6,6 +6,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../models/EventModel.dart';
 import '../../utils/SVCommon.dart';
@@ -212,10 +213,37 @@ class _CalenderScreenState extends State<CalenderScreen> {
                 height: 10,
               ),
               SizedBox(
-                height: context.height() * 0.4,
-                child: context.watch<EventsController>().gettingEvents
-                    ? const Center(
-                        child: CircularProgressIndicator(),
+                height: context.watch<EventsController>().gettingEvents
+                    ? context.height()
+                    : context.height() * 0.4,
+                child: eventsController!.gettingEvents
+                    ? Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey,
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: 5,
+                            itemBuilder: (context, index) {
+                              return index == 0
+                                  ? Container(
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      margin: const EdgeInsets.all(20),
+                                      width: context.width(),
+                                      height: context.height() * 0.4,
+                                    )
+                                  : Container(
+                                      decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      margin: const EdgeInsets.all(10),
+                                      width: context.width(),
+                                      height: context.height() * 0.1,
+                                    );
+                            }),
                       )
                     : selectedIndex == 0
                         ? getMonthVIew()
