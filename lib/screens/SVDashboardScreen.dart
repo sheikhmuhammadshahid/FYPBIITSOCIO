@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import '../Controllers/NotificatinsCountController.dart';
 import '../Test.dart';
 import '../TimeTable/DateSheetScree.dart';
+import '../TimeTable/ShowAllTimeTableScreen.dart';
 import 'fragments/SVAddPostFragment.dart';
 import 'fragments/SVHomeFragment.dart';
 import 'fragments/SVNotificationFragment.dart';
@@ -277,7 +278,9 @@ class _SVDashboardScreenState extends State<SVDashboardScreen>
             ? const CalenderScreen()
             : context.watch<SettingController>().selectedWall == '9'
                 ? const DateSheetScreen()
-                : const SVHomeFragment(),
+                : context.watch<SettingController>().selectedWall == '10'
+                    ? const ShowTimeTableScreen()
+                    : const SVHomeFragment(),
         extendBody: true,
         bottomNavigationBar: const ScrollHideNavigationBar());
     // bottomNavigationBar: const Padding(

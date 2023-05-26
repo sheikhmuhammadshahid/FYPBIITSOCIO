@@ -39,6 +39,7 @@ class PostController with ChangeNotifier {
           '${ip}post/getTimeTable?section=${loggedInUser!.userType == "1" ? loggedInUser!.section : loggedInUser!.CNIC}&userType=${loggedInUser!.userType}');
       if (response.statusCode == 200) {
         timeTable = TimeTableModel.fromMap(response.data);
+        print(response.data);
       }
     } catch (e) {
       print(e);

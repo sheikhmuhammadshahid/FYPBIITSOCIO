@@ -57,6 +57,8 @@ class TimeTableSlot {
 
 class TimeTableModel {
   List<String> slot = [];
+  List<String> venue = [];
+  List<String> teacher = [];
   List<TimeTableSlot> monday = [];
   List<TimeTableSlot> tuesday = [];
   List<TimeTableSlot> wednesday = [];
@@ -64,6 +66,8 @@ class TimeTableModel {
   List<TimeTableSlot> friday = [];
   TimeTableModel({
     required this.slot,
+    required this.venue,
+    required this.teacher,
     required this.monday,
     required this.tuesday,
     required this.wednesday,
@@ -73,6 +77,8 @@ class TimeTableModel {
 
   TimeTableModel copyWith({
     List<String>? slot,
+    List<String>? venue,
+    List<String>? teacher,
     List<TimeTableSlot>? monday,
     List<TimeTableSlot>? tuesday,
     List<TimeTableSlot>? wednesday,
@@ -81,6 +87,8 @@ class TimeTableModel {
   }) {
     return TimeTableModel(
       slot: slot ?? this.slot,
+      venue: venue ?? this.venue,
+      teacher: teacher ?? this.teacher,
       monday: monday ?? this.monday,
       tuesday: tuesday ?? this.tuesday,
       wednesday: wednesday ?? this.wednesday,
@@ -93,6 +101,8 @@ class TimeTableModel {
     final result = <String, dynamic>{};
 
     result.addAll({'slot': slot});
+    result.addAll({'venue': venue});
+    result.addAll({'teacher': teacher});
     result.addAll({'monday': monday.map((x) => x.toMap()).toList()});
     result.addAll({'tuesday': tuesday.map((x) => x.toMap()).toList()});
     result.addAll({'wednesday': wednesday.map((x) => x.toMap()).toList()});
@@ -105,6 +115,8 @@ class TimeTableModel {
   factory TimeTableModel.fromMap(Map<String, dynamic> map) {
     return TimeTableModel(
       slot: List<String>.from(map['slot']),
+      venue: List<String>.from(map['venue']),
+      teacher: List<String>.from(map['teacher']),
       monday: List<TimeTableSlot>.from(
           map['monday']?.map((x) => TimeTableSlot.fromMap(x))),
       tuesday: List<TimeTableSlot>.from(
@@ -125,7 +137,7 @@ class TimeTableModel {
 
   @override
   String toString() {
-    return 'TimeTableModel(slot: $slot, monday: $monday, tuesday: $tuesday, wednesday: $wednesday, thursday: $thursday, friday: $friday)';
+    return 'TimeTableModel(slot: $slot, venue: $venue, teacher: $teacher, monday: $monday, tuesday: $tuesday, wednesday: $wednesday, thursday: $thursday, friday: $friday)';
   }
 
   @override
@@ -134,6 +146,8 @@ class TimeTableModel {
 
     return other is TimeTableModel &&
         listEquals(other.slot, slot) &&
+        listEquals(other.venue, venue) &&
+        listEquals(other.teacher, teacher) &&
         listEquals(other.monday, monday) &&
         listEquals(other.tuesday, tuesday) &&
         listEquals(other.wednesday, wednesday) &&
@@ -144,6 +158,8 @@ class TimeTableModel {
   @override
   int get hashCode {
     return slot.hashCode ^
+        venue.hashCode ^
+        teacher.hashCode ^
         monday.hashCode ^
         tuesday.hashCode ^
         wednesday.hashCode ^
