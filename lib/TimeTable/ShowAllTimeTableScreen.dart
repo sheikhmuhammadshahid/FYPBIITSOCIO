@@ -33,7 +33,23 @@ class _ShowTimeTableScreenState extends State<ShowTimeTableScreen> {
   ];
   getSlots() {
     List<String> data = postController.timeTable!.slot;
-    data.insert(0, 'All');
+    if (!data.any((element) => element == 'All')) data.insert(0, 'All');
+    return data;
+  }
+
+  getTeachers() {
+    List<String> data = postController.timeTable!.teacher;
+    if (!data.any((element) => element == 'All')) data.insert(0, 'All');
+    return data;
+  }
+
+  getVenue() {
+    List<String> data = postController.timeTable!.venue;
+    if (!data.any((element) => element == 'All')) {
+      data.removeAt(0);
+      data.insert(0, 'All');
+    }
+    //days.removeWhere((element) => element == '');
     return data;
   }
 
@@ -67,6 +83,7 @@ class _ShowTimeTableScreenState extends State<ShowTimeTableScreen> {
                                     SizedBox(
                                       width: context.width() * 0.35,
                                       child: getDropDownWidget(
+                                          toshow: 1,
                                           context: context,
                                           hintText: 'select day',
                                           items: days,
@@ -80,6 +97,7 @@ class _ShowTimeTableScreenState extends State<ShowTimeTableScreen> {
                                     SizedBox(
                                       width: context.width() * 0.65,
                                       child: getDropDownWidget(
+                                          toshow: 2,
                                           context: context,
                                           hintText: 'select slot',
                                           items: getSlots(),
@@ -103,10 +121,10 @@ class _ShowTimeTableScreenState extends State<ShowTimeTableScreen> {
                                     SizedBox(
                                       width: context.width() * 0.35,
                                       child: getDropDownWidget(
+                                          toshow: 3,
                                           context: context,
                                           hintText: 'select venue',
-                                          items:
-                                              postController.timeTable!.venue,
+                                          items: getVenue(),
                                           onchanged: (value) {
                                             setState(() {
                                               selectedVenue = value!;
@@ -117,10 +135,10 @@ class _ShowTimeTableScreenState extends State<ShowTimeTableScreen> {
                                     SizedBox(
                                       width: context.width() * 0.65,
                                       child: getDropDownWidget(
+                                          toshow: 4,
                                           context: context,
                                           hintText: 'select teacher',
-                                          items:
-                                              postController.timeTable!.teacher,
+                                          items: getTeachers(),
                                           onchanged: (value) {
                                             setState(() {
                                               selectedTeacher = value!;
@@ -155,9 +173,9 @@ class _ShowTimeTableScreenState extends State<ShowTimeTableScreen> {
                         child: getRowWidget(
                             TimeTableSlot(data: 'Course_Venue', slot: 'Slot'))),
                     SizedBox(
-                      height: context.height() * 0.57,
+                      height: context.height() * 0.54,
                       width: context.width(),
-                      child: SingleChildScrollView(child: getWidget()),
+                      child: getWidget(),
                     )
                   ],
                 ),
@@ -168,8 +186,16 @@ class _ShowTimeTableScreenState extends State<ShowTimeTableScreen> {
       {required BuildContext context,
       required List<String> items,
       required String hintText,
+      required int toshow,
       required var onchanged}) {
     return DropdownButtonFormField(
+      value: toshow == 1
+          ? selectedDay
+          : toshow == 2
+              ? selectedSlot
+              : toshow == 3
+                  ? selectedVenue
+                  : selectedTeacher,
       isExpanded: true,
       decoration: InputDecoration(
           label: Text(hintText.splitAfter(' ').trim()),
@@ -224,32 +250,52 @@ class _ShowTimeTableScreenState extends State<ShowTimeTableScreen> {
     ]);
   }
 
-  Column getWidget() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (selectedDay.isEmptyOrNull ||
-            selectedDay.toString().toLowerCase().startsWith('mon')) ...{
-          getColumnForDayAndData('Monday', postController.timeTable!.monday)
-        },
-        if (selectedDay.isEmptyOrNull ||
-            selectedDay.toString().toLowerCase().startsWith('tue')) ...{
-          getColumnForDayAndData('Tuesday', postController.timeTable!.tuesday)
-        },
-        if (selectedDay.isEmptyOrNull ||
-            selectedDay.toString().toLowerCase().startsWith('wed')) ...{
-          getColumnForDayAndData(
-              'Wednesday', postController.timeTable!.wednesday)
-        },
-        if (selectedDay.isEmptyOrNull ||
-            selectedDay.toString().toLowerCase().startsWith('thu')) ...{
-          getColumnForDayAndData('Thursday', postController.timeTable!.thursday)
-        },
-        if (selectedDay.isEmptyOrNull ||
-            selectedDay.toString().toLowerCase().startsWith('fri')) ...{
-          getColumnForDayAndData('Friday', postController.timeTable!.friday)
+  Widget getWidget() {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: 5,
+      itemBuilder: (context, index) {
+        if (index == 0) {
+          if (selectedDay.isEmptyOrNull ||
+              selectedDay == "All" ||
+              selectedDay.toString().toLowerCase().startsWith('mon')) {
+            return getColumnForDayAndData(
+                'Monday', postController.timeTable!.monday);
+          }
         }
-      ],
+        if (index == 1) {
+          if (selectedDay.isEmptyOrNull ||
+              selectedDay == "All" ||
+              selectedDay.toString().toLowerCase().startsWith('tue')) {
+            return getColumnForDayAndData(
+                'Tuesday', postController.timeTable!.tuesday);
+          }
+        }
+        if (index == 2) {
+          if (selectedDay.isEmptyOrNull ||
+              selectedDay == "All" ||
+              selectedDay.toString().toLowerCase().startsWith('wed')) {
+            return getColumnForDayAndData(
+                'Wednesday', postController.timeTable!.wednesday);
+          }
+        }
+        if (index == 3) {
+          if (selectedDay.isEmptyOrNull ||
+              selectedDay == "All" ||
+              selectedDay.toString().toLowerCase().startsWith('thu')) {
+            return getColumnForDayAndData(
+                'Thursday', postController.timeTable!.thursday);
+          }
+        } else {
+          if (selectedDay.isEmptyOrNull ||
+              selectedDay == "All" ||
+              selectedDay.toString().toLowerCase().startsWith('fri')) {
+            return getColumnForDayAndData(
+                'Friday', postController.timeTable!.friday);
+          }
+        }
+        return const SizedBox.shrink();
+      },
     );
   }
 
@@ -260,7 +306,16 @@ class _ShowTimeTableScreenState extends State<ShowTimeTableScreen> {
         getCard(day),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: data.map((e) => getRowWidget(e)).toList(),
+          children: data
+              .map((e) => (e.slot.contains(selectedSlot ?? '') ||
+                          selectedSlot == 'All') &&
+                      (e.data.contains(selectedTeacher ?? '') ||
+                          selectedTeacher == 'All') &&
+                      (e.data.contains(selectedVenue ?? '') ||
+                          selectedVenue == 'All')
+                  ? getRowWidget(e)
+                  : const SizedBox.shrink())
+              .toList(),
         ),
       ],
     );
