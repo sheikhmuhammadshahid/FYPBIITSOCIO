@@ -86,31 +86,45 @@ class _SVHomeFragmentState extends State<SVHomeFragment> {
             } else ...{
               if (context.watch<SettingController>().selectedWall == '3') ...{
                 Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: context.primaryColor,
-                          ),
-                          onPressed: () {
-                            settingController.selectedWall = '9';
-                            settingController.notifyListeners();
-                          },
-                          child: const Text('DateSheet')),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: context.primaryColor,
-                          ),
-                          onPressed: () {
-                            settingController.selectedWall = '7';
-                            settingController.notifyListeners();
-                          },
-                          child: const Text('Callender'))
-                    ],
+                  child: FittedBox(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: context.primaryColor,
+                            ),
+                            onPressed: () {
+                              settingController.selectedWall = '9';
+                              settingController.notifyListeners();
+                            },
+                            child: const Text('DateSheet')),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: context.primaryColor,
+                            ),
+                            onPressed: () {
+                              settingController.selectedWall = '10';
+                              settingController.notifyListeners();
+                            },
+                            child: const Text('TimeTable')),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: context.primaryColor,
+                            ),
+                            onPressed: () {
+                              settingController.selectedWall = '7';
+                              settingController.notifyListeners();
+                            },
+                            child: const Text('Callender'))
+                      ],
+                    ),
                   ),
                 )
               }

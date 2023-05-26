@@ -176,7 +176,7 @@ class FriendsStoriesController extends ChangeNotifier {
       storiesLoading = true;
       setState();
 
-      var response = await Dio().get('${ip}Post/getSocietiesDetail');
+      var response = await Dio().get('${ip}Post/getSocietiesDetail?cnic=${loggedInUser!.CNIC}');
       if (response.statusCode == 200) {
         societies.clear();
         for (var element in response.data) {
