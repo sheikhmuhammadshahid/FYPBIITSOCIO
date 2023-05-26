@@ -80,7 +80,7 @@ class _SVDashboardScreenState extends State<SVDashboardScreen>
               builder: (context, value, child) {
                 return Column(
                   children: [
-                    if (settingController.isAppBarVisible && check()) ...{
+                    if (check()) ...{
                       16.height,
                       SizedBox(
                         height: 50,

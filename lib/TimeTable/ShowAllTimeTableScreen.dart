@@ -312,7 +312,9 @@ class _ShowTimeTableScreenState extends State<ShowTimeTableScreen> {
                           selectedSlot == 'All') &&
                       (e.data.contains(selectedTeacher ?? '') ||
                           selectedTeacher == 'All') &&
-                      (e.data.contains(selectedVenue ?? '') ||
+                      (e.data.split('_')[e.data.split('_').length - 1] ==
+                              selectedVenue ||
+                          selectedVenue == null ||
                           selectedVenue == 'All')
                   ? getRowWidget(e)
                   : const SizedBox.shrink())

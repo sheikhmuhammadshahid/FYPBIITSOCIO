@@ -111,7 +111,11 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
                 if (descriptionController.text.isNotEmpty ||
                     isImagePicked != 0) {
                   if (selected || dropDownController.selectedList.isEmpty) {
-                    selectedOptions = 'All';
+                    for (var element in dropDownController.items) {
+                      for (var element1 in element.singleItemCategoryList) {
+                        selectedOptions += element1.value;
+                      }
+                    }
                   } else {
                     selectedOptions = '';
                     for (var element in dropDownController.selectedList) {

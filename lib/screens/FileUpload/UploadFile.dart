@@ -101,7 +101,7 @@ class _UploadFileState extends State<UploadFile> {
                       builder: (context) => AlertDialog(
                         title: const Text('To Upload?'),
                         content: SizedBox(
-                          height: context.height() * 0.3,
+                          height: context.height() * 0.2,
                           child: Column(
                             children: [
                               TextButton(
@@ -116,19 +116,15 @@ class _UploadFileState extends State<UploadFile> {
                                     Navigator.pop(context);
                                   },
                                   child: const Text('Date Sheet')),
-                              TextButton(
-                                  onPressed: () {
-                                    toUpload = 'callender';
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text('Callender'))
                             ],
                           ),
                         ),
                       ),
                     );
-                    // ignore: use_build_context_synchronously
-                    postController.uploadFile(path, context, toUpload);
+                    if (toUpload != '') {
+                      // ignore: use_build_context_synchronously
+                      postController.uploadFile(path, context, toUpload);
+                    }
                   } else {
                     EasyLoading.showToast('please select file.');
                   }

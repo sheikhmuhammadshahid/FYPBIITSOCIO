@@ -137,7 +137,7 @@ class _SVHomeFragmentState extends State<SVHomeFragment> {
                                 loggedInUser!.userType &&
                             postController.timeTable == null
                         ? MediaQuery.of(context).size.height * 0.4
-                        : MediaQuery.of(context).size.height * 0.91,
+                        : MediaQuery.of(context).size.height * 0.89,
                 child: const SVPostComponent()),
             16.height,
           ],
