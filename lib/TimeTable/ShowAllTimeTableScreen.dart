@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
+import '../utils/SVCommon.dart';
 import '../utils/SVConstants.dart';
 
 class ShowTimeTableScreen extends StatefulWidget {
@@ -61,7 +62,7 @@ class _ShowTimeTableScreenState extends State<ShowTimeTableScreen> {
   @override
   Widget build(BuildContext context) {
     return context.watch<DateSheetCallender>().isTimeTableLoading
-        ? const Text('Loading')
+        ? getNotificationShimmer(context)
         : postController.timeTable == null
             ? const Center(child: Text('No timeTable found!'))
             : Padding(
