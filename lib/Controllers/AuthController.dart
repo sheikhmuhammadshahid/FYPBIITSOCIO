@@ -10,6 +10,7 @@ import 'package:nb_utils/nb_utils.dart';
 import '../screens/SVDashboardScreen.dart';
 import '../screens/auth/screens/SVSignInScreen.dart';
 import '../utils/SVCommon.dart';
+import 'SettingController.dart';
 
 class AuthController extends ChangeNotifier {
   SharedPreferences? sharedPref;
@@ -45,22 +46,27 @@ class AuthController extends ChangeNotifier {
   }
 
   bool isLoading = true;
-  getUsers() async {
+  getUsers(SettingController settingController) async {
     try {
       pageNo++;
-      isLoading = true;
-      notifyListeners();
+      if (pageNo == 1) {
+        isLoading = true;
+
+        notifyListeners();
+      }
       var response = await Dio().get(
-          "${ip}User/getAllUsers?pageNo=$pageNo&&cnic=${loggedInUser!.CNIC}");
+          "${ip}User/getAllUsers?pageNo=$pageNo&&cnic=${loggedInUser!.CNIC}&fromWall=${settingController.selectedWall}");
       if (response.statusCode == 200) {
-        for (var element in response.data) {
-          User u = User.fromMap(element["user"]);
-          u.isFriend = element["isFriend"];
-          u.postsCount = element["postCount"];
-          u.countFriends = element["countFriends"];
-          users.add(u);
+        if (response.data != "No more users") {
+          for (var element in response.data) {
+            User u = User.fromMap(element["user"]);
+            u.isFriend = element["isFriend"];
+            u.postsCount = element["postCount"];
+            u.countFriends = element["countFriends"];
+            users.add(u);
+          }
+          userToShow = users;
         }
-        userToShow = users;
       }
     } catch (e) {
       print(e);

@@ -10,10 +10,28 @@ class DropDownController extends ChangeNotifier {
   List<SingleCategoryModel> items = [];
   List<SingleItemCategoryModel> selectedList = [];
   bool isGetting = true;
+  clearItems() {
+    try {
+      items.clear();
+      notifyListeners();
+    } catch (e) {}
+  }
+
+  setIsgetting(bool toset) {
+    try {
+      isGetting = toset;
+      notifyListeners();
+    } catch (e) {}
+  }
+
   getData(SettingController settingController) async {
     try {
+      clearItems();
+      setIsgetting(true);
+      print(settingController.selectedWall);
       var response = await Dio().get(
           '${ip}user/getDescipline?cnic=${loggedInUser!.CNIC}&fromWall=${settingController.selectedWall}');
+
       if (response.statusCode == 200) {
         items.clear();
         List<DropDownModel> data = [];
@@ -35,9 +53,13 @@ class DropDownController extends ChangeNotifier {
                           value: e.CNIC,
                           avatarSingleItem: sVProfileImageProvider(
                               profileimageAddress + e.profileImage, 30, 30),
-                          extraInfoSingleItem: e.name,
-                          nameSingleItem:
-                              e.userType == "1" ? e.aridNo : e.CNIC))
+                          extraInfoSingleItem:
+                              e.userType == "6" ? 'Society' : e.name,
+                          nameSingleItem: e.userType == "1"
+                              ? e.aridNo
+                              : e.userType == "6"
+                                  ? e.name ?? ''
+                                  : e.CNIC))
                       .toList()));
         }
       }
@@ -45,5 +67,6 @@ class DropDownController extends ChangeNotifier {
     } catch (e) {
       print(e);
     }
+    setIsgetting(false);
   }
 }

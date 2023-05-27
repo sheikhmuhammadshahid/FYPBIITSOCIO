@@ -63,6 +63,7 @@ class _ScrollHideNavigationBarState extends State<ScrollHideNavigationBar> {
         settingController.isAppBarVisible = false;
         _isScrollingUp = true;
       });
+      settingController.notifyListeners();
     }
     if (settingController.scrollController.position.userScrollDirection ==
             ScrollDirection.forward &&
@@ -71,6 +72,7 @@ class _ScrollHideNavigationBarState extends State<ScrollHideNavigationBar> {
         settingController.isAppBarVisible = true;
         _isScrollingUp = false;
       });
+      settingController.notifyListeners();
     }
 
     // Optional: Get the current scroll position

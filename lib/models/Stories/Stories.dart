@@ -8,6 +8,7 @@ class Stories {
   String text;
   int? color;
   String? time;
+  String storyFor;
   Stories({
     required this.id,
     required this.type,
@@ -16,6 +17,7 @@ class Stories {
     required this.text,
     this.color,
     this.time,
+    required this.storyFor,
   });
 
   Stories copyWith({
@@ -26,6 +28,7 @@ class Stories {
     String? text,
     int? color,
     String? time,
+    String? storyFor,
   }) {
     return Stories(
       id: id ?? this.id,
@@ -35,6 +38,7 @@ class Stories {
       text: text ?? this.text,
       color: color ?? this.color,
       time: time ?? this.time,
+      storyFor: storyFor ?? this.storyFor,
     );
   }
 
@@ -54,6 +58,7 @@ class Stories {
     if (time != null) {
       result.addAll({'time': time});
     }
+    result.addAll({'storyFor': storyFor});
 
     return result;
   }
@@ -67,6 +72,7 @@ class Stories {
       text: map['text'] ?? '',
       color: map['color']?.toInt(),
       time: map['time'],
+      storyFor: map['storyFor'] ?? '',
     );
   }
 
@@ -77,7 +83,7 @@ class Stories {
 
   @override
   String toString() {
-    return 'Stories(id: $id, type: $type, societyId: $societyId, url: $url, text: $text, color: $color, time: $time)';
+    return 'Stories(id: $id, type: $type, societyId: $societyId, url: $url, text: $text, color: $color, time: $time, storyFor: $storyFor)';
   }
 
   @override
@@ -91,7 +97,8 @@ class Stories {
         other.url == url &&
         other.text == text &&
         other.color == color &&
-        other.time == time;
+        other.time == time &&
+        other.storyFor == storyFor;
   }
 
   @override
@@ -102,6 +109,7 @@ class Stories {
         url.hashCode ^
         text.hashCode ^
         color.hashCode ^
-        time.hashCode;
+        time.hashCode ^
+        storyFor.hashCode;
   }
 }

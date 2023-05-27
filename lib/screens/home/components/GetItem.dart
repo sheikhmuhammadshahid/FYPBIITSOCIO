@@ -27,6 +27,7 @@ Widget getItem(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 post.userPosted!.profileImage == ""
                     ? Image.asset(
@@ -69,27 +70,38 @@ Widget getItem(
                             ));
                       }),
                 12.width,
-                Text(post.userPosted!.name.validate(), style: boldTextStyle())
-                    .onTap(() {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SVProfileFragment(
-                          user: false,
-                          id: post.userPosted!.CNIC,
-                        ),
-                      ));
-                }),
+                SizedBox(
+                  width: context.width() * 0.35,
+                  child: Text(post.userPosted!.name.validate(),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: boldTextStyle())
+                      .onTap(() {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SVProfileFragment(
+                            user: false,
+                            id: post.userPosted!.CNIC,
+                          ),
+                        ));
+                  }),
+                ),
                 4.width,
                 // Image.asset('images/socialv/icons/ic_TickSquare.png',
                 //     height: 14, width: 14, fit: BoxFit.cover),
               ],
-            ).paddingSymmetric(horizontal: 16),
+            ).paddingSymmetric(horizontal: 10),
             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text('${DateTime.parse(post.dateTime).timeAgo.validate()} ',
-                    style:
-                        secondaryTextStyle(color: svGetBodyColor(), size: 12)),
+                SizedBox(
+                  width: context.width() * 0.25,
+                  child: Text(
+                      '${DateTime.parse(post.dateTime).timeAgo.validate()} ',
+                      style: secondaryTextStyle(
+                          color: svGetBodyColor(), size: 12)),
+                ),
                 PopupMenuButton(
                   itemBuilder: (context) {
                     return [
@@ -171,7 +183,7 @@ Widget getItem(
                   },
                 )
               ],
-            ).paddingSymmetric(horizontal: 8),
+            ).paddingSymmetric(horizontal: 1),
           ],
         ),
         16.height,

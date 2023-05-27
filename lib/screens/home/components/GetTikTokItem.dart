@@ -81,20 +81,29 @@ Widget getTikTokItem(
                             fit: BoxFit.cover,
                           ).cornerRadiusWithClipRRect(SVAppCommonRadius),
                     12.width,
-                    Text(
-                        postController.posts[index].userPosted!.name.validate(),
-                        style: boldTextStyle(color: Colors.white)),
-                    4.width,
-                    Image.asset('images/socialv/icons/ic_TickSquare.png',
-                        height: 14, width: 14, fit: BoxFit.cover),
+                    SizedBox(
+                      width: context.width() * 0.4,
+                      child: Text(
+                          postController.posts[index].userPosted!.name
+                              .validate(),
+                          maxLines: 2,
+                          style: boldTextStyle(color: Colors.white)),
+                    ),
+                    //4.width,
+                    // Image.asset('images/socialv/icons/ic_TickSquare.png',
+                    //     height: 14, width: 14, fit: BoxFit.cover),
                   ],
-                ).paddingSymmetric(horizontal: 16),
+                ).paddingSymmetric(horizontal: 10),
                 Row(
                   children: [
-                    Text(
-                        '${DateTime.parse(postController.posts[index].dateTime).timeAgo.validate()} ',
-                        style:
-                            secondaryTextStyle(color: Colors.white, size: 12)),
+                    SizedBox(
+                      width: context.width() * 0.2,
+                      child: Text(
+                          '${DateTime.parse(postController.posts[index].dateTime).timeAgo.validate()} ',
+                          maxLines: 2,
+                          style: secondaryTextStyle(
+                              color: Colors.white, size: 12)),
+                    ),
                     PopupMenuButton(
                       color: Colors.white,
                       itemBuilder: (context) {
@@ -177,7 +186,7 @@ Widget getTikTokItem(
                       },
                     )
                   ],
-                ).paddingSymmetric(horizontal: 8),
+                ).paddingSymmetric(horizontal: 2),
               ],
             ),
           ),

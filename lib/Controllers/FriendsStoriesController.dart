@@ -19,6 +19,8 @@ import 'package:provider/provider.dart';
 
 class FriendsStoriesController extends ChangeNotifier {
   bool isCLicked = false;
+  bool isMentor = false;
+  bool isJoinedSociety = false;
   int selectedIndex = -1;
   TextEditingController filterController = TextEditingController();
   bool isStoriesLoading = true;
@@ -171,24 +173,31 @@ class FriendsStoriesController extends ChangeNotifier {
     return "";
   }
 
+  setStoriesLoading(bool toset) {
+    try {
+      storiesLoading = toset;
+      notifyListeners();
+    } catch (e) {}
+  }
+
   getSocietiesDetail() async {
     try {
-      storiesLoading = true;
-      setState();
+      setStoriesLoading(true);
 
-      var response = await Dio().get('${ip}Post/getSocietiesDetail?cnic=${loggedInUser!.CNIC}');
+      var response = await Dio()
+          .get('${ip}Post/getSocietiesDetail?cnic=${loggedInUser!.CNIC}');
       if (response.statusCode == 200) {
         societies.clear();
-        for (var element in response.data) {
+        isMentor = response.data['isMentor'];
+        isJoinedSociety = response.data['isjoined'];
+        for (var element in response.data['dt']) {
           societies.add(Society.fromMap(element));
         }
         print("${societies.length}sdsd");
       }
     } catch (e) {}
     print('done');
-    storiesLoading = false;
-
-    setState();
+    setStoriesLoading(false);
   }
 
   setState() {

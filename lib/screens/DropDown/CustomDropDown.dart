@@ -1,5 +1,4 @@
 import 'package:biit_social/Controllers/DropDowncontroler.dart';
-import 'package:biit_social/Controllers/SettingController.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:select2dot1/select2dot1.dart';
@@ -21,7 +20,6 @@ class _CustomExample0State extends State<CustomExample0> {
     // TODO: implement initState
     super.initState();
     dropDownController ??= context.read<DropDownController>();
-    dropDownController!.getData(context.read<SettingController>());
   }
 
   DropDownController? dropDownController;
@@ -32,15 +30,19 @@ class _CustomExample0State extends State<CustomExample0> {
 
     return Padding(
       padding: const EdgeInsets.all(15.0),
-      child: CustomSelect2dot1(
-        title: 'Seslect',
-        data: context.watch<DropDownController>().items,
-        isMultiSelect: true,
-        avatarInSingleSelect: false,
-        extraInfoInSingleSelect: true,
-        extraInfoInDropdown: true,
-        scrollController: widget.scrollController,
-      ),
+      child: context.watch<DropDownController>().isGetting
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : CustomSelect2dot1(
+              title: 'Select',
+              data: context.watch<DropDownController>().items,
+              isMultiSelect: true,
+              avatarInSingleSelect: false,
+              extraInfoInSingleSelect: true,
+              extraInfoInDropdown: true,
+              scrollController: widget.scrollController,
+            ),
     );
   }
 }

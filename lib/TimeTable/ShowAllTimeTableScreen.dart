@@ -287,7 +287,7 @@ class _ShowTimeTableScreenState extends State<ShowTimeTableScreen> {
             return getColumnForDayAndData(
                 'Thursday', postController.timeTable!.thursday);
           }
-        } else {
+        } else if (index == 4) {
           if (selectedDay.isEmptyOrNull ||
               selectedDay == "All" ||
               selectedDay.toString().toLowerCase().startsWith('fri')) {
@@ -295,6 +295,7 @@ class _ShowTimeTableScreenState extends State<ShowTimeTableScreen> {
                 'Friday', postController.timeTable!.friday);
           }
         }
+
         return const SizedBox.shrink();
       },
     );

@@ -33,18 +33,16 @@ class SVRequestNotificationComponent extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(element.name.validate(), style: boldTextStyle(size: 14)),
-                2.width,
-                element.ifOfficial.validate()
-                    ? Image.asset('images/socialv/icons/ic_TickSquare.png',
-                        height: 14, width: 14, fit: BoxFit.cover)
-                    : const Offstage(),
-                Text('send request to follow you',
-                    style: secondaryTextStyle(color: svGetBodyColor())),
-              ],
+            SizedBox(
+              width: context.width() * 0.72,
+              child: Text.rich(TextSpan(
+                  text: element.name.validate(),
+                  style: boldTextStyle(size: 14),
+                  children: [
+                    TextSpan(
+                        text: ' send request to follow you',
+                        style: secondaryTextStyle(color: svGetBodyColor()))
+                  ])),
             ),
             6.height,
             Text(element.dateTime.validate(),
@@ -65,6 +63,9 @@ class SVRequestNotificationComponent extends StatelessWidget {
                           context: context,
                           status: true,
                           to: int.parse(element.body!));
+
+                      loggedInUser!.countFriends =
+                          (loggedInUser!.countFriends ?? 0) + 1;
                       dothis();
                     },
                     elevation: 0,

@@ -39,6 +39,8 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
     afterBuildCreated(() {
       setStatusBarColor(context.cardColor);
     });
+    dropDownController ??= context.read<DropDownController>();
+    dropDownController!.getData(context.read<SettingController>());
     //context.read<FriendsStoriesController>().getSectionAndDesciplines();
   }
 
@@ -49,17 +51,6 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
     super.dispose();
   }
 
-  var desciplines = [
-    const DropdownMenuItem(value: "All", child: Text("All")),
-    const DropdownMenuItem(value: "BSIT", child: Text("BSIT")),
-    const DropdownMenuItem(value: "BSCS", child: Text("BSCS")),
-    const DropdownMenuItem(value: "BSSE", child: Text("BSSE")),
-    const DropdownMenuItem(value: "BSAI", child: Text("BSAI")),
-    const DropdownMenuItem(value: "1", child: Text("Students")),
-    const DropdownMenuItem(value: "2", child: Text("Teachers")),
-    const DropdownMenuItem(value: "3", child: Text("Admin")),
-  ];
-
   List<Items> selectedSections = [];
   String? selectedDescipline;
   late FriendsStoriesController friendStoriesController;
@@ -68,24 +59,26 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
   late PostController postController;
   late SettingController settingController;
   bool clicked = false;
-  late DropDownController dropDownController;
+  DropDownController? dropDownController;
   @override
   Widget build(BuildContext context) {
     friendStoriesController = context.read<FriendsStoriesController>();
     postController = context.read<PostController>();
-    dropDownController = context.read<DropDownController>();
+    dropDownController ??= context.read<DropDownController>();
     settingController = context.read<SettingController>();
     return Scaffold(
       backgroundColor: context.cardColor,
       appBar: AppBar(
         iconTheme: IconThemeData(color: context.iconColor),
         backgroundColor: context.cardColor,
-        title: Text('New Post', style: boldTextStyle(size: 20)),
+        title: Text(widget.isStatus ? 'New Story' : 'New Post',
+            style: boldTextStyle(size: 20)),
         elevation: 0,
         centerTitle: false,
         actions: [
-          if (loggedInUser!.userType == "2" ||
-              loggedInUser!.userType == "3") ...{
+          if (!widget.isStatus &&
+              (loggedInUser!.userType == "2" ||
+                  loggedInUser!.userType == "3")) ...{
             IconButton(
               onPressed: () {
                 setState(() {
@@ -102,7 +95,7 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
           },
           AppButton(
             shapeBorder: RoundedRectangleBorder(borderRadius: radius(4)),
-            text: 'Post',
+            text: widget.isStatus ? 'Add' : 'Post',
             textStyle: secondaryTextStyle(color: Colors.white, size: 10),
             onTap: () async {
               FocusScope.of(context).requestFocus(FocusNode());
@@ -110,15 +103,15 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
               try {
                 if (descriptionController.text.isNotEmpty ||
                     isImagePicked != 0) {
-                  if (selected || dropDownController.selectedList.isEmpty) {
-                    for (var element in dropDownController.items) {
+                  if (selected || dropDownController!.selectedList.isEmpty) {
+                    for (var element in dropDownController!.items) {
                       for (var element1 in element.singleItemCategoryList) {
-                        selectedOptions += element1.value;
+                        selectedOptions += element1.value + ',';
                       }
                     }
                   } else {
                     selectedOptions = '';
-                    for (var element in dropDownController.selectedList) {
+                    for (var element in dropDownController!.selectedList) {
                       selectedOptions = "${selectedOptions + element.value},";
                     }
                   }
@@ -145,6 +138,7 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
                       : await PostController().addStory(
                           Stories(
                             id: 0,
+                            storyFor: selectedOptions,
                             societyId: 3,
                             type: isImagePicked == 1
                                 ? "image"
@@ -156,16 +150,18 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
                           ),
                           context);
                   if (!widget.isStatus) {
-                    postController.posts.add(Post(
-                        postedBy: p!.postedBy,
-                        dateTime: p.dateTime,
-                        description: p.description,
-                        text: p.text,
-                        user: loggedInUser!.toJson(),
-                        userPosted: loggedInUser,
-                        postFor: p.postFor,
-                        type: p.type,
-                        fromWall: p.fromWall));
+                    postController.posts.insert(
+                        0,
+                        Post(
+                            postedBy: p!.postedBy,
+                            dateTime: p.dateTime,
+                            description: p.description,
+                            text: p.text,
+                            user: loggedInUser!.toJson(),
+                            userPosted: loggedInUser,
+                            postFor: p.postFor,
+                            type: p.type,
+                            fromWall: p.fromWall));
                     postController.notifyListeners();
                   }
                   // ignore: use_build_context_synchronously

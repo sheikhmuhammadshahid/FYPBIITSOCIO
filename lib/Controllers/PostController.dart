@@ -90,9 +90,11 @@ class PostController with ChangeNotifier {
     try {
       EasyLoading.show(status: 'Please wait...', dismissOnTap: false);
       isImagePicked = 0;
+
       var formData = FormData.fromMap({
-        'societyId': post.societyId,
+        'societyId': 0,
         'text': post.text,
+        'storyFor': post.storyFor,
         'color': post.color,
         'type': post.type,
         'image': post.type == "image" || post.type == "video"

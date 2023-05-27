@@ -41,40 +41,43 @@ class _SVStoryComponentState extends State<SVStoryComponent> {
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Column(
-          children: [
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 3),
-              height: 90,
-              width: MediaQuery.of(context).size.width * 0.2,
-              decoration: BoxDecoration(
-                color: SVAppColorPrimary,
-                borderRadius: radius(SVAppCommonRadius),
+        if (context.watch<FriendsStoriesController>().isMentor)
+          Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 3),
+                height: 90,
+                width: MediaQuery.of(context).size.width * 0.2,
+                decoration: BoxDecoration(
+                  color: SVAppColorPrimary,
+                  borderRadius: radius(SVAppCommonRadius),
+                ),
+                child: IconButton(
+                    icon: const Icon(Icons.add, color: Colors.white),
+                    onPressed: () async {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                SVAddPostFragment(isStatus: true),
+                          ));
+                    }),
               ),
-              child: IconButton(
-                  icon: const Icon(Icons.add, color: Colors.white),
-                  onPressed: () async {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              SVAddPostFragment(isStatus: true),
-                        ));
-                  }),
-            ),
-            10.height,
-            Text('Your Story',
-                style: secondaryTextStyle(
-                    size: 12,
-                    color: context.iconColor,
-                    weight: FontWeight.w500)),
-          ],
-        ),
+              10.height,
+              Text('Your Story',
+                  style: secondaryTextStyle(
+                      size: 12,
+                      color: context.iconColor,
+                      weight: FontWeight.w500)),
+            ],
+          ),
         !context.watch<FriendsStoriesController>().storiesLoading
             ? SizedBox(
-                width: controller.societies.isNotEmpty
-                    ? MediaQuery.of(context).size.width * 0.78
-                    : MediaQuery.of(context).size.width * 0.6,
+                width: !controller.isMentor
+                    ? context.width() * 0.9
+                    : controller.societies.isNotEmpty
+                        ? MediaQuery.of(context).size.width * 0.78
+                        : MediaQuery.of(context).size.width * 0.6,
                 child: controller.societies.isNotEmpty
                     ? SingleChildScrollView(
                         scrollDirection: Axis.horizontal,

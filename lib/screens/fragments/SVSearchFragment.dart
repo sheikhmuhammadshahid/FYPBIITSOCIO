@@ -1,5 +1,7 @@
 import 'package:biit_social/Controllers/AuthController.dart';
+import 'package:biit_social/Controllers/SettingController.dart';
 import 'package:flutter/material.dart';
+import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:biit_social/models/SVSearchModel.dart';
 import 'package:biit_social/screens/fragments/SVProfileFragment.dart';
@@ -30,17 +32,28 @@ class _SVSearchFragmentState extends State<SVSearchFragment> {
   late AuthController authController;
   init() {
     authController = context.read<AuthController>();
-    authController.getUsers();
+    authController.userToShow = authController.users = [];
+    authController.pageNo = 0;
+    settingController ??= context.read<SettingController>();
+    authController.getUsers(settingController!);
   }
 
+  SettingController? settingController;
   @override
   Widget build(BuildContext context) {
+    settingController ??= context.read<SettingController>();
     return Scaffold(
       backgroundColor: svGetScaffoldColor(),
       appBar: AppBar(
         backgroundColor: svGetScaffoldColor(),
         iconTheme: IconThemeData(color: context.iconColor),
         leadingWidth: 30,
+        bottom: PreferredSize(
+            preferredSize: Size.fromHeight(
+                authController.userToShow.isEmpty ? context.height() * 0.1 : 0),
+            child: context.watch<AuthController>().userToShow.isEmpty
+                ? Text('RECENT', style: boldTextStyle()).paddingAll(16)
+                : const SizedBox()),
         title: Container(
           decoration:
               BoxDecoration(color: context.cardColor, borderRadius: radius(8)),
@@ -48,7 +61,7 @@ class _SVSearchFragmentState extends State<SVSearchFragment> {
             onChanged: (p0) {
               authController.users.isNotEmpty
                   ? authController.filterUsers(p0)
-                  : {authController.getUsers()};
+                  : {authController.getUsers(settingController!)};
             },
             textFieldType: TextFieldType.NAME,
             decoration: InputDecoration(
@@ -71,18 +84,11 @@ class _SVSearchFragmentState extends State<SVSearchFragment> {
         child: Consumer<AuthController>(
           builder: (context, controller, child) {
             return authController.isLoading
-                ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
+                ? getNotificationShimmer(context)
                 : authController.userToShow.isNotEmpty
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          authController.userToShow.isEmpty
-                              ? Text('RECENT', style: boldTextStyle())
-                                  .paddingAll(16)
-                              : const SizedBox(),
-                          ListView.separated(
+                    ? LazyLoadScrollView(
+                        child: RefreshIndicator(
+                          child: ListView.separated(
                             padding: const EdgeInsets.all(16),
                             shrinkWrap: true,
                             physics: const BouncingScrollPhysics(),
@@ -102,7 +108,16 @@ class _SVSearchFragmentState extends State<SVSearchFragment> {
                             },
                             itemCount: authController.userToShow.length,
                           ),
-                        ],
+                          onRefresh: () async {
+                            authController.pageNo = 0;
+                            authController.users.clear();
+                            authController.userToShow.clear();
+                            await authController.getUsers(settingController!);
+                          },
+                        ),
+                        onEndOfPage: () {
+                          authController.getUsers(settingController!);
+                        },
                       )
                     : Center(
                         child: Text(

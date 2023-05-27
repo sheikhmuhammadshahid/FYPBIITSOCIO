@@ -8,12 +8,14 @@ class Society {
   int id;
   String name;
   String profileImage;
+  bool isMentor;
   List<Stories>? stories;
   int storiesCount;
   Society({
     required this.id,
     required this.name,
     required this.profileImage,
+    required this.isMentor,
     this.stories,
     required this.storiesCount,
   });
@@ -22,6 +24,7 @@ class Society {
     int? id,
     String? name,
     String? profileImage,
+    bool? isMentor,
     List<Stories>? stories,
     int? storiesCount,
   }) {
@@ -29,6 +32,7 @@ class Society {
       id: id ?? this.id,
       name: name ?? this.name,
       profileImage: profileImage ?? this.profileImage,
+      isMentor: isMentor ?? this.isMentor,
       stories: stories ?? this.stories,
       storiesCount: storiesCount ?? this.storiesCount,
     );
@@ -40,6 +44,7 @@ class Society {
     result.addAll({'id': id});
     result.addAll({'name': name});
     result.addAll({'profileImage': profileImage});
+    result.addAll({'isMentor': isMentor});
     if (stories != null) {
       result.addAll({'stories': stories!.map((x) => x.toMap()).toList()});
     }
@@ -53,6 +58,7 @@ class Society {
       id: map['id']?.toInt() ?? 0,
       name: map['name'] ?? '',
       profileImage: map['profileImage'] ?? '',
+      isMentor: map['isMentor'] ?? false,
       stories: map['stories'] != null
           ? List<Stories>.from(map['stories']?.map((x) => Stories.fromMap(x)))
           : null,
@@ -67,7 +73,7 @@ class Society {
 
   @override
   String toString() {
-    return 'Society(id: $id, name: $name, profileImage: $profileImage, stories: $stories, storiesCount: $storiesCount)';
+    return 'Society(id: $id, name: $name, profileImage: $profileImage, isMentor: $isMentor, stories: $stories, storiesCount: $storiesCount)';
   }
 
   @override
@@ -78,6 +84,7 @@ class Society {
         other.id == id &&
         other.name == name &&
         other.profileImage == profileImage &&
+        other.isMentor == isMentor &&
         listEquals(other.stories, stories) &&
         other.storiesCount == storiesCount;
   }
@@ -87,6 +94,7 @@ class Society {
     return id.hashCode ^
         name.hashCode ^
         profileImage.hashCode ^
+        isMentor.hashCode ^
         stories.hashCode ^
         storiesCount.hashCode;
   }

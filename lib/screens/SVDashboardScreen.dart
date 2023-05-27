@@ -72,15 +72,24 @@ class _SVDashboardScreenState extends State<SVDashboardScreen>
           backgroundColor: context.scaffoldBackgroundColor,
           elevation: 0,
           bottom: PreferredSize(
-            preferredSize: Size.fromHeight(
-                check() && context.watch<SettingController>().isAppBarVisible
-                    ? context.height() * 0.06
-                    : context.height() * 0.01),
+            preferredSize: Size.fromHeight((check(context) ||
+                        (context
+                                .watch<FriendsStoriesController>()
+                                .isJoinedSociety &&
+                            settingController.selectedWall == "6")) &&
+                    context.watch<SettingController>().isAppBarVisible
+                ? context.height() * 0.06
+                : context.height() * 0.01),
             child: Consumer<SettingController>(
               builder: (context, value, child) {
                 return Column(
                   children: [
-                    if (check()) ...{
+                    if ((check(context) ||
+                            (context
+                                    .watch<FriendsStoriesController>()
+                                    .isJoinedSociety &&
+                                settingController.selectedWall == "6")) &&
+                        context.watch<SettingController>().isAppBarVisible) ...{
                       16.height,
                       SizedBox(
                         height: 50,
@@ -183,22 +192,25 @@ class _SVDashboardScreenState extends State<SVDashboardScreen>
           ),
           title: Text(loggedInUser!.name!, style: boldTextStyle(size: 18)),
           actions: [
-            GestureDetector(
-              onTap: () {
-                const SVSearchFragment().launch(context);
-              },
-              child: CircleAvatar(
-                backgroundColor: context.scaffoldBackgroundColor,
+            if (context.watch<SettingController>().selectedWall == '3' ||
+                settingController.selectedWall == '2' ||
+                settingController.selectedWall == '1')
+              GestureDetector(
+                onTap: () {
+                  const SVSearchFragment().launch(context);
+                },
+                child: CircleAvatar(
+                  backgroundColor: context.scaffoldBackgroundColor,
 
-                radius: 10,
-                // backgroundImage:
-                //     const AssetImage('images/socialv/icons/ic_Search.png'),
-                child: Image.asset(
-                  'images/socialv/icons/ic_Search.png',
-                  color: context.primaryColor.withOpacity(.8),
+                  radius: 10,
+                  // backgroundImage:
+                  //     const AssetImage('images/socialv/icons/ic_Search.png'),
+                  child: Image.asset(
+                    'images/socialv/icons/ic_Search.png',
+                    color: context.primaryColor.withOpacity(.8),
+                  ),
                 ),
               ),
-            ),
             const SizedBox(
               width: 10,
             ),
@@ -287,9 +299,10 @@ class _SVDashboardScreenState extends State<SVDashboardScreen>
     //     padding: EdgeInsets.only(bottom: 10), child: SvBottomNavigation()));
   }
 
-  bool check() {
-    if ((settingController.selectedWall == loggedInUser!.userType ||
-            settingController.selectedWall == '5' ||
+  bool check(BuildContext context) {
+    var checkingFrom = context.watch<SettingController>().selectedWall;
+    if ((checkingFrom == loggedInUser!.userType ||
+            checkingFrom == '5' ||
             settingController.selectedWall == '2' ||
             settingController.selectedWall == '1') &&
         loggedInUser!.userType == '3') {

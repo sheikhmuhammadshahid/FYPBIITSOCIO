@@ -50,15 +50,20 @@ class _SVHomeDrawerComponentState extends State<SVHomeDrawerComponent> {
                               height: 62, width: 62, fit: BoxFit.cover)
                           .cornerRadiusWithClipRRect(8),
                   16.width,
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(loggedInUser!.name!, style: boldTextStyle(size: 18)),
-                      8.height,
-                      Text(loggedInUser!.email!,
-                          style: secondaryTextStyle(color: svGetBodyColor())),
-                    ],
+                  SizedBox(
+                    width: context.width() * 0.56,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(loggedInUser!.name!,
+                            maxLines: 2, style: boldTextStyle(size: 18)),
+                        8.height,
+                        Text(loggedInUser!.email!,
+                            maxLines: 2,
+                            style: secondaryTextStyle(color: svGetBodyColor())),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -97,6 +102,8 @@ class _SVHomeDrawerComponentState extends State<SVHomeDrawerComponent> {
                     setState(() {});
 
                     if (selectedIndex == options.length - 1) {
+                      context.read<SettingController>().selectedWall = "3";
+                      //context.read<FriendsStoriesController>().dispose();
                       const SVSignInScreen().launch(context, isNewTask: true);
                     } else if (selectedIndex == 3) {
                       finish(context);

@@ -39,7 +39,7 @@ class SVLikeNotificationComponent extends StatelessWidget {
                         ? Image.asset('images/socialv/icons/ic_TickSquare.png',
                             height: 14, width: 14, fit: BoxFit.cover)
                         : const Offstage(),
-                    Text(' like your post',
+                    Text(' liked your post',
                         style: secondaryTextStyle(color: svGetBodyColor())),
                   ],
                 ),
