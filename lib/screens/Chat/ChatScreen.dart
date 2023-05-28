@@ -7,6 +7,7 @@ import 'package:biit_social/utils/getVideoItem.dart';
 import 'package:chat_bubbles/date_chips/date_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
+import '../../utils/IPHandleClass.dart';
 import '../../utils/SVCommon.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:provider/provider.dart';
@@ -89,7 +90,8 @@ class _ChatScreenState extends State<ChatScreen> {
                             width: 52,
                             fit: BoxFit.cover)
                         .cornerRadiusWithClipRRect(100)
-                    : Image.network(profileimageAddress + widget.profileScreen,
+                    : Image.network(
+                            IPHandle.profileimageAddress + widget.profileScreen,
                             errorBuilder: (context, error, stackTrace) {
                         return Container(
                           color: Colors.black,
@@ -263,7 +265,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                 //     profileimageAddress +
                                                 //         ch.senderImage),
                                                 child: sVProfileImageProvider(
-                                                    profileimageAddress +
+                                                    IPHandle.profileimageAddress +
                                                         ch.senderImage,
                                                     10.0,
                                                     10.0),
@@ -311,7 +313,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                                 },
                                                               )
                                                             : Image.network(
-                                                                imageAddress +
+                                                                IPHandle.imageAddress +
                                                                     ch.url!,
                                                                 height: context
                                                                         .height() *
@@ -342,7 +344,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                                     url: ch.fromFile
                                                                         ? ch
                                                                             .url!
-                                                                        : imageAddress +
+                                                                        : IPHandle.imageAddress +
                                                                             ch
                                                                                 .url!,
                                                                     fromNetwork:

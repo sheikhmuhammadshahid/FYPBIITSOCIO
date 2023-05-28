@@ -1,9 +1,10 @@
 import 'package:biit_social/Controllers/SettingController.dart';
-import 'package:biit_social/utils/SVCommon.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:biit_social/utils/SVConstants.dart';
 import 'package:provider/provider.dart';
+
+import '../../../utils/IPHandleClass.dart';
 
 class SVGroupProfile extends StatelessWidget {
   String url;
@@ -32,7 +33,7 @@ class SVGroupProfile extends StatelessWidget {
                           topLeft: SVAppCommonRadius.toInt(),
                           topRight: SVAppCommonRadius.toInt())
                       : Image.network(
-                          profileimageAddress + url,
+                          IPHandle.profileimageAddress + url,
                           width: context.width(),
                           height: 130,
                           fit: BoxFit.cover,
@@ -69,7 +70,7 @@ class SVGroupProfile extends StatelessWidget {
                 width: 88,
                 fit: BoxFit.cover,
               ).cornerRadiusWithClipRRect(SVAppCommonRadius)
-            : Image.network(profileimageAddress + url,
+            : Image.network(IPHandle.profileimageAddress + url,
                     height: 88, width: 88, fit: BoxFit.cover)
                 .cornerRadiusWithClipRRect(SVAppCommonRadius);
   }

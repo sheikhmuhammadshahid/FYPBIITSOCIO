@@ -3,6 +3,7 @@ import 'package:getwidget/getwidget.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../../Controllers/PostController.dart';
+import '../../../utils/IPHandleClass.dart';
 import '../../../utils/SVCommon.dart';
 import '../../../utils/SVConstants.dart';
 import '../../../utils/getVideoItem.dart';
@@ -31,7 +32,7 @@ Widget getTikTokItem(
                         fit: BoxFit.cover,
                         //aspectRatio: 16 / 9,
                         child: sVImageProvider(
-                            '$imageAddress${postController.posts[index].text}',
+                            '${IPHandle.imageAddress}${postController.posts[index].text}',
                             250.0,
                             context.width() - 32,
                             GFAvatarShape.square))
@@ -39,7 +40,7 @@ Widget getTikTokItem(
                         aspectRatio: 3 / 4,
                         child: GetVideoItem(
                             fromNetwork: true,
-                            url: imageAddress +
+                            url: IPHandle.imageAddress +
                                 postController.posts[index].text),
                       )),
           ),
@@ -72,7 +73,7 @@ Widget getTikTokItem(
                             fit: BoxFit.cover,
                           ).cornerRadiusWithClipRRect(SVAppCommonRadius)
                         : Image.network(
-                            '${profileimageAddress}3230440894009.jpg',
+                            '${IPHandle.profileimageAddress}3230440894009.jpg',
                             // postController.posts[index]
                             //     .userPosted!.profileImage
                             //     .validate(),

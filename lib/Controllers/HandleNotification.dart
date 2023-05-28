@@ -2,13 +2,15 @@ import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import '../utils/SVCommon.dart';
+
+import '../utils/IPHandleClass.dart';
 
 var serverKey =
     'AAAAOdphUpY:APA91bG4pIrZBz8jSXlQIksRZ2wEqvrmw4KuI7W2aWIYPmLNVNw8VlHeCqN2wNqRFlrn1bP49TwmeLLPevgxhO8F9KnvhOnsG9UC9vJT5hTwIFLzo2A0Mic8FRj_sL6btkLQKq8B-R0_';
 Future<void> sendNotification(String title, String body, cnic) async {
   try {
-    var response = await Dio().get('${ip}User/getDeviceToken?cnic=$cnic');
+    var response =
+        await Dio().get('${IPHandle.ip}User/getDeviceToken?cnic=$cnic');
     String token = response.data;
     if (response.statusCode == 200) {
       const postUrl = 'https://fcm.googleapis.com/fcm/send';

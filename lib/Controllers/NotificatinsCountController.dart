@@ -3,6 +3,8 @@ import 'package:biit_social/utils/SVCommon.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
+import '../utils/IPHandleClass.dart';
+
 class NotificationCountController extends ChangeNotifier {
   int notificationsCount = 0;
   int classPostsCount = 0;
@@ -16,7 +18,7 @@ class NotificationCountController extends ChangeNotifier {
   getData(SettingController settingController) async {
     try {
       var response = await Dio().get(
-          '${ip}User/getNotificatinosData?cnic=${loggedInUser!.CNIC}&fromWall=${settingController.selectedWall}');
+          '${IPHandle.ip}User/getNotificatinosData?cnic=${loggedInUser!.CNIC}&fromWall=${settingController.selectedWall}');
       if (response.statusCode == 200) {
         notificationsCount = response.data['notificationsCount'];
         classPostsCount = response.data['classPostsCount'];

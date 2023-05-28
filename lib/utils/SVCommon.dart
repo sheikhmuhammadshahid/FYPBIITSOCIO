@@ -17,11 +17,7 @@ import 'package:shimmer/shimmer.dart';
 FriendsStoriesController? friendsStoriesController;
 
 User? loggedInUser;
-String ippp = '192.168.9.231';
-String ip = "http://$ippp/BiitSocioApis/api/";
-String imageAddress = "http://$ippp/BiitSocioApis/postImages/";
-String profileimageAddress = "http://$ippp/BiitSocioApis/Images/";
-String storyAddress = 'http://$ippp/BiitSocioApis/Status/';
+
 var headers = {"Content-Type": "application/json"};
 String selectedOptions = "";
 

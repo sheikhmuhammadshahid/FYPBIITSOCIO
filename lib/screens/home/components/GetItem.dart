@@ -5,6 +5,7 @@ import 'package:getwidget/getwidget.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../../models/Post/PostModel.dart';
+import '../../../utils/IPHandleClass.dart';
 import '../../../utils/SVCommon.dart';
 import '../../../utils/SVConstants.dart';
 import '../../../utils/getVideoItem.dart';
@@ -49,7 +50,8 @@ Widget getItem(
                             ));
                       })
                     : Image.network(
-                        profileimageAddress + post.userPosted!.profileImage,
+                        IPHandle.profileimageAddress +
+                            post.userPosted!.profileImage,
                         // post
                         //     .userPosted!.profileImage
                         //     .validate(),
@@ -200,12 +202,13 @@ Widget getItem(
                 height: 200,
                 width: context.width() - 32,
                 child: post.type == 'image'
-                    ? sVImageProvider('$imageAddress${post.text}', 250.0,
-                        context.width() - 32, GFAvatarShape.square)
+                    ? sVImageProvider('${IPHandle.imageAddress}${post.text}',
+                        250.0, context.width() - 32, GFAvatarShape.square)
                     : AspectRatio(
                         aspectRatio: 3 / 4,
                         child: GetVideoItem(
-                            fromNetwork: true, url: imageAddress + post.text),
+                            fromNetwork: true,
+                            url: IPHandle.imageAddress + post.text),
                       )),
           ),
         // Image.network(

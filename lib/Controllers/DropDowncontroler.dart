@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:select2dot1/select2dot1.dart';
 
+import '../utils/IPHandleClass.dart';
 import '../utils/SVCommon.dart';
 
 class DropDownController extends ChangeNotifier {
@@ -30,7 +31,7 @@ class DropDownController extends ChangeNotifier {
       setIsgetting(true);
       print(settingController.selectedWall);
       var response = await Dio().get(
-          '${ip}user/getDescipline?cnic=${loggedInUser!.CNIC}&fromWall=${settingController.selectedWall}');
+          '${IPHandle.ip}user/getDescipline?cnic=${loggedInUser!.CNIC}&fromWall=${settingController.selectedWall}');
 
       if (response.statusCode == 200) {
         items.clear();
@@ -52,7 +53,9 @@ class DropDownController extends ChangeNotifier {
                       .map((e) => SingleItemCategoryModel(
                           value: e.CNIC,
                           avatarSingleItem: sVProfileImageProvider(
-                              profileimageAddress + e.profileImage, 30, 30),
+                              IPHandle.profileimageAddress + e.profileImage,
+                              30,
+                              30),
                           extraInfoSingleItem:
                               e.userType == "6" ? 'Society' : e.name,
                           nameSingleItem: e.userType == "1"

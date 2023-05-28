@@ -7,6 +7,8 @@ import 'package:biit_social/utils/SVConstants.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../../utils/IPHandleClass.dart';
+
 class SVProfileHeaderComponent extends StatelessWidget {
   bool? user = false;
 
@@ -36,7 +38,7 @@ class SVProfileHeaderComponent extends StatelessWidget {
                             topLeft: SVAppCommonRadius.toInt(),
                             topRight: SVAppCommonRadius.toInt())
                         : Image.network(
-                            profileimageAddress +
+                            IPHandle.profileimageAddress +
                                 (user!
                                     ? loggedInUser!.profileImage
                                     : controller.userToShow!.profileImage),
@@ -109,7 +111,7 @@ class SVProfileHeaderComponent extends StatelessWidget {
                 height: 88, width: 88, fit: BoxFit.cover)
             .cornerRadiusWithClipRRect(SVAppCommonRadius)
         : Image.network(
-                profileimageAddress +
+                IPHandle.profileimageAddress +
                     (user!
                         ? loggedInUser!.profileImage
                         : controller.userToShow!.profileImage),

@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import '../../../Controllers/AuthController.dart';
+import '../../../utils/IPHandleClass.dart';
 import '../../../utils/SVColors.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
@@ -313,7 +314,7 @@ class _GetProfileScreenState extends State<GetProfileScreen> {
                                   AssetImage('images/socialv/faces/face_4.png'))
                           : DecorationImage(
                               fit: BoxFit.cover,
-                              image: NetworkImage(profileimageAddress +
+                              image: NetworkImage(IPHandle.profileimageAddress +
                                   loggedInUser!.profileImage))),
             ),
             Positioned(

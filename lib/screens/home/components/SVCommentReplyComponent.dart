@@ -6,6 +6,8 @@ import 'package:biit_social/utils/SVColors.dart';
 import 'package:biit_social/utils/SVCommon.dart';
 import 'package:provider/provider.dart';
 
+import '../../../utils/IPHandleClass.dart';
+
 class SVCommentReplyComponent extends StatelessWidget {
   int postId;
   int repLiedOn;
@@ -33,7 +35,8 @@ class SVCommentReplyComponent extends StatelessWidget {
                             height: 48, width: 48, fit: BoxFit.cover)
                         .cornerRadiusWithClipRRect(8)
                     : Image.network(
-                            profileimageAddress + loggedInUser!.profileImage,
+                            IPHandle.profileimageAddress +
+                                loggedInUser!.profileImage,
                             height: 48,
                             width: 48,
                             fit: BoxFit.cover)

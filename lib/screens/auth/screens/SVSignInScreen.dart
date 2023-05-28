@@ -5,7 +5,9 @@ import 'package:biit_social/screens/auth/components/SVLoginInComponent.dart';
 import 'package:biit_social/screens/auth/components/SVSignUpComponent.dart';
 import 'package:biit_social/utils/SVCommon.dart';
 import 'package:biit_social/utils/SVConstants.dart';
+import '../../../utils/IPHandleClass.dart';
 import '../../../utils/SVColors.dart';
+import 'package:provider/provider.dart';
 
 class SVSignInScreen extends StatefulWidget {
   const SVSignInScreen({Key? key}) : super(key: key);
@@ -52,8 +54,10 @@ class _SVSignInScreenState extends State<SVSignInScreen> {
   }
 
   TextEditingController ipController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    SettingController settingController = context.read<SettingController>();
     return Scaffold(
       backgroundColor: svGetScaffoldColor(),
       body: Column(
@@ -62,7 +66,7 @@ class _SVSignInScreenState extends State<SVSignInScreen> {
           Image.asset('images/socialv/gifs/BIITLOGO.png',
                   height: 150, width: 150, fit: BoxFit.cover)
               .onTap(() async {
-            ipController.text = ippp;
+            ipController.text = IPHandle.ippp;
             showDialog(
               context: context,
               builder: (context) {
@@ -79,9 +83,8 @@ class _SVSignInScreenState extends State<SVSignInScreen> {
                     TextButton(
                         onPressed: () {
                           if (ipController.text.isNotEmpty) {
-                            setState(() {
-                              ippp = ipController.text.trim();
-                            });
+                            IPHandle.setIp(ipController.text.trim());
+
                             Navigator.pop(context);
                           }
                         },

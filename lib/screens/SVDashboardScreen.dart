@@ -10,6 +10,7 @@ import '../Controllers/NotificatinsCountController.dart';
 import '../Test.dart';
 import '../TimeTable/DateSheetScree.dart';
 import '../TimeTable/ShowAllTimeTableScreen.dart';
+import '../utils/IPHandleClass.dart';
 import 'fragments/SVAddPostFragment.dart';
 import 'fragments/SVHomeFragment.dart';
 import 'fragments/SVNotificationFragment.dart';
@@ -111,7 +112,7 @@ class _SVDashboardScreenState extends State<SVDashboardScreen>
                                   ? CircleAvatar(
                                       radius: 30,
                                       backgroundImage: NetworkImage(
-                                          profileimageAddress +
+                                          IPHandle.profileimageAddress +
                                               loggedInUser!.profileImage))
                                   : const CircleAvatar(
                                       radius: 30,
@@ -264,7 +265,7 @@ class _SVDashboardScreenState extends State<SVDashboardScreen>
                             ? CircleAvatar(
                                 radius: 15,
                                 backgroundImage: NetworkImage(
-                                    profileimageAddress +
+                                    IPHandle.profileimageAddress +
                                         loggedInUser!.profileImage))
                             : const CircleAvatar(
                                 radius: 15,

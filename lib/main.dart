@@ -25,6 +25,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 
 import 'Controllers/DateSheetAndCallender.dart';
 import 'Controllers/NotificatinsCountController.dart';
+import 'Controllers/StoryController.dart';
 
 AppStore appStore = AppStore();
 late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
@@ -103,6 +104,9 @@ void main() async {
     ),
     ChangeNotifierProvider(
       create: (_) => EventsController(),
+    ),
+    ChangeNotifierProvider(
+      create: (_) => StorysController(),
     ),
     ChangeNotifierProvider(
       create: (_) => DateSheetCallender(),

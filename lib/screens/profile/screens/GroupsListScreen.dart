@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:biit_social/utils/SVCommon.dart';
 import 'package:provider/provider.dart';
+import '../../../utils/IPHandleClass.dart';
 import '../../Chat/ChatScreen.dart';
 import 'SVGroupProfileScreen.dart';
 
@@ -175,7 +176,7 @@ class _GroupsListScreenState extends State<GroupsListScreen> {
                                                     fit: BoxFit.cover)
                                                 .cornerRadiusWithClipRRect(100)
                                             : Image.network(
-                                                    profileimageAddress +
+                                                    IPHandle.profileimageAddress +
                                                         group.profile,
                                                     errorBuilder: (context,
                                                         error, stackTrace) {

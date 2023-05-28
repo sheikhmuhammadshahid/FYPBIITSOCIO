@@ -5,6 +5,7 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:biit_social/utils/SVCommon.dart';
 import 'package:provider/provider.dart';
 import '../../../models/User/UserModel.dart';
+import '../../../utils/IPHandleClass.dart';
 import '../../Chat/ChatScreen.dart';
 import '../../fragments/SVProfileFragment.dart';
 import '../../fragments/SVSearchFragment.dart';
@@ -226,7 +227,7 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                                                   fit: BoxFit.cover)
                                               .cornerRadiusWithClipRRect(100)
                                           : Image.network(
-                                                  profileimageAddress +
+                                                  IPHandle.profileimageAddress +
                                                       user.profileImage,
                                                   errorBuilder: (context, error,
                                                       stackTrace) {

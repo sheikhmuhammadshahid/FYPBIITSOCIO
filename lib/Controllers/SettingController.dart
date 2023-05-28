@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 
 import 'package:biit_social/utils/SVCommon.dart';
 import '../models/User/UserModel.dart';
+import '../utils/IPHandleClass.dart';
 
 class SettingController extends ChangeNotifier {
   int selectedIndex = 0;
+
   bool expansionChanged = false;
   ScrollController scrollController = ScrollController();
   bool isAppBarVisible = true;
@@ -99,7 +101,7 @@ class SettingController extends ChangeNotifier {
   getUserProfile(frined) async {
     try {
       var response = await Dio().get(
-          "${ip}User/getUser?friendof=${loggedInUser!.CNIC}&&friend=$frined");
+          "${IPHandle.ip}User/getUser?friendof=${loggedInUser!.CNIC}&&friend=$frined");
       if (response.statusCode == 200) {
         userToShow = User.fromMap(response.data["user"]);
         userToShow!.countFriends = response.data["countFriends"];

@@ -6,6 +6,7 @@ import 'package:biit_social/utils/SVCommon.dart';
 import 'package:provider/provider.dart';
 
 import '../../../models/User/UserModel.dart';
+import '../../../utils/IPHandleClass.dart';
 import '../../fragments/SVProfileFragment.dart';
 import '../components/SVGroupProfile.dart';
 
@@ -63,8 +64,11 @@ class _SVGroupProfileScreenState extends State<SVGroupProfileScreen> {
                 widget.group.profile == ''
                     ? Image.asset('images/socialv/icons/ic_TickSquare.png',
                         height: 14, width: 14, fit: BoxFit.cover)
-                    : Image.network(profileimageAddress + widget.group.profile,
-                        height: 14, width: 14, fit: BoxFit.cover),
+                    : Image.network(
+                        IPHandle.profileimageAddress + widget.group.profile,
+                        height: 14,
+                        width: 14,
+                        fit: BoxFit.cover),
               ],
             ),
             8.height,
@@ -314,7 +318,7 @@ class _SVGroupProfileScreenState extends State<SVGroupProfileScreen> {
                                                       .cornerRadiusWithClipRRect(
                                                           100)
                                                   : Image.network(
-                                                          profileimageAddress +
+                                                          IPHandle.profileimageAddress +
                                                               user.profileImage,
                                                           errorBuilder:
                                                               (context, error,

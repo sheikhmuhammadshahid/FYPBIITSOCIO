@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:biit_social/utils/IPHandleClass.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -12,7 +13,7 @@ class ServerClient with ChangeNotifier {
   connectWithServer() async {
     try {
       // String ip = await getIp(context);
-      String ipp = ippp;
+      String ipp = IPHandle.ippp;
       socket = await Socket.connect(ipp, 5000);
       startListening();
     } catch (e) {

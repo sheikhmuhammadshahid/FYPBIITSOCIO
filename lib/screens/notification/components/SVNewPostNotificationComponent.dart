@@ -4,6 +4,8 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:biit_social/models/SVNotificationModel.dart';
 import 'package:biit_social/utils/SVCommon.dart';
 
+import '../../../utils/IPHandleClass.dart';
+
 class SVNewPostNotificationComponent extends StatelessWidget {
   final SVNotificationModel element;
 
@@ -21,7 +23,7 @@ class SVNewPostNotificationComponent extends StatelessWidget {
                 ),
               )
             : sVProfileImageProvider(
-                profileimageAddress + element.profileImage!,
+                IPHandle.profileimageAddress + element.profileImage!,
                 40.0,
                 40.0,
               ),
@@ -51,8 +53,8 @@ class SVNewPostNotificationComponent extends StatelessWidget {
             ? Image.asset("images/socialv/faces/face_5.png".validate(),
                     height: 48, width: 48, fit: BoxFit.cover)
                 .cornerRadiusWithClipRRect(4)
-            : sVImageProvider(imageAddress + element.profileImage!, 48, 48,
-                GFAvatarShape.square)
+            : sVImageProvider(IPHandle.imageAddress + element.profileImage!, 48,
+                48, GFAvatarShape.square)
       ],
     ).paddingAll(16);
   }

@@ -3,6 +3,7 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:biit_social/utils/SVCommon.dart';
 
 import '../../../models/User/UserModel.dart';
+import '../../../utils/IPHandleClass.dart';
 
 class SVSearchCardComponent extends StatelessWidget {
   final User element;
@@ -24,7 +25,8 @@ class SVSearchCardComponent extends StatelessWidget {
                     fit: BoxFit.cover,
                   ).cornerRadiusWithClipRRect(8)
                 : Image.network(
-                        profileimageAddress + element.profileImage.validate(),
+                        IPHandle.profileimageAddress +
+                            element.profileImage.validate(),
                         height: 56,
                         width: 56,
                         fit: BoxFit.cover)

@@ -3,6 +3,7 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:biit_social/models/SVCommentModel.dart';
 import 'package:biit_social/utils/SVCommon.dart';
 
+import '../../../utils/IPHandleClass.dart';
 import 'SVCommentReplyComponent.dart';
 
 class SVCommentComponent extends StatefulWidget {
@@ -32,7 +33,8 @@ class _SVCommentComponentState extends State<SVCommentComponent> {
                             height: 48, width: 48, fit: BoxFit.cover)
                         .cornerRadiusWithClipRRect(8)
                     : Image.network(
-                            profileimageAddress + widget.comment.profileImage!,
+                            IPHandle.profileimageAddress +
+                                widget.comment.profileImage!,
                             height: 48,
                             width: 48,
                             fit: BoxFit.cover)

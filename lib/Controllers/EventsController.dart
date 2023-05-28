@@ -7,6 +7,7 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import '../TimeTable/Calender/SyncfusionCallender.dart' as syn;
+import '../utils/IPHandleClass.dart';
 import '../utils/SVCommon.dart';
 
 class EventsController extends ChangeNotifier {
@@ -28,7 +29,7 @@ class EventsController extends ChangeNotifier {
     try {
       gettingEvents = true;
       setState();
-      var response = await Dio().get('${ip}Event/getEvent');
+      var response = await Dio().get('${IPHandle.ip}Event/getEvent');
       print(response.data);
       if (response.statusCode == 200) {
         eventController = EventController();
@@ -69,7 +70,7 @@ class EventsController extends ChangeNotifier {
 
   addEvent(EventModel ev) async {
     try {
-      var response = await Dio().post('${ip}Event/addEvent',
+      var response = await Dio().post('${IPHandle.ip}Event/addEvent',
           data: ev.toJson(), options: Options(headers: headers));
       if (response.statusCode == 200) {
         EventModel ev = EventModel.fromMap(response.data);
@@ -101,7 +102,7 @@ class EventsController extends ChangeNotifier {
   deleteEvent(int id) async {
     try {
       var response = await Dio().get(
-        '${ip}Event/deleteEvent?id=$id',
+        '${IPHandle.ip}Event/deleteEvent?id=$id',
       );
       if (response.statusCode == 200) {
         EventModel ev = EventModel.fromMap(response.data);
@@ -118,7 +119,7 @@ class EventsController extends ChangeNotifier {
 
   updateEvent(EventModel event) async {
     try {
-      var response = await Dio().post('${ip}Event/updateEvent',
+      var response = await Dio().post('${IPHandle.ip}Event/updateEvent',
           data: event.toJson(), options: Options(headers: headers));
       if (response.statusCode == 200) {
         int e = events.indexWhere((element) => element.id == event.id);

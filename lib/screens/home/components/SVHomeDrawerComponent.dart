@@ -8,6 +8,7 @@ import 'package:biit_social/screens/home/screens/SVForumScreen.dart';
 import 'package:biit_social/utils/SVColors.dart';
 import 'package:biit_social/utils/SVCommon.dart';
 
+import '../../../utils/IPHandleClass.dart';
 import '../../Teacher/givePermission.dart';
 import '../../fragments/SVProfileFragment.dart';
 import '../../profile/screens/GroupsListScreen.dart';
@@ -41,7 +42,8 @@ class _SVHomeDrawerComponentState extends State<SVHomeDrawerComponent> {
                 children: [
                   loggedInUser!.profileImage != ""
                       ? Image.network(
-                              profileimageAddress + loggedInUser!.profileImage,
+                              IPHandle.profileimageAddress +
+                                  loggedInUser!.profileImage,
                               height: 62,
                               width: 62,
                               fit: BoxFit.cover)

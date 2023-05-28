@@ -9,6 +9,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:nb_utils/nb_utils.dart';
 import '../screens/SVDashboardScreen.dart';
 import '../screens/auth/screens/SVSignInScreen.dart';
+import '../utils/IPHandleClass.dart';
 import '../utils/SVCommon.dart';
 import 'SettingController.dart';
 
@@ -55,7 +56,7 @@ class AuthController extends ChangeNotifier {
         notifyListeners();
       }
       var response = await Dio().get(
-          "${ip}User/getAllUsers?pageNo=$pageNo&&cnic=${loggedInUser!.CNIC}&fromWall=${settingController.selectedWall}");
+          "${IPHandle.ip}User/getAllUsers?pageNo=$pageNo&&cnic=${loggedInUser!.CNIC}&fromWall=${settingController.selectedWall}");
       if (response.statusCode == 200) {
         if (response.data != "No more users") {
           for (var element in response.data) {
@@ -142,7 +143,7 @@ class AuthController extends ChangeNotifier {
       loggedInUser!.token = token;
 
       var response = await Dio().get(
-          '${ip}User/updateToken?token=$token&&cnic=${loggedInUser!.CNIC}');
+          '${IPHandle.ip}User/updateToken?token=$token&&cnic=${loggedInUser!.CNIC}');
       if (response.statusCode == 200) {}
     } catch (e) {
       print(e);
@@ -154,7 +155,7 @@ class AuthController extends ChangeNotifier {
     try {
       EasyLoading.show(status: 'Please wait...', dismissOnTap: false);
       //EasyLoading.showInfo('', duration: const Duration(days: 2));
-      String url = "${ip}User/LoginUser";
+      String url = "${IPHandle.ip}User/LoginUser";
       var response = await Dio()
           .post(url, data: u.toJson(), options: Options(headers: headers));
       EasyLoading.dismiss();
@@ -191,7 +192,7 @@ class AuthController extends ChangeNotifier {
 
   updateProfile(FormData data) async {
     try {
-      var response = await Dio().post('${ip}Post/updateProfile',
+      var response = await Dio().post('${IPHandle.ip}Post/updateProfile',
           data: data,
           options: Options(headers: {
             "Content-Type": "application/json",

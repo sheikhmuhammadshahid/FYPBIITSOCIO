@@ -4,6 +4,8 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:biit_social/models/SVNotificationModel.dart';
 import 'package:biit_social/utils/SVCommon.dart';
 
+import '../../../utils/IPHandleClass.dart';
+
 class SVLikeNotificationComponent extends StatelessWidget {
   final SVNotificationModel element;
 
@@ -24,7 +26,9 @@ class SVLikeNotificationComponent extends StatelessWidget {
                     ),
                   )
                 : sVProfileImageProvider(
-                    profileimageAddress + element.profileImage!, 60.0, 60.0),
+                    IPHandle.profileimageAddress + element.profileImage!,
+                    60.0,
+                    60.0),
             8.width,
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,8 +59,8 @@ class SVLikeNotificationComponent extends StatelessWidget {
             ? Image.asset('images/socialv/posts/post_three.png'.validate(),
                     height: 48, width: 48, fit: BoxFit.cover)
                 .cornerRadiusWithClipRRect(4)
-            : sVImageProvider(imageAddress + element.postImage!, 48.0, 48.0,
-                GFAvatarShape.square)
+            : sVImageProvider(IPHandle.imageAddress + element.postImage!, 48.0,
+                48.0, GFAvatarShape.square)
       ],
     ).paddingAll(16);
   }

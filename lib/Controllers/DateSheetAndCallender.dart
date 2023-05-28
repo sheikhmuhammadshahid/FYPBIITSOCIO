@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../models/DateSheet/DateSheet.dart';
 import '../models/DateSheet/DateSheetBy.dart';
+import '../utils/IPHandleClass.dart';
 import '../utils/SVCommon.dart';
 
 class DateSheetCallender extends ChangeNotifier {
@@ -24,8 +25,8 @@ class DateSheetCallender extends ChangeNotifier {
     try {
       isDateLoading = true;
       setstate();
-      var response =
-          await Dio().get("${ip}User/getDateSheet?cnic=${loggedInUser!.CNIC}");
+      var response = await Dio()
+          .get("${IPHandle.ip}User/getDateSheet?cnic=${loggedInUser!.CNIC}");
       if (response.statusCode == 200) {
         days.clear();
         dateSheetsBy.clear();
@@ -64,7 +65,7 @@ class DateSheetCallender extends ChangeNotifier {
     try {
       isTimeTableLoading = true;
       setState();
-      var response = await Dio().get('${ip}post/getAllTimeTable');
+      var response = await Dio().get('${IPHandle.ip}post/getAllTimeTable');
       if (response.statusCode == 200) {
         timeTable = TimeTableModel.fromMap(response.data);
         print(response.data);

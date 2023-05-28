@@ -13,6 +13,7 @@ import '../models/SVCommentModel.dart';
 import '../models/SVGroupModel.dart';
 import '../models/SVNotificationModel.dart';
 import '../models/User/UserModel.dart';
+import '../utils/IPHandleClass.dart';
 import '../utils/SVCommon.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +21,7 @@ import 'package:provider/provider.dart';
 class FriendsStoriesController extends ChangeNotifier {
   bool isCLicked = false;
   bool isMentor = false;
+  int stoeryIndex = 0;
   bool isJoinedSociety = false;
   int selectedIndex = -1;
   TextEditingController filterController = TextEditingController();
@@ -72,7 +74,7 @@ class FriendsStoriesController extends ChangeNotifier {
           RequestedBy: loggedInUser!.CNIC,
           RequestedTo: to,
           status: 'pending');
-      var response = await Dio().post('${ip}Friends/sendFriendRequest',
+      var response = await Dio().post('${IPHandle.ip}Friends/sendFriendRequest',
           data: f.toJson(), options: Options(headers: headers));
       if (response.statusCode == 200) {
         getSnackBar(
@@ -92,7 +94,7 @@ class FriendsStoriesController extends ChangeNotifier {
   acceptFriendReques({to, context, status, not_id}) async {
     try {
       var response = await Dio().get(
-        '${ip}Friends/acceptFriendRequest?reques_id=$to&&status=$status&&noti_id=$not_id',
+        '${IPHandle.ip}Friends/acceptFriendRequest?reques_id=$to&&status=$status&&noti_id=$not_id',
       );
       getSnackBar(context: context, message: response.data);
     } catch (e) {}
@@ -101,7 +103,7 @@ class FriendsStoriesController extends ChangeNotifier {
   unFriend({to, context}) async {
     try {
       var response = await Dio().get(
-        '${ip}Friends/unfriend?sentBy=${loggedInUser!.CNIC}&&sentTo=$to',
+        '${IPHandle.ip}Friends/unfriend?sentBy=${loggedInUser!.CNIC}&&sentTo=$to',
       );
       getSnackBar(context: context, message: response.data);
       return true;
@@ -113,12 +115,12 @@ class FriendsStoriesController extends ChangeNotifier {
   List<SVNotificationModel> listMonth = []; // = getNotificationsThisMonth();
   List<SVNotificationModel> listEarlier = [];
   List<SVNotificationModel> notifications = [];
-  getNotifications(context) async {
+  getNotifications(BuildContext context) async {
     try {
       isStoriesLoading = true;
-      var controller = Provider.of<SettingController>(context, listen: false);
+      var controller = context.read<SettingController>();
       var response = await Dio().get(
-          "${ip}Notification/getNotification?userId=${loggedInUser!.CNIC}&fromWall=${controller.selectedWall}");
+          "${IPHandle.ip}Notification/getNotification?userId=${loggedInUser!.CNIC}&fromWall=${controller.selectedWall}");
       if (response.statusCode == 200) {
         notifications.clear();
         listEarlier.clear();
@@ -175,17 +177,18 @@ class FriendsStoriesController extends ChangeNotifier {
 
   setStoriesLoading(bool toset) {
     try {
-      storiesLoading = toset;
+      isStoriesLoading = toset;
       notifyListeners();
     } catch (e) {}
   }
 
   getSocietiesDetail() async {
     try {
-      setStoriesLoading(true);
-
-      var response = await Dio()
-          .get('${ip}Post/getSocietiesDetail?cnic=${loggedInUser!.CNIC}');
+      //  setStoriesLoading(true);
+      isStoriesLoading = true;
+      setState();
+      var response = await Dio().get(
+          '${IPHandle.ip}Post/getSocietiesDetail?cnic=${loggedInUser!.CNIC}');
       if (response.statusCode == 200) {
         societies.clear();
         isMentor = response.data['isMentor'];
@@ -197,7 +200,11 @@ class FriendsStoriesController extends ChangeNotifier {
       }
     } catch (e) {}
     print('done');
-    setStoriesLoading(false);
+    isStoriesLoading = false;
+    setState();
+    //setStoriesLoading(false);
+    //notifyListeners();
+    print(isStoriesLoading);
   }
 
   setState() {
@@ -209,8 +216,8 @@ class FriendsStoriesController extends ChangeNotifier {
   bool isSectionsLoading = true;
   getSectionAndDesciplines() async {
     try {
-      var response =
-          await Dio().get('${ip}user/getDescipline?cnic=${loggedInUser!.CNIC}');
+      var response = await Dio()
+          .get('${IPHandle.ip}user/getDescipline?cnic=${loggedInUser!.CNIC}');
       isSectionsLoading = true;
       setState();
       if (response.statusCode == 200) {
@@ -317,10 +324,10 @@ class FriendsStoriesController extends ChangeNotifier {
       String url = '';
       if (fromGroup) {
         url =
-            '${ip}groups/getChatOfGroup?id=$id&loggedInUserId=${loggedInUser!.CNIC}';
+            '${IPHandle.ip}groups/getChatOfGroup?id=$id&loggedInUserId=${loggedInUser!.CNIC}';
       } else {
         url =
-            '${ip}chat/getChat?loggedInUserId=${loggedInUser!.CNIC}&chatwithId=$id';
+            '${IPHandle.ip}chat/getChat?loggedInUserId=${loggedInUser!.CNIC}&chatwithId=$id';
       }
       var response = await Dio().get(url);
       if (response.statusCode == 200) {
@@ -350,7 +357,7 @@ class FriendsStoriesController extends ChangeNotifier {
             : null,
         'type': ch.type
       });
-      var response = await Dio().post('${ip}chat/addChat',
+      var response = await Dio().post('${IPHandle.ip}chat/addChat',
           data: data, options: Options(headers: headers));
       if (response.statusCode == 200) {
         //EasyLoading.showToast('added');
@@ -368,8 +375,8 @@ class FriendsStoriesController extends ChangeNotifier {
     try {
       isStoriesLoading = true;
       setState();
-      var response = await Dio()
-          .get('${ip}Friends/getFriends?user_id=${loggedInUser!.CNIC}');
+      var response = await Dio().get(
+          '${IPHandle.ip}Friends/getFriends?user_id=${loggedInUser!.CNIC}');
       if (response.statusCode == 200) {
         friends.clear();
         for (var element in response.data) {
@@ -389,7 +396,7 @@ class FriendsStoriesController extends ChangeNotifier {
       isStoriesLoading = true;
       setState();
       var res = await Dio().get(
-          '${ip}groups/getGroups?cnic=${loggedInUser!.CNIC}&userType=${loggedInUser!.userType}');
+          '${IPHandle.ip}groups/getGroups?cnic=${loggedInUser!.CNIC}&userType=${loggedInUser!.userType}');
       if (res.statusCode == 200) {
         groups.clear();
         for (var element in res.data) {
@@ -417,7 +424,7 @@ class FriendsStoriesController extends ChangeNotifier {
         'users': users
       });
       print(body);
-      var response = await Dio().post('${ip}Groups/addGroup',
+      var response = await Dio().post('${IPHandle.ip}Groups/addGroup',
           data: body, options: Options(headers: headers));
       if (response.statusCode == 200) {
         EasyLoading.showToast(response.data['message']);
@@ -436,7 +443,7 @@ class FriendsStoriesController extends ChangeNotifier {
       comments.clear();
       setState();
       var response =
-          await Dio().get('${ip}comments/getComment?post_id=$postId');
+          await Dio().get('${IPHandle.ip}comments/getComment?post_id=$postId');
       if (response.statusCode == 200) {
         for (var element in response.data) {
           comments.add(SVCommentModel.fromMap(element));
@@ -453,7 +460,8 @@ class FriendsStoriesController extends ChangeNotifier {
       groupUsers.clear();
       setState();
 
-      var response = await Dio().get('${ip}Groups/getGroupDetail?id=$id');
+      var response =
+          await Dio().get('${IPHandle.ip}Groups/getGroupDetail?id=$id');
       if (response.statusCode == 200) {
         for (var element in response.data) {
           groupUsers.add(User.fromMap(element));
@@ -477,7 +485,7 @@ class FriendsStoriesController extends ChangeNotifier {
         'repliedOn': repLiedOn,
         'text': v.comment,
       });
-      var response = await Dio().post('${ip}comments/addComment',
+      var response = await Dio().post('${IPHandle.ip}comments/addComment',
           data: data, options: Options(headers: headers));
       if (response.statusCode == 200) {
         EasyLoading.showToast('commented successfully');

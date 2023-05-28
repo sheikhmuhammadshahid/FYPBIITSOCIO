@@ -10,6 +10,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
 import '../TimeTable/TimeTableModel.dart';
 import '../utils/FilesPicker.dart';
+import '../utils/IPHandleClass.dart';
 import '../utils/SVCommon.dart';
 
 class PostController with ChangeNotifier {
@@ -36,7 +37,7 @@ class PostController with ChangeNotifier {
       isTimeTableLoading = true;
       setState();
       var response = await Dio().get(
-          '${ip}post/getTimeTable?section=${loggedInUser!.userType == "1" ? loggedInUser!.section : loggedInUser!.CNIC}&userType=${loggedInUser!.userType}');
+          '${IPHandle.ip}post/getTimeTable?section=${loggedInUser!.userType == "1" ? loggedInUser!.section : loggedInUser!.CNIC}&userType=${loggedInUser!.userType}');
       if (response.statusCode == 200) {
         timeTable = TimeTableModel.fromMap(response.data);
         print(response.data);
@@ -67,7 +68,7 @@ class PostController with ChangeNotifier {
             : null,
       });
 
-      String url = "${ip}Post/addPost";
+      String url = "${IPHandle.ip}Post/addPost";
       var v = jsonEncode(post.toMap());
       // post.user = "12";
       var response = await Dio().post(url,
@@ -95,6 +96,7 @@ class PostController with ChangeNotifier {
         'societyId': 0,
         'text': post.text,
         'storyFor': post.storyFor,
+        'time': DateTime.now().toString(),
         'color': post.color,
         'type': post.type,
         'image': post.type == "image" || post.type == "video"
@@ -102,7 +104,7 @@ class PostController with ChangeNotifier {
             : null,
       });
 
-      String url = "${ip}Post/addStory";
+      String url = "${IPHandle.ip}Post/addStory";
       var v = jsonEncode(post.toMap());
       // post.user = "12";
       var response = await Dio().post(url,
@@ -142,13 +144,17 @@ class PostController with ChangeNotifier {
       if (status) {
         posts[index].likesCount = posts[index].likesCount! + 1;
         setState();
-        response = await http.post(Uri.parse("${ip}Reacts/addReaction"),
-            body: jsonEncode(data), headers: headers);
+        response = await http.post(
+            Uri.parse("${IPHandle.ip}Reacts/addReaction"),
+            body: jsonEncode(data),
+            headers: headers);
       } else {
         posts[index].likesCount = posts[index].likesCount! - 1;
         setState();
-        response = await http.post(Uri.parse("${ip}Reacts/deleteReact"),
-            body: jsonEncode(data), headers: headers);
+        response = await http.post(
+            Uri.parse("${IPHandle.ip}Reacts/deleteReact"),
+            body: jsonEncode(data),
+            headers: headers);
       }
       if (response.statusCode == 200) {
         print(response.body);
@@ -162,7 +168,8 @@ class PostController with ChangeNotifier {
     try {
       isLoading = true;
       setState();
-      String url = "${ip}post/getPinnedPosts?user_id=${loggedInUser!.CNIC}";
+      String url =
+          "${IPHandle.ip}post/getPinnedPosts?user_id=${loggedInUser!.CNIC}";
       var response = await Dio().get(url);
       //body: post.toJson(), headers: headers);
       if (response.statusCode == 200) {
@@ -198,7 +205,7 @@ class PostController with ChangeNotifier {
       pageNumber++;
 
       String url =
-          "${ip}post/getPosts?cnic=${loggedInUser!.CNIC}&&pageNumber=$pageNumber&&fromWall=${context.selectedWall}";
+          "${IPHandle.ip}post/getPosts?cnic=${loggedInUser!.CNIC}&&pageNumber=$pageNumber&&fromWall=${context.selectedWall}";
       //var v = jsonEncode(post.toMap());
 
       print(url);
@@ -237,7 +244,7 @@ class PostController with ChangeNotifier {
       EasyLoading.show(status: 'Please wait...', dismissOnTap: false);
       var formData = FormData.fromMap(
           {'file': await MultipartFile.fromFile(path), 'toUpload': toupload});
-      var response = await Dio().post('${ip}post/uploadFile',
+      var response = await Dio().post('${IPHandle.ip}post/uploadFile',
           data: formData,
           options: Options(headers: {
             "Content-Type": "application/json",
@@ -258,7 +265,7 @@ class PostController with ChangeNotifier {
         'user_id': loggedInUser!.CNIC,
         'post_id': posts[index].id,
       });
-      var response = await Dio().post("${ip}Post/pinPost",
+      var response = await Dio().post("${IPHandle.ip}Post/pinPost",
           data: data, options: Options(headers: headers));
       if (response.statusCode == 200) {
         posts[index].isPinned = true;
@@ -274,7 +281,7 @@ class PostController with ChangeNotifier {
   removeFromDiary(index) async {
     try {
       var response = await Dio().get(
-        "${ip}Post/unPinPosts?user_id=${loggedInUser!.CNIC}&&post_id=${pinedPosts[index].id}",
+        "${IPHandle.ip}Post/unPinPosts?user_id=${loggedInUser!.CNIC}&&post_id=${pinedPosts[index].id}",
       );
       if (response.statusCode == 200) {
         pinedPosts[index].isPinned = false;
@@ -306,7 +313,8 @@ class PostController with ChangeNotifier {
       int id = posts[index].id!;
       posts.remove(posts[index]);
       notifyListeners();
-      var response = await Dio().get("${ip}Post/deletePost?post_id=$id");
+      var response =
+          await Dio().get("${IPHandle.ip}Post/deletePost?post_id=$id");
       if (response.statusCode == 200) {}
     } catch (e) {
       print(e);

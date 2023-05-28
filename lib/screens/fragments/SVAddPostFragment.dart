@@ -146,6 +146,7 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
                                     ? 'video'
                                     : "text",
                             url: "",
+                            time: DateTime.now().toString(),
                             text: descriptionController.text,
                           ),
                           context);

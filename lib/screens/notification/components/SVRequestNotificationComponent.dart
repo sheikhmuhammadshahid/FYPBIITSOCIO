@@ -6,6 +6,8 @@ import 'package:biit_social/utils/SVColors.dart';
 import 'package:biit_social/utils/SVCommon.dart';
 import 'package:provider/provider.dart';
 
+import '../../../utils/IPHandleClass.dart';
+
 class SVRequestNotificationComponent extends StatelessWidget {
   final SVNotificationModel element;
 
@@ -25,7 +27,7 @@ class SVRequestNotificationComponent extends StatelessWidget {
                 ),
               )
             : sVProfileImageProvider(
-                profileimageAddress + element.profileImage!,
+                IPHandle.profileimageAddress + element.profileImage!,
                 40.0,
                 40.0,
               ),
