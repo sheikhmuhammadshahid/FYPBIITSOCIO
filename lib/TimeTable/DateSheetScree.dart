@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../Controllers/DateSheetAndCallender.dart';
+import '../utils/SVCommon.dart';
 
 class DateSheetScreen extends StatefulWidget {
   const DateSheetScreen({super.key});
@@ -55,44 +57,102 @@ class _DateSheetScreenState extends State<DateSheetScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    context.read<DateSheetCallender>().getDateSheet();
+    dateSheetCallender ??= context.read<DateSheetCallender>();
+    dateSheetCallender!.getDateSheet();
+    dateSheetCallender!.getExamTypes();
   }
+
+  DateSheetCallender? dateSheetCallender;
 
   @override
   Widget build(BuildContext context) {
+    dateSheetCallender ??= context.read<DateSheetCallender>();
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        centerTitle: true,
-        title: Text(
-          'Date Sheet',
-          style: TextStyle(
-            fontFamily: svFontRoboto,
-            fontSize: 20,
-            color: context.iconColor,
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: SizedBox(
+              height: context.height() * 0.07,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Date Sheet',
+                    style: TextStyle(
+                      fontFamily: svFontRoboto,
+                      fontSize: 20,
+                      color: context.iconColor,
+                    ),
+                  ),
+                  10.width,
+                  SizedBox(
+                    width: context.width() * 0.45,
+                    child: context
+                            .watch<DateSheetCallender>()
+                            .isTimeTableLoading
+                        ? Shimmer.fromColors(
+                            baseColor: context.primaryColor.withOpacity(.2),
+                            highlightColor:
+                                context.primaryColor.withOpacity(.1),
+                            child: Card(
+                              child: SizedBox(
+                                width: context.width() * 0.45,
+                                height: 40,
+                              ),
+                            ))
+                        : DropdownButtonFormField(
+                            decoration: const InputDecoration(
+                                hintText: 'Select to filter!'),
+                            isExpanded: true,
+                            items: dateSheetCallender!.dateSheetTypes
+                                .map((e) => DropdownMenuItem(
+                                      value: e,
+                                      child: Text(e),
+                                    ))
+                                .toList(),
+                            onChanged: (value) {
+                              if (dateSheetCallender!.dateSheetsBy.isNotEmpty) {
+                                if (!(dateSheetCallender!.dateSheetsBy[0]
+                                        .dateSheet[0].examType ==
+                                    value)) {
+                                  dateSheetCallender!.dateSheettoGet = value!;
+                                  dateSheetCallender!.getDateSheet();
+                                }
+                              } else {
+                                dateSheetCallender!.dateSheettoGet = value!;
+                                dateSheetCallender!.getDateSheet();
+                              }
+                            },
+                          ),
+                  )
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
-      body: SizedBox(
-        height: context.height() * 0.73,
-        child: SingleChildScrollView(
-          child: Consumer<DateSheetCallender>(
-            builder: (context, value, child) {
-              return value.isDateLoading
-                  ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : value.dateSheetsBy.isNotEmpty
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: value.days
-                              .map((e) => getDateSheetWidget(value, e))
-                              .toList(),
-                        )
-                      : const Text('DateSheet not found!');
-            },
+          10.height,
+          SizedBox(
+            height: context.height() * 0.7,
+            child: Consumer<DateSheetCallender>(
+              builder: (context, value, child) {
+                return value.isDateLoading
+                    ? getNotificationShimmer(context)
+                    : value.dateSheetsBy.isNotEmpty
+                        ? SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: value.days
+                                  .map((e) => getDateSheetWidget(value, e))
+                                  .toList(),
+                            ),
+                          )
+                        : const Padding(
+                            padding: EdgeInsets.only(top: 40),
+                            child: Text('DateSheet not found!'));
+              },
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

@@ -1,6 +1,13 @@
 import 'package:biit_social/utils/SVCommon.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:nb_utils/nb_utils.dart';
+
+import '../../Controllers/DropDowncontroler.dart';
+import 'package:provider/provider.dart';
+
+import '../DropDown/CustomDropDown.dart';
 
 class SVGivePermission extends StatefulWidget {
   const SVGivePermission({super.key});
@@ -16,13 +23,41 @@ class _SVGivePermissionState extends State<SVGivePermission> {
     Items(id: 2, name: 'Add posts'),
   ];
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    dropDownController ??= context.read<DropDownController>();
+    dropDownController!.getTeachersAndStudents();
+  }
+
+  DropDownController? dropDownController;
+  String? selectedTeacher = '';
+  @override
   Widget build(BuildContext context) {
+    dropDownController ??= context.read<DropDownController>();
     return Scaffold(
       floatingActionButton: SizedBox(
         width: 100,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(shape: const StadiumBorder()),
-          onPressed: () {},
+          onPressed: () {
+            if (dropDownController!.selectedList.isNotEmpty &&
+                selectedTeacher != null &&
+                selectedTeacher != '') {
+              String toSave = '';
+              for (var element in dropDownController!.selectedList) {
+                toSave += element.value + ",";
+              }
+              dropDownController!.saveTAs(FormData.fromMap(
+                  {'students': toSave, 'teacher': selectedTeacher}));
+            } else if (selectedTeacher.isEmptyOrNull) {
+              EasyLoading.showToast('Please select teacher!',
+                  dismissOnTap: true);
+            } else {
+              EasyLoading.showToast('Please select one or more students!',
+                  dismissOnTap: true);
+            }
+          },
           child: Row(
             children: const [
               Icon(Icons.add),
@@ -43,28 +78,40 @@ class _SVGivePermissionState extends State<SVGivePermission> {
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 20.0, right: 20, top: 40),
-        child: Column(
-          children: [
-            TextFormField(
-              decoration: const InputDecoration(hintText: 'Select Teacher'),
-              readOnly: true,
-              onTap: () async {
-                //  await getSelector(context, 'Select Teacher', items);
-              },
-            ),
-            const SizedBox(
-              height: 40,
-            ),
-            TextFormField(
-              decoration: const InputDecoration(hintText: 'Select Students'),
-              readOnly: true,
-              onTap: () async {
-                // await getSelector(context, 'Select permissons', items1);
-              },
-            ),
-            //ElevatedButton(onPressed: () {}, child: const Text('Save'))
-          ],
-        ),
+        child: context.watch<DropDownController>().isGetting
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : Column(
+                children: [
+                  DropdownButtonFormField(
+                    decoration: InputDecoration(
+                        iconColor: context.iconColor,
+                        hintText: 'Select Teacher',
+                        label: Text(
+                          'Teacher',
+                          style: TextStyle(color: context.iconColor),
+                        ),
+                        hintStyle: TextStyle(color: context.iconColor)),
+                    items: dropDownController!.teachers
+                        .map((e) => DropdownMenuItem(
+                              value: e,
+                              child: Text(e),
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      selectedTeacher = value!;
+                    },
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  CustomExample0(
+                    scrollController: ScrollController(),
+                  ),
+                  //ElevatedButton(onPressed: () {}, child: const Text('Save'))
+                ],
+              ),
       ),
     );
   }

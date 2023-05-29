@@ -15,6 +15,7 @@ class DateSheetCallender extends ChangeNotifier {
   bool isTimeTableLoading = true;
   List<String> days = [];
   List<DateSheet> datesheet = [];
+  List<String> dateSheetTypes = [];
   setstate() {
     try {
       notifyListeners();
@@ -25,8 +26,8 @@ class DateSheetCallender extends ChangeNotifier {
     try {
       isDateLoading = true;
       setstate();
-      var response = await Dio()
-          .get("${IPHandle.ip}User/getDateSheet?cnic=${loggedInUser!.CNIC}");
+      var response = await Dio().get(
+          "${IPHandle.ip}User/getDateSheet?cnic=${loggedInUser!.CNIC}&examType=$dateSheettoGet");
       if (response.statusCode == 200) {
         days.clear();
         dateSheetsBy.clear();
@@ -59,6 +60,23 @@ class DateSheetCallender extends ChangeNotifier {
     try {
       notifyListeners();
     } catch (e) {}
+  }
+
+  String dateSheettoGet = '';
+  getExamTypes() async {
+    try {
+      isTimeTableLoading = true;
+      notifyListeners();
+      var response = await Dio().get('${IPHandle.ip}User/getDateSheetsTypes');
+      if (response.statusCode == 200) {
+        dateSheetTypes.clear();
+        for (var element in response.data) {
+          dateSheetTypes.add(element);
+        }
+      }
+    } catch (e) {}
+    isTimeTableLoading = false;
+    notifyListeners();
   }
 
   getAllTimeTable() async {

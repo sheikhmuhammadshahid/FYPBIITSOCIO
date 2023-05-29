@@ -19,6 +19,7 @@ class AuthController extends ChangeNotifier {
   List<User> users = [];
   List<User> userToShow = [];
   int pageNo = 0;
+
   filterUsers(data) {
     try {
       userToShow = users

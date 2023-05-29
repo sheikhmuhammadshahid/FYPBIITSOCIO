@@ -186,6 +186,7 @@ getNotificationShimmer(BuildContext context) {
       highlightColor: context.primaryColor.withOpacity(.1),
       child: ListView.builder(
         itemCount: 10,
+        shrinkWrap: true,
         itemBuilder: (context, index) {
           return ListTile(
             leading: const CircleAvatar(

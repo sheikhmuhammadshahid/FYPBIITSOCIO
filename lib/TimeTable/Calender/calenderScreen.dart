@@ -287,7 +287,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
                                   trailing: loggedInUser!.userType != '3'
                                       ? const SizedBox.shrink()
                                       : PopupMenuButton(
-                                          color: context.iconColor,
+                                          color: context.cardColor,
                                           itemBuilder: (context) {
                                             return [
                                               PopupMenuItem(
@@ -310,7 +310,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
                                                           Icon(
                                                             Icons.delete,
                                                             color: context
-                                                                .primaryColor
+                                                                .iconColor
                                                                 .withOpacity(
                                                                     .8),
                                                           ),
@@ -319,8 +319,9 @@ class _CalenderScreenState extends State<CalenderScreen> {
                                                           ),
                                                           Text(
                                                             'Delete',
-                                                            style:
-                                                                boldTextStyle(),
+                                                            style: boldTextStyle(
+                                                                color: context
+                                                                    .iconColor),
                                                           ),
                                                         ],
                                                       ))),
@@ -382,7 +383,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
                                                           Icon(
                                                             Icons.edit,
                                                             color: context
-                                                                .primaryColor
+                                                                .iconColor
                                                                 .withOpacity(
                                                                     .8),
                                                           ),
