@@ -57,8 +57,8 @@ class TimeTableSlot {
 
 class TimeTableModel {
   List<String> slot = [];
-  List<String> venue = [];
-  List<String> teacher = [];
+  List<String>? venue = [];
+  List<String>? teacher = [];
   List<TimeTableSlot> monday = [];
   List<TimeTableSlot> tuesday = [];
   List<TimeTableSlot> wednesday = [];
@@ -66,8 +66,8 @@ class TimeTableModel {
   List<TimeTableSlot> friday = [];
   TimeTableModel({
     required this.slot,
-    required this.venue,
-    required this.teacher,
+    this.venue,
+    this.teacher,
     required this.monday,
     required this.tuesday,
     required this.wednesday,
@@ -101,8 +101,12 @@ class TimeTableModel {
     final result = <String, dynamic>{};
 
     result.addAll({'slot': slot});
-    result.addAll({'venue': venue});
-    result.addAll({'teacher': teacher});
+    if (venue != null) {
+      result.addAll({'venue': venue});
+    }
+    if (teacher != null) {
+      result.addAll({'teacher': teacher});
+    }
     result.addAll({'monday': monday.map((x) => x.toMap()).toList()});
     result.addAll({'tuesday': tuesday.map((x) => x.toMap()).toList()});
     result.addAll({'wednesday': wednesday.map((x) => x.toMap()).toList()});

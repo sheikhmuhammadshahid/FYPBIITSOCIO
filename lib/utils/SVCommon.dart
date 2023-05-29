@@ -445,7 +445,7 @@ sVProfileImageProvider(url, height, width) {
   );
 }
 
-sVImageProvider(url, height, width, GFAvatarShape shape) {
+sVImageProvider(url, double height, double width, GFAvatarShape shape) {
   return SizedBox(
     height: height,
     width: width,

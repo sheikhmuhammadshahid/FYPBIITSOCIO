@@ -115,9 +115,11 @@ class FriendsStoriesController extends ChangeNotifier {
   List<SVNotificationModel> listMonth = []; // = getNotificationsThisMonth();
   List<SVNotificationModel> listEarlier = [];
   List<SVNotificationModel> notifications = [];
+  bool isGettingNotifications = true;
   getNotifications(BuildContext context) async {
     try {
-      isStoriesLoading = true;
+      isGettingNotifications = true;
+
       var controller = context.read<SettingController>();
       var response = await Dio().get(
           "${IPHandle.ip}Notification/getNotification?userId=${loggedInUser!.CNIC}&fromWall=${controller.selectedWall}");
@@ -151,9 +153,9 @@ class FriendsStoriesController extends ChangeNotifier {
     } catch (e) {
       print(e);
     }
-    isStoriesLoading = false;
+    isGettingNotifications = false;
 
-    setState();
+    // notifyListeners();
   }
 
   String getDateStatus(String dateString) {
@@ -210,6 +212,21 @@ class FriendsStoriesController extends ChangeNotifier {
   setState() {
     try {
       notifyListeners();
+    } catch (e) {}
+  }
+
+  sendOfficialNotification(var data) async {
+    try {
+      var response = await Dio().post(
+          '${IPHandle.ip}Notification/addNotification',
+          data: data,
+          options: Options(headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          }));
+      if (response.statusCode == 200) {
+        EasyLoading.showToast('Notification added!');
+      }
     } catch (e) {}
   }
 

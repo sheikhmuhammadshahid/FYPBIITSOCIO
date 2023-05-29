@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:biit_social/Controllers/DropDowncontroler.dart';
@@ -117,55 +118,67 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
                   }
 
                   print(selectedOptions);
-                  Post? p;
-                  if (!widget.isStatus) {
-                    p = Post(
-                        fromWall: settingController.selectedWall,
-                        description: descriptionController.text,
-                        user: loggedInUser!.toJson().toString(),
-                        postFor: selectedOptions,
-                        dateTime: DateTime.now().toString(),
-                        type: isImagePicked == 1
-                            ? "image"
-                            : isImagePicked == 2
-                                ? 'video'
-                                : "text",
-                        text: isImagePicked != 0 ? path.path : "",
-                        postedBy: loggedInUser!.CNIC);
+                  if (clicked) {
+                    friendStoriesController
+                        .sendOfficialNotification(jsonEncode({
+                      'body': descriptionController.text,
+                      'NotificationTo': selectedOptions,
+                      'ifOfficial': true,
+                      'fromWall': loggedInUser!.userType,
+                      'status': 0,
+                      'notificationFrom': loggedInUser!.CNIC
+                    }));
+                  } else {
+                    Post? p;
+                    if (!widget.isStatus) {
+                      p = Post(
+                          fromWall: settingController.selectedWall,
+                          description: descriptionController.text,
+                          user: loggedInUser!.toJson().toString(),
+                          postFor: selectedOptions,
+                          dateTime: DateTime.now().toString(),
+                          type: isImagePicked == 1
+                              ? "image"
+                              : isImagePicked == 2
+                                  ? 'video'
+                                  : "text",
+                          text: isImagePicked != 0 ? path.path : "",
+                          postedBy: loggedInUser!.CNIC);
+                    }
+                    !widget.isStatus
+                        ? await PostController().addPost(p!, context)
+                        : await PostController().addStory(
+                            Stories(
+                              id: 0,
+                              storyFor: selectedOptions,
+                              societyId: 3,
+                              type: isImagePicked == 1
+                                  ? "image"
+                                  : isImagePicked == 2
+                                      ? 'video'
+                                      : "text",
+                              url: "",
+                              time: DateTime.now().toString(),
+                              text: descriptionController.text,
+                            ),
+                            context);
+                    if (!widget.isStatus) {
+                      postController.posts.insert(
+                          0,
+                          Post(
+                              postedBy: p!.postedBy,
+                              dateTime: p.dateTime,
+                              description: p.description,
+                              text: p.text,
+                              user: loggedInUser!.toJson(),
+                              userPosted: loggedInUser,
+                              postFor: p.postFor,
+                              type: p.type,
+                              fromWall: p.fromWall));
+                      postController.notifyListeners();
+                    }
+                    // ignore: use_build_context_synchronously
                   }
-                  !widget.isStatus
-                      ? await PostController().addPost(p!, context)
-                      : await PostController().addStory(
-                          Stories(
-                            id: 0,
-                            storyFor: selectedOptions,
-                            societyId: 3,
-                            type: isImagePicked == 1
-                                ? "image"
-                                : isImagePicked == 2
-                                    ? 'video'
-                                    : "text",
-                            url: "",
-                            time: DateTime.now().toString(),
-                            text: descriptionController.text,
-                          ),
-                          context);
-                  if (!widget.isStatus) {
-                    postController.posts.insert(
-                        0,
-                        Post(
-                            postedBy: p!.postedBy,
-                            dateTime: p.dateTime,
-                            description: p.description,
-                            text: p.text,
-                            user: loggedInUser!.toJson(),
-                            userPosted: loggedInUser,
-                            postFor: p.postFor,
-                            type: p.type,
-                            fromWall: p.fromWall));
-                    postController.notifyListeners();
-                  }
-                  // ignore: use_build_context_synchronously
                   Navigator.pop(context);
                 } else {
                   EasyLoading.showToast('Please write something');

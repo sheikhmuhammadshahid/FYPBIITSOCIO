@@ -72,18 +72,18 @@ class _SVStoryScreenState extends State<SVStoryScreen>
                       onStoryShow: (valuee) {
                         // int index = provier.societies[provier.index].stories!
                         //     .indexOf(valuee);
-                        try {
-                          var v = valuee.view.key.toString();
-                          print(v.splitBetween('<', '>'));
-                          try {
-                            stryController.shownStoryIndex =
-                                int.parse(v.splitBetween('<', '>'));
-                            stryController.notifyListeners();
-                          } catch (e) {
-                            stryController.shownStoryIndex = -1;
-                            stryController.notifyListeners();
-                          }
-                        } catch (e) {}
+                        // try {
+                        //   var v = valuee.view.key.toString();
+                        //   print(v.splitBetween('<', '>'));
+                        //   try {
+                        //     stryController.shownStoryIndex =
+                        //         int.parse(v.splitBetween('<', '>'));
+                        //     stryController.notifyListeners();
+                        //   } catch (e) {
+                        //     stryController.shownStoryIndex = -1;
+                        //     stryController.notifyListeners();
+                        //   }
+                        // } catch (e) {}
 
                         // valuee.duration
                       },
@@ -155,23 +155,23 @@ class _SVStoryScreenState extends State<SVStoryScreen>
                           Text(provier.societies[provier.index].name.validate(),
                               style: boldTextStyle(color: Colors.white)),
                           5.height,
-                          Text(
-                            provier.societies[provier.index].stories!.length >
-                                        context
-                                            .watch<StorysController>()
-                                            .shownStoryIndex &&
-                                    stryController.shownStoryIndex != -1
-                                ? DateTime.parse(provier
-                                        .societies[provier.index]
-                                        .stories![
-                                            stryController.shownStoryIndex]
-                                        .time!
-                                        .replaceAll(' ', 'T')
-                                        .validate())
-                                    .timeAgo
-                                : '',
-                            style: secondaryTextStyle(color: Colors.white),
-                          )
+                          // Text(
+                          //   provier.societies[provier.index].stories!.length >
+                          //               context
+                          //                   .watch<StorysController>()
+                          //                   .shownStoryIndex &&
+                          //           stryController.shownStoryIndex != -1
+                          //       ? DateTime.parse(provier
+                          //               .societies[provier.index]
+                          //               .stories![
+                          //                   stryController.shownStoryIndex]
+                          //               .time!
+                          //               .replaceAll(' ', 'T')
+                          //               .validate())
+                          //           .timeAgo
+                          //       : '',
+                          //   style: secondaryTextStyle(color: Colors.white),
+                          // )
                           // svRobotoText(
                           //     text: DateFormat('MM/dd/yyyy h:mm:ss a')
                           //         .parse(provier

@@ -41,19 +41,20 @@ class _SVNotificationFragmentState extends State<SVNotificationFragment> {
     afterBuildCreated(() {
       setStatusBarColor(svGetScaffoldColor());
     });
-    init();
+    //init();
   }
 
-  init() {
-    friendsController = context.read<FriendsStoriesController>();
-    friendsController.getNotifications(context);
+  init() async {
+    friendsController ??= context.read<FriendsStoriesController>();
+    await friendsController!.getNotifications(context);
   }
 
   int selectedTab = 0;
   //List<String> admin = ['All', 'REQUESTS', 'SOCIETIES'];
-  late FriendsStoriesController friendsController;
+  FriendsStoriesController? friendsController;
   @override
   Widget build(BuildContext context) {
+    friendsController ??= context.read<FriendsStoriesController>();
     return Scaffold(
         backgroundColor: svGetScaffoldColor(),
         appBar: AppBar(
@@ -93,44 +94,43 @@ class _SVNotificationFragmentState extends State<SVNotificationFragment> {
           //   ),
           // ),
         ),
-        body: Consumer<FriendsStoriesController>(
-          builder: (context, controler, child) {
-            return controler.isStoriesLoading
-                ? getNotificationShimmer(context)
-                : SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('TODAY', style: boldTextStyle()).paddingAll(16),
-                        const Divider(height: 0, indent: 16, endIndent: 16),
-                        Column(
-                          children: controler.listToday.map((e) {
-                            return getNotificationComponent(
-                                type: e.notificationType, element: e);
-                          }).toList(),
-                        ),
-                        Text('THIS MONTH', style: boldTextStyle())
-                            .paddingAll(16),
-                        const Divider(height: 0, indent: 16, endIndent: 16),
-                        Column(
-                          children: controler.listMonth.map((e) {
-                            return getNotificationComponent(
-                                type: e.notificationType, element: e);
-                          }).toList(),
-                        ),
-                        Text('Earlier', style: boldTextStyle()).paddingAll(16),
-                        const Divider(height: 0, indent: 16, endIndent: 16),
-                        Column(
-                          children: controler.listEarlier.map((e) {
-                            return getNotificationComponent(
-                                type: e.notificationType, element: e);
-                          }).toList(),
-                        ),
-                        16.height,
-                      ],
-                    ),
-                  );
-          },
+        body: FutureBuilder(
+          future: init(),
+          builder: (context, snapshot) => friendsController!
+                  .isGettingNotifications
+              ? getNotificationShimmer(context)
+              : SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('TODAY', style: boldTextStyle()).paddingAll(16),
+                      const Divider(height: 0, indent: 16, endIndent: 16),
+                      Column(
+                        children: friendsController!.listToday.map((e) {
+                          return getNotificationComponent(
+                              type: e.notificationType, element: e);
+                        }).toList(),
+                      ),
+                      Text('THIS MONTH', style: boldTextStyle()).paddingAll(16),
+                      const Divider(height: 0, indent: 16, endIndent: 16),
+                      Column(
+                        children: friendsController!.listMonth.map((e) {
+                          return getNotificationComponent(
+                              type: e.notificationType, element: e);
+                        }).toList(),
+                      ),
+                      Text('Earlier', style: boldTextStyle()).paddingAll(16),
+                      const Divider(height: 0, indent: 16, endIndent: 16),
+                      Column(
+                        children: friendsController!.listEarlier.map((e) {
+                          return getNotificationComponent(
+                              type: e.notificationType, element: e);
+                        }).toList(),
+                      ),
+                      16.height,
+                    ],
+                  ),
+                ),
         ));
   }
 }

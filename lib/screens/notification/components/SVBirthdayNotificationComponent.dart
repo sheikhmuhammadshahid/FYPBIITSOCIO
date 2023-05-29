@@ -3,6 +3,8 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:biit_social/models/SVNotificationModel.dart';
 import 'package:biit_social/utils/SVCommon.dart';
 
+import '../../../utils/IPHandleClass.dart';
+
 class SVBirthdayNotificationComponent extends StatelessWidget {
   final SVNotificationModel element;
 
@@ -17,9 +19,18 @@ class SVBirthdayNotificationComponent extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(element.profileImage.validate(),
-                    height: 40, width: 40, fit: BoxFit.cover)
-                .cornerRadiusWithClipRRect(8),
+            element.profileImage == ""
+                ? CircleAvatar(
+                    radius: 29,
+                    backgroundImage: AssetImage(
+                      "images/socialv/faces/face_5.png".validate(),
+                    ),
+                  )
+                : sVProfileImageProvider(
+                    IPHandle.profileimageAddress + element.profileImage!,
+                    40.0,
+                    40.0,
+                  ),
             8.width,
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,33 +41,26 @@ class SVBirthdayNotificationComponent extends StatelessWidget {
                     Text(element.name.validate(),
                         style: boldTextStyle(size: 14)),
                     2.width,
-                    element.ifOfficial.validate()
-                        ? Image.asset('images/socialv/icons/ic_TickSquare.png',
-                            height: 14, width: 14, fit: BoxFit.cover)
-                        : const Offstage(),
-                    Text(' and ${element.secondName}',
-                        style: secondaryTextStyle(color: svGetBodyColor())),
+                    // element.ifOfficial.validate()
+                    //     ? Image.asset('images/socialv/icons/ic_TickSquare.png',
+                    //         height: 14, width: 14, fit: BoxFit.cover)
+                    //     : const Offstage(),
+                    // Text(' and ${element.secondName}',
+                    //     style: secondaryTextStyle(color: svGetBodyColor())),
                   ],
                 ),
                 6.height,
-                Text('have their birthday on ${element.birthDate.validate()}',
+                Text(element.body.validate(),
                     style: secondaryTextStyle(
                       color: svGetBodyColor(),
                     )),
                 6.height,
-                Text('${element.dateTime.validate()} ago',
+                Text(element.dateTime.validate(),
                     style:
                         secondaryTextStyle(color: svGetBodyColor(), size: 12)),
               ],
             ),
           ],
-        ),
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration:
-              BoxDecoration(color: context.cardColor, borderRadius: radius(8)),
-          child: Image.asset('images/socialv/icons/ic_Cake.png',
-              height: 20, width: 20, fit: BoxFit.cover),
         ),
       ],
     ).paddingAll(16);

@@ -20,7 +20,7 @@ class _SVSplashScreenState extends State<SVSplashScreen> {
 
   Future<void> init() async {
     setStatusBarColor(Colors.transparent);
-
+    sharedPreferences = await SharedPreferences.getInstance();
     await 3.seconds.delay;
     // ignore: use_build_context_synchronously
     finish(context);

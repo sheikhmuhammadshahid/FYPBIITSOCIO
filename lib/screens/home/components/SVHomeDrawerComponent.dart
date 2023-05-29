@@ -99,13 +99,15 @@ class _SVHomeDrawerComponentState extends State<SVHomeDrawerComponent> {
                       width: 22,
                       fit: BoxFit.cover,
                       color: context.iconColor),
-                  onTap: () {
+                  onTap: () async {
                     selectedIndex = index;
                     setState(() {});
 
                     if (selectedIndex == options.length - 1) {
                       context.read<SettingController>().selectedWall = "3";
+                      await sharedPreferences.remove('rememberMe');
                       //context.read<FriendsStoriesController>().dispose();
+                      // ignore: use_build_context_synchronously
                       const SVSignInScreen().launch(context, isNewTask: true);
                     } else if (selectedIndex == 3) {
                       finish(context);

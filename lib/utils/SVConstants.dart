@@ -7,7 +7,7 @@ const svAppName = "BIIT SOCIAL";
 class SVNotificationType {
   static String like = 'like';
   static String request = 'request';
-  static String birthday = 'birthday';
+  static String birthday = 'official';
   static String newPost = 'newPost';
 }
 

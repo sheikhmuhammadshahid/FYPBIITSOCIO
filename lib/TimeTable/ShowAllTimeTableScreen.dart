@@ -39,13 +39,13 @@ class _ShowTimeTableScreenState extends State<ShowTimeTableScreen> {
   }
 
   getTeachers() {
-    List<String> data = postController.timeTable!.teacher;
+    List<String> data = postController.timeTable!.teacher!;
     if (!data.any((element) => element == 'All')) data.insert(0, 'All');
     return data;
   }
 
   getVenue() {
-    List<String> data = postController.timeTable!.venue;
+    List<String> data = postController.timeTable!.venue!;
     if (!data.any((element) => element == 'All')) {
       data.removeAt(0);
       data.insert(0, 'All');
