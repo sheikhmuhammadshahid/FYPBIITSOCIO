@@ -1,5 +1,6 @@
 import 'package:biit_social/Controllers/PostController.dart';
 import 'package:biit_social/screens/fragments/SVProfileFragment.dart';
+import 'package:biit_social/screens/home/components/GetLikedByUsersScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -271,74 +272,81 @@ Widget getItem(
               ],
             ),
             Text('${post.CommentsCount.validate()} comments',
-                style: secondaryTextStyle(color: svGetBodyColor())),
+                    style: secondaryTextStyle(color: svGetBodyColor()))
+                .onTap(() {
+              SVCommentScreen(
+                postId: post.id!,
+              ).launch(context);
+            }),
           ],
         ).paddingSymmetric(horizontal: 16),
         const Divider(indent: 16, endIndent: 16, height: 20),
-        //   if (post.likesCount != null && post.likesCount! > 0)
-        //     Row(
-        //       mainAxisAlignment: MainAxisAlignment.center,
-        //       children: [
-        //         SizedBox(
-        //           width: 56,
-        //           child: Stack(
-        //             alignment: Alignment.centerLeft,
-        //             children: [
-        //               Positioned(
-        //                 right: 0,
-        //                 child: Container(
-        //                   decoration: BoxDecoration(
-        //                       border: Border.all(color: Colors.white, width: 2),
-        //                       borderRadius: radius(100)),
-        //                   child: Image.asset('images/socialv/faces/face_1.png',
-        //                           height: 24, width: 24, fit: BoxFit.cover)
-        //                       .cornerRadiusWithClipRRect(100),
-        //                 ),
-        //               ),
-        //               Positioned(
-        //                 left: 14,
-        //                 child: Container(
-        //                   decoration: BoxDecoration(
-        //                       border: Border.all(color: Colors.white, width: 2),
-        //                       borderRadius: radius(100)),
-        //                   child: Image.asset('images/socialv/faces/face_2.png',
-        //                           height: 24, width: 24, fit: BoxFit.cover)
-        //                       .cornerRadiusWithClipRRect(100),
-        //                 ),
-        //               ),
-        //               Positioned(
-        //                 child: Container(
-        //                   decoration: BoxDecoration(
-        //                       border: Border.all(color: Colors.white, width: 2),
-        //                       borderRadius: radius(100)),
-        //                   child: Image.asset('images/socialv/faces/face_3.png',
-        //                           height: 24, width: 24, fit: BoxFit.cover)
-        //                       .cornerRadiusWithClipRRect(100),
-        //                 ),
-        //               ),
-        //             ],
-        //           ),
-        //         ),
-        //         10.width,
-        //         RichText(
-        //           text: TextSpan(
-        //             text: 'Liked By ',
-        //             style: secondaryTextStyle(color: svGetBodyColor(), size: 12),
-        //             children: <TextSpan>[
-        //               TextSpan(
-        //                   text: 'Ms.Mountain ', style: boldTextStyle(size: 12)),
-        //               TextSpan(
-        //                   text: 'And ',
-        //                   style: secondaryTextStyle(
-        //                       color: svGetBodyColor(), size: 12)),
-        //               TextSpan(
-        //                   text: '${post.likesCount ?? 0} users',
-        //                   style: boldTextStyle(size: 12)),
-        //             ],
-        //           ),
-        //         )
-        //       ],
-        //     )
+        if (post.likesCount != null && post.likesCount! > 0)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 56,
+                child: Stack(
+                  alignment: Alignment.centerLeft,
+                  children: [
+                    Positioned(
+                      right: 0,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white, width: 2),
+                            borderRadius: radius(100)),
+                        child: Image.asset('images/socialv/faces/face_1.png',
+                                height: 24, width: 24, fit: BoxFit.cover)
+                            .cornerRadiusWithClipRRect(100),
+                      ),
+                    ),
+                    Positioned(
+                      left: 14,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white, width: 2),
+                            borderRadius: radius(100)),
+                        child: Image.asset('images/socialv/faces/face_2.png',
+                                height: 24, width: 24, fit: BoxFit.cover)
+                            .cornerRadiusWithClipRRect(100),
+                      ),
+                    ),
+                    Positioned(
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white, width: 2),
+                            borderRadius: radius(100)),
+                        child: Image.asset('images/socialv/faces/face_3.png',
+                                height: 24, width: 24, fit: BoxFit.cover)
+                            .cornerRadiusWithClipRRect(100),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              10.width,
+              RichText(
+                text: TextSpan(
+                  text: 'Liked By ',
+                  style: secondaryTextStyle(color: svGetBodyColor(), size: 12),
+                  children: <TextSpan>[
+                    TextSpan(
+                        text: 'Ms.Mountain ', style: boldTextStyle(size: 12)),
+                    TextSpan(
+                        text: 'And ',
+                        style: secondaryTextStyle(
+                            color: svGetBodyColor(), size: 12)),
+                    TextSpan(
+                        text: '${post.likesCount ?? 0} users',
+                        style: boldTextStyle(size: 12)),
+                  ],
+                ),
+              )
+            ],
+          ).onTap(() {
+            GetLikedByUsersScreen(postId: post.id ?? 0).launch(context);
+          })
       ],
     ),
   );

@@ -1,5 +1,5 @@
 class IPHandle {
-  static String ippp = '192.168.236.231';
+  static String ippp = '192.168.224.231';
   static String ip = "http://$ippp/BiitSocioApis/api/";
   static String imageAddress = "http://$ippp/BiitSocioApis/postImages/";
   static String profileimageAddress = "http://$ippp/BiitSocioApis/Images/";

@@ -10,6 +10,7 @@ import 'package:biit_social/screens/SVSplashScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive/hive.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:biit_social/store/AppStore.dart';
 import 'package:biit_social/utils/AppTheme.dart';
@@ -57,6 +58,12 @@ setBackground() async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Directory path = await getApplicationDocumentsDirectory();
+  Hive.init(path.path);
+  await Hive.openBox('Posts');
+  await Hive.openBox('Chats');
+  await Hive.openBox('TimeTable');
+
   AwesomeNotifications().initialize(
       null,
       [

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:biit_social/Controllers/FriendsStoriesController.dart';
+import 'package:biit_social/Controllers/SettingController.dart';
 import 'package:biit_social/models/User/UserModel.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
@@ -420,12 +421,9 @@ sVProfileImageProvider(url, height, width) {
     ),
     errorWidget: (context, url, error) => const GFAvatar(
       maxRadius: 30,
+      backgroundImage: AssetImage('images/socialv/faces/face_5.png'),
       // borderRadius: BorderRadius.circular(10),
       backgroundColor: Colors.grey,
-      child: Icon(
-        Icons.error,
-        size: 20,
-      ),
     ),
     imageBuilder: (context, imageProvider) => GFAvatar(
       //shape: shape,
@@ -443,6 +441,37 @@ sVProfileImageProvider(url, height, width) {
       //size: 200,
     ),
   );
+}
+
+checkConnection(SettingController settingController) async {
+  try {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    print(connectivityResult);
+    if (connectivityResult == ConnectivityResult.none) {
+      settingController.isConnected = false;
+      settingController.notifyListeners();
+      return false;
+      // I am not connected to any network.
+    } else if (connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi ||
+        connectivityResult == ConnectivityResult.ethernet) {
+      settingController.isConnected = true;
+      settingController.notifyListeners();
+      return true;
+      // I am connected to a mobile network.
+    } else if (connectivityResult == ConnectivityResult.vpn) {
+      settingController.isConnected = false;
+      settingController.notifyListeners();
+      return false;
+      // I am connected to a vpn network.
+      // Note for iOS and macOS:
+      // There is no separate network interface type for [vpn].
+      // It returns [other] on any device (also simulator)
+    }
+  } catch (e) {
+    print(e);
+  }
+  return false;
 }
 
 sVImageProvider(url, double height, double width, GFAvatarShape shape) {

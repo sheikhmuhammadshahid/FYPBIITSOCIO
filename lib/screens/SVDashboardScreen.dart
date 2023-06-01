@@ -1,5 +1,6 @@
 import 'package:biit_social/Client.dart';
 import 'package:biit_social/Controllers/FriendsStoriesController.dart';
+import 'package:biit_social/Controllers/HistoryController.dart';
 import 'package:biit_social/Controllers/SettingController.dart';
 import 'package:biit_social/TimeTable/Calender/calenderScreen.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +43,7 @@ class _SVDashboardScreenState extends State<SVDashboardScreen>
   late ServerClient controller;
   init() async {
     friendsStoriesController = context.read<FriendsStoriesController>();
+    HistoryController.savePosts();
     await friendsStoriesController!.getFriends();
     // ignore: use_build_context_synchronously
     controller = context.read<ServerClient>();

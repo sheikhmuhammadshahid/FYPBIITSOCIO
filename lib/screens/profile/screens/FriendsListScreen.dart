@@ -45,7 +45,7 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
   @override
   void initState() {
     super.initState();
-    init();
+    // init();
   }
 
   late FriendsStoriesController friendsStoriesController;
@@ -177,6 +177,7 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                     ? MediaQuery.of(context).size.height - 200
                     : MediaQuery.of(context).size.height,
                 child: ListView.builder(
+                  shrinkWrap: true,
                   physics: const AlwaysScrollableScrollPhysics(),
                   itemCount: value.friends.length,
                   itemBuilder: (context, index) {
@@ -187,19 +188,14 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                             .contains(value.tofilter.toLowerCase())
                         ? GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ChatScreen(
-                                      groupChat: false,
-                                      id: user.CNIC,
-                                      profileScreen: user.profileImage,
-                                      name: user.name == null ? '' : user.name!,
-                                      section: user.section == null
-                                          ? ''
-                                          : user.section!,
-                                    ),
-                                  ));
+                              ChatScreen(
+                                groupChat: false,
+                                id: user.CNIC,
+                                profileScreen: user.profileImage,
+                                name: user.name == null ? '' : user.name!,
+                                section:
+                                    user.section == null ? '' : user.section!,
+                              ).launch(context);
                             },
                             child: Padding(
                               padding:
@@ -219,28 +215,11 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                                               ),
                                             ));
                                       },
-                                      child: user.profileImage == ''
-                                          ? Image.asset(
-                                                  'images/socialv/faces/face_2.png',
-                                                  height: 52,
-                                                  width: 52,
-                                                  fit: BoxFit.cover)
-                                              .cornerRadiusWithClipRRect(100)
-                                          : Image.network(
-                                                  IPHandle.profileimageAddress +
-                                                      user.profileImage,
-                                                  errorBuilder: (context, error,
-                                                      stackTrace) {
-                                              return Container(
-                                                color: Colors.black,
-                                                child: const Icon(
-                                                    Icons.no_backpack),
-                                              );
-                                            },
-                                                  height: 52,
-                                                  width: 52,
-                                                  fit: BoxFit.cover)
-                                              .cornerRadiusWithClipRRect(100),
+                                      child: sVProfileImageProvider(
+                                          IPHandle.profileimageAddress +
+                                              user.profileImage,
+                                          40,
+                                          40),
                                     ),
                                     title: widget.toShow == 'Groups'
                                         ? const Text('Group Name')

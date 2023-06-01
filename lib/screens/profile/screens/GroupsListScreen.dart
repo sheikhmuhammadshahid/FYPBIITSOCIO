@@ -162,6 +162,7 @@ class _GroupsListScreenState extends State<GroupsListScreen> {
                                             MaterialPageRoute(
                                               builder: (context) => ChatScreen(
                                                 groupChat: true,
+                                                group: group,
                                                 id: group.id.toString(),
                                                 profileScreen: group.profile,
                                                 name: group.name,
@@ -185,7 +186,7 @@ class _GroupsListScreenState extends State<GroupsListScreen> {
                                                     ? Image.asset(
                                                             group.isOfficial!
                                                                 ? 'images/socialv/gifs/BIITLOGO.png'
-                                                                : 'images/socialv/faces/face_2.png',
+                                                                : 'images/socialv/faces/face_5.png',
                                                             height: 52,
                                                             width: 52,
                                                             fit: BoxFit.cover)

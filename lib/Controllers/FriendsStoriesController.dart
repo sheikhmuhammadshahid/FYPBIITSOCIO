@@ -378,7 +378,7 @@ class FriendsStoriesController extends ChangeNotifier {
           data: data, options: Options(headers: headers));
       if (response.statusCode == 200) {
         //EasyLoading.showToast('added');
-        if (fromGroup) {
+        if (!fromGroup) {
           client.sendMessage(
               message: '${loggedInUser!.CNIC}~${ch.senderImage}~${ch.message}');
         }
@@ -423,6 +423,39 @@ class FriendsStoriesController extends ChangeNotifier {
     } catch (e) {}
     isStoriesLoading = false;
     setState();
+  }
+
+  muteOrUnMute({
+    required int groupId,
+    required bool todo,
+  }) async {
+    try {
+      String url =
+          '${IPHandle.ip}Friends/muteOrUnmuteGroup?groupId=$groupId&userId=${loggedInUser!.CNIC}&todo=$todo';
+      var res = await Dio().get(url);
+      if (res.statusCode == 200) {
+        EasyLoading.showToast(res.data, dismissOnTap: true);
+        return true;
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  leaveGroup(int groupId) async {
+    try {
+      String url =
+          '${IPHandle.ip}Friends/leaveGroup?groupId=$groupId&userId=${loggedInUser!.CNIC}';
+      var res = await Dio().get(url);
+      if (res.statusCode == 200) {
+        EasyLoading.showToast(res.data, dismissOnTap: true);
+        return true;
+      }
+    } catch (e) {
+      print(e);
+    }
+    // EasyLoading.showToast(res.data,dismissOnTap: true);
+    return false;
   }
 
   createGroup(List<String> users) async {

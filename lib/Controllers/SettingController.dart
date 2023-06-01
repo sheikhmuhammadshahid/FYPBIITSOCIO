@@ -8,7 +8,7 @@ import '../utils/IPHandleClass.dart';
 
 class SettingController extends ChangeNotifier {
   int selectedIndex = 0;
-
+  bool isConnected = true;
   bool expansionChanged = false;
   ScrollController scrollController = ScrollController();
   bool isAppBarVisible = true;

@@ -61,14 +61,14 @@ class _SVGroupProfileScreenState extends State<SVGroupProfileScreen> {
               children: [
                 Text(widget.group.name, style: boldTextStyle(size: 20)),
                 4.width,
-                widget.group.profile == ''
-                    ? Image.asset('images/socialv/icons/ic_TickSquare.png',
-                        height: 14, width: 14, fit: BoxFit.cover)
-                    : Image.network(
-                        IPHandle.profileimageAddress + widget.group.profile,
-                        height: 14,
-                        width: 14,
-                        fit: BoxFit.cover),
+                // widget.group.profile == ''
+                //     ? Image.asset('images/socialv/icons/ic_TickSquare.png',
+                //         height: 14, width: 14, fit: BoxFit.cover)
+                //     : Image.network(
+                //         IPHandle.profileimageAddress + widget.group.profile,
+                //         height: 14,
+                //         width: 14,
+                //         fit: BoxFit.cover),
               ],
             ),
             8.height,
@@ -86,13 +86,13 @@ class _SVGroupProfileScreenState extends State<SVGroupProfileScreen> {
                 Text(widget.group.isOfficial! ? 'Official' : 'Public Group',
                     style: secondaryTextStyle(color: svGetBodyColor())),
                 18.width,
-                Image.asset(
-                  'images/socialv/icons/ic_Calendar.png',
-                  height: 16,
-                  width: 16,
-                  fit: BoxFit.cover,
-                  color: context.iconColor,
-                ),
+                // Image.asset(
+                //   'images/socialv/icons/ic_Calendar.png',
+                //   height: 16,
+                //   width: 16,
+                //   fit: BoxFit.cover,
+                //   color: context.iconColor,
+                // ),
               ],
             ),
             25.height,
@@ -309,31 +309,11 @@ class _SVGroupProfileScreenState extends State<SVGroupProfileScreen> {
                                                   ),
                                                 );
                                               },
-                                              child: user.profileImage == ''
-                                                  ? Image.asset(
-                                                          'images/socialv/faces/face_2.png',
-                                                          height: 52,
-                                                          width: 52,
-                                                          fit: BoxFit.cover)
-                                                      .cornerRadiusWithClipRRect(
-                                                          100)
-                                                  : Image.network(
-                                                          IPHandle.profileimageAddress +
-                                                              user.profileImage,
-                                                          errorBuilder:
-                                                              (context, error,
-                                                                  stackTrace) {
-                                                      return Container(
-                                                        color: Colors.black,
-                                                        child: const Icon(
-                                                            Icons.no_backpack),
-                                                      );
-                                                    },
-                                                          height: 52,
-                                                          width: 52,
-                                                          fit: BoxFit.cover)
-                                                      .cornerRadiusWithClipRRect(
-                                                          100),
+                                              child: sVProfileImageProvider(
+                                                  IPHandle.profileimageAddress +
+                                                      user.profileImage,
+                                                  40,
+                                                  40),
                                             ),
                                             title: Text(user.name ?? ''),
                                             subtitle: Text(user.userType == "2"

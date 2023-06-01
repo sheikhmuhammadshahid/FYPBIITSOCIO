@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:biit_social/Controllers/HandleNotification.dart';
+import 'package:biit_social/Controllers/HistoryController.dart';
 import 'package:biit_social/Controllers/SettingController.dart';
 import 'package:biit_social/models/Post/PostModel.dart';
 import 'package:biit_social/models/Stories/Stories.dart';
@@ -192,44 +193,52 @@ class PostController with ChangeNotifier {
 
   getPosts(SettingController context) async {
     try {
-      if (pageNumber >= 1) {
-        isLazyLoading = true;
-      } else {
-        isLoading = true;
-      }
-      // ip = await getIp() + ip;
-      if (pageNumber == 0) {
-        posts.clear();
-      }
-      setState();
-      pageNumber++;
-
-      String url =
-          "${IPHandle.ip}post/getPosts?cnic=${loggedInUser!.CNIC}&&pageNumber=$pageNumber&&fromWall=${context.selectedWall}";
-      //var v = jsonEncode(post.toMap());
-
-      print(url);
-
-      var response = await Dio().get(url);
-      //body: post.toJson(), headers: headers);
-      if (response.statusCode == 200) {
-        if (response.data != "No more posts") {
-          if (pageNumber == 1) {
-            posts.clear();
-          }
-          var data = response.data;
-          for (var element in data) {
-            Post p = Post.fromMap(element["post"]);
-            p.isFriend = element["isFriend"];
-            p.isLiked = element["isLiked"];
-            p.isPinned = element["isPinned"];
-            posts.add(p);
-          }
+      if (await checkConnection(context)) {
+        if (pageNumber >= 1) {
+          isLazyLoading = true;
         } else {
-          // ScaffoldMessenger.of(context)
-          //     .showSnackBar(const SnackBar(content: Text('No more posts')));
+          isLoading = true;
         }
-      } else {}
+        // ip = await getIp() + ip;
+        if (pageNumber == 0) {
+          posts.clear();
+        }
+        setState();
+        pageNumber++;
+
+        String url =
+            "${IPHandle.ip}post/getPosts?cnic=${loggedInUser!.CNIC}&&pageNumber=$pageNumber&&fromWall=${context.selectedWall}";
+
+        //var v = jsonEncode(post.toMap());
+
+        print(url);
+
+        var response = await Dio().get(url);
+        //body: post.toJson(), headers: headers);
+        if (response.statusCode == 200) {
+          if (response.data != "No more posts") {
+            if (pageNumber == 1) {
+              posts.clear();
+            }
+            var data = response.data;
+            for (var element in data) {
+              Post p = Post.fromMap(element["post"]);
+              p.isFriend = element["isFriend"];
+              p.isLiked = element["isLiked"];
+              p.isPinned = element["isPinned"];
+              posts.add(p);
+            }
+          } else {
+            // ScaffoldMessenger.of(context)
+            //     .showSnackBar(const SnackBar(content: Text('No more posts')));
+          }
+        } else {}
+      } else {
+        if (pageNumber == 1) {
+          posts.clear();
+          posts = await HistoryController.getPosts(context.selectedWall);
+        }
+      }
     } catch (e) {
       print(e);
     }

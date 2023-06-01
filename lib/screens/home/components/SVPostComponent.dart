@@ -87,7 +87,9 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                   ));
                                 },
                                 child: postController.fromDiary ||
-                                        postController.posts[index].postFor
+                                        postController
+                                            .posts[index].userPosted!.name
+                                            .validate()
                                             .toLowerCase()
                                             .contains(postController
                                                 .classWallFilter

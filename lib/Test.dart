@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:biit_social/Controllers/PostController.dart';
 import 'package:biit_social/Controllers/SettingController.dart';
 import 'package:biit_social/utils/SVCommon.dart';
+import 'package:biit_social/utils/SVConstants.dart';
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -88,113 +89,150 @@ class _ScrollHideNavigationBarState extends State<ScrollHideNavigationBar> {
   Widget build(BuildContext context) {
     postController = context.read<PostController>();
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: CustomNavigationBar(
-        iconSize: 30.0,
-        borderRadius: const Radius.circular(10),
-        isFloating: true,
-        //blurEffect: true,
-        selectedColor: context.primaryColor.withOpacity(.8),
-        strokeColor: context.primaryColor.withOpacity(.5),
-        unSelectedColor: context.primaryColor.withOpacity(.4),
-        backgroundColor: context.scaffoldBackgroundColor,
-        items: [
-          if (loggedInUser!.userType != '3')
-            CustomNavigationBarItem(
-              badgeCount:
-                  context.watch<NotificationCountController>().biitCount,
-              showBadge:
-                  context.watch<NotificationCountController>().biitCount != 0,
-              selectedTitle: const Text('BIIT'),
-              icon: const ImageIcon(AssetImage('images/BIIT.png')),
-              //  title: const Text("BIIT"),
-            ),
-          if (loggedInUser!.userType != '4')
-            CustomNavigationBarItem(
-              badgeCount:
-                  context.watch<NotificationCountController>().personalCount,
-              showBadge:
-                  context.watch<NotificationCountController>().personalCount !=
+      padding: EdgeInsets.only(
+          bottom: !context.watch<SettingController>().isConnected ? 0 : 8.0),
+      child: Container(
+        color: Colors.transparent,
+        height: !context.watch<SettingController>().isConnected
+            ? context.height() * 0.09
+            : context.height() * 0.07,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            CustomNavigationBar(
+              iconSize: 30.0,
+              borderRadius: const Radius.circular(10),
+              isFloating: true,
+              //blurEffect: true,
+              selectedColor: context.primaryColor.withOpacity(.8),
+              strokeColor: context.primaryColor.withOpacity(.5),
+              unSelectedColor: context.primaryColor.withOpacity(.4),
+              backgroundColor: context.scaffoldBackgroundColor,
+              items: [
+                if (loggedInUser!.userType != '3')
+                  CustomNavigationBarItem(
+                    badgeCount:
+                        context.watch<NotificationCountController>().biitCount,
+                    showBadge: context
+                            .watch<NotificationCountController>()
+                            .biitCount !=
+                        0,
+                    selectedTitle: const Text('BIIT'),
+                    icon: const ImageIcon(AssetImage('images/BIIT.png')),
+                    //  title: const Text("BIIT"),
+                  ),
+                if (loggedInUser!.userType != '4')
+                  CustomNavigationBarItem(
+                    badgeCount: context
+                        .watch<NotificationCountController>()
+                        .personalCount,
+                    showBadge: context
+                            .watch<NotificationCountController>()
+                            .personalCount !=
+                        0,
+                    selectedTitle: const Text('personal'),
+                    icon: const Icon(Icons.person),
+                    //  title: const Text("Student"),
+                  ),
+                if (loggedInUser!.userType != '2')
+                  CustomNavigationBarItem(
+                    badgeCount: context
+                        .watch<NotificationCountController>()
+                        .teacherCount,
+                    showBadge: context
+                            .watch<NotificationCountController>()
+                            .teacherCount !=
+                        0,
+                    selectedTitle: const Text('Teacher'),
+                    //showBadge: true,
+                    icon: const ImageIcon(
+                      AssetImage(
+                        'images/teacher.png',
+                        //color: Colors.black,
+                      ),
+                    ),
+                    // title: const Text("Teacher"),
+                  ),
+                if (loggedInUser!.userType != '1')
+                  CustomNavigationBarItem(
+                    showBadge: context
+                            .watch<NotificationCountController>()
+                            .studentCount !=
+                        0,
+                    badgeCount: context
+                        .watch<NotificationCountController>()
+                        .studentCount,
+                    selectedTitle: const Text('student'),
+                    icon: const ImageIcon(
+                      AssetImage(
+                        'images/studentLogo.png',
+                        //color: Colors.black,
+                      ),
+                    ),
+                    // title: const Text("Societies"),
+                  ),
+                CustomNavigationBarItem(
+                  showBadge: context
+                          .watch<NotificationCountController>()
+                          .societiesCount !=
                       0,
-              selectedTitle: const Text('personal'),
-              icon: const Icon(Icons.person),
-              //  title: const Text("Student"),
-            ),
-          if (loggedInUser!.userType != '2')
-            CustomNavigationBarItem(
-              badgeCount:
-                  context.watch<NotificationCountController>().teacherCount,
-              showBadge:
-                  context.watch<NotificationCountController>().teacherCount !=
-                      0,
-              selectedTitle: const Text('Teacher'),
-              //showBadge: true,
-              icon: const ImageIcon(
-                AssetImage(
-                  'images/teacher.png',
-                  //color: Colors.black,
+                  badgeCount: context
+                      .watch<NotificationCountController>()
+                      .societiesCount,
+                  selectedTitle: const Text('societies'),
+                  icon: const ImageIcon(
+                    AssetImage(
+                      'images/society.png',
+                      //color: Colors.black,
+                    ),
+                  ),
+                  // title: const Text("Societies"),
                 ),
-              ),
-              // title: const Text("Teacher"),
-            ),
-          if (loggedInUser!.userType != '1')
-            CustomNavigationBarItem(
-              showBadge:
-                  context.watch<NotificationCountController>().studentCount !=
+                CustomNavigationBarItem(
+                  badgeCount: context
+                      .watch<NotificationCountController>()
+                      .classPostsCount,
+                  showBadge: context
+                          .watch<NotificationCountController>()
+                          .classPostsCount !=
                       0,
-              badgeCount:
-                  context.watch<NotificationCountController>().studentCount,
-              selectedTitle: const Text('student'),
-              icon: const ImageIcon(
-                AssetImage(
-                  'images/studentLogo.png',
-                  //color: Colors.black,
+                  selectedTitle: const Text('Class'),
+                  icon: const ImageIcon(
+                    AssetImage(
+                      'images/class.png',
+                      //color: Colors.black,
+                    ),
+                  ),
+                  //title: const Text("Class"),
                 ),
-              ),
-              // title: const Text("Societies"),
+              ],
+              currentIndex: _currentIndex,
+              onTap: (index) {
+                if (index != _currentIndex ||
+                    settingController.selectedWall == '7' ||
+                    settingController.selectedWall == '9') {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                  dothis();
+                }
+              },
             ),
-          CustomNavigationBarItem(
-            showBadge:
-                context.watch<NotificationCountController>().societiesCount !=
-                    0,
-            badgeCount:
-                context.watch<NotificationCountController>().societiesCount,
-            selectedTitle: const Text('societies'),
-            icon: const ImageIcon(
-              AssetImage(
-                'images/society.png',
-                //color: Colors.black,
-              ),
-            ),
-            // title: const Text("Societies"),
-          ),
-          CustomNavigationBarItem(
-            badgeCount:
-                context.watch<NotificationCountController>().classPostsCount,
-            showBadge:
-                context.watch<NotificationCountController>().classPostsCount !=
-                    0,
-            selectedTitle: const Text('Class'),
-            icon: const ImageIcon(
-              AssetImage(
-                'images/class.png',
-                //color: Colors.black,
-              ),
-            ),
-            //title: const Text("Class"),
-          ),
-        ],
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          if (index != _currentIndex ||
-              settingController.selectedWall == '7' ||
-              settingController.selectedWall == '9') {
-            setState(() {
-              _currentIndex = index;
-            });
-            dothis();
-          }
-        },
+            !context.watch<SettingController>().isConnected
+                ? Container(
+                    height: context.height() * 0.02,
+                    width: context.width(),
+                    color: Colors.red,
+                    child: Center(
+                        child: Text(
+                      'No internet connection!',
+                      style: TextStyle(
+                          fontFamily: svFontRoboto, color: Colors.white),
+                    )),
+                  )
+                : const SizedBox.shrink()
+          ],
+        ),
       ),
     ); // : const SizedBox.shrink();
   }

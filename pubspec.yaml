@@ -79,6 +79,7 @@ dependencies:
   
  
   omni_datetime_picker: ^1.0.7
+  hive: ^2.2.3
  
  
 dev_dependencies:

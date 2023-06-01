@@ -7,6 +7,7 @@ import 'package:biit_social/utils/getVideoItem.dart';
 import 'package:chat_bubbles/date_chips/date_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
+import '../../models/SVGroupModel.dart';
 import '../../utils/IPHandleClass.dart';
 import '../../utils/SVCommon.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -19,11 +20,13 @@ class ChatScreen extends StatefulWidget {
   String id;
   String name;
   String section;
+  Group? group;
   bool groupChat;
   ChatScreen(
       {super.key,
       required this.id,
       required this.name,
+      this.group,
       required this.section,
       required this.groupChat,
       required this.profileScreen});
@@ -81,24 +84,10 @@ class _ChatScreenState extends State<ChatScreen> {
           children: [
             Stack(
               children: [
-                widget.profileScreen == ''
-                    ? Image.asset(
-                            widget.groupChat
-                                ? 'images/socialv/gifs/BIITLOGO.png'
-                                : 'images/socialv/faces/face_2.png',
-                            height: 52,
-                            width: 52,
-                            fit: BoxFit.cover)
-                        .cornerRadiusWithClipRRect(100)
-                    : Image.network(
-                            IPHandle.profileimageAddress + widget.profileScreen,
-                            errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: Colors.black,
-                          child: const Icon(Icons.no_backpack),
-                        );
-                      }, height: 52, width: 52, fit: BoxFit.cover)
-                        .cornerRadiusWithClipRRect(100),
+                sVProfileImageProvider(
+                    IPHandle.profileimageAddress + widget.profileScreen,
+                    40,
+                    40),
                 !widget.groupChat
                     ? Consumer<FriendsStoriesController>(
                         builder: (context, value, child) {
@@ -140,58 +129,82 @@ class _ChatScreenState extends State<ChatScreen> {
             PopupMenuButton(
               itemBuilder: (context) {
                 return [
-                  if (widget.section == loggedInUser!.CNIC ||
-                      widget.section == loggedInUser!.name) ...{
+                  if (widget.group!.Admin == loggedInUser!.CNIC ||
+                      widget.group!.Admin == loggedInUser!.name) ...{
                     PopupMenuItem(
-                        child: TextButton(
-                            onPressed: () {},
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.delete,
-                                  color: svGetBodyColor(),
-                                ),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  'Delete',
-                                  style: boldTextStyle(),
-                                ),
-                              ],
-                            ))),
-                    PopupMenuItem(
-                        child: TextButton(
-                            onPressed: () {},
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.edit,
-                                  color: svGetBodyColor(),
-                                ),
-                                Text(
-                                  'Edit',
-                                  style: boldTextStyle(),
-                                ),
-                              ],
-                            ))),
+                        child: ListTile(
+                      title: Text(
+                        'Delete',
+                        style: boldTextStyle(),
+                      ),
+                      leading: Icon(
+                        Icons.delete,
+                        color: svGetBodyColor(),
+                      ),
+                    )),
+                    // PopupMenuItem(
+                    //     child: TextButton(
+                    //         onPressed: () {},
+                    //         child: Row(
+                    //           children: [
+                    //             Icon(
+                    //               Icons.edit,
+                    //               color: svGetBodyColor(),
+                    //             ),
+                    //             Text(
+                    //               'Edit',
+                    //               style: boldTextStyle(),
+                    //             ),
+                    //           ],
+                    //         ))),
                   },
                   if (widget.groupChat)
                     PopupMenuItem(
-                        child: TextButton(
-                            onPressed: () {},
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.exit_to_app,
-                                  color: svGetBodyColor(),
-                                ),
-                                Text(
-                                  'Left group',
-                                  style: boldTextStyle(),
-                                ),
-                              ],
-                            ))),
+                        child: ListTile(
+                      title: Text(
+                        'Leave group',
+                        style: boldTextStyle(),
+                      ),
+                      onTap: () async {
+                        await friendsStoriesController
+                            .leaveGroup(int.parse(widget.id));
+                        context.pop();
+                        context.pop();
+                      },
+                      leading: Icon(
+                        Icons.exit_to_app,
+                        color: svGetBodyColor(),
+                      ),
+                    )),
+                  PopupMenuItem(
+                      child: ListTile(
+                    onTap: () async {
+                      await friendsStoriesController.muteOrUnMute(
+                          groupId: widget.group!.id,
+                          todo: widget.group!.isMuted ?? false);
+                      // ignore: use_build_context_synchronously
+                      context.pop();
+                      widget.group!.isMuted = !(widget.group!.isMuted ?? false);
+
+                      friendsStoriesController.groups
+                          .where((element) => element.id == widget.group!.id)
+                          .first
+                          .isMuted = widget.group!.isMuted;
+                      friendsStoriesController.notifyListeners();
+                    },
+                    title: Text(
+                      widget.group!.isMuted ?? false
+                          ? 'Un-Mute group'
+                          : 'Mute group',
+                      style: boldTextStyle(),
+                    ),
+                    leading: Icon(
+                      widget.group!.isMuted ?? false
+                          ? Icons.volume_up
+                          : Icons.volume_down,
+                      color: svGetBodyColor(),
+                    ),
+                  )),
                 ];
               },
             ),

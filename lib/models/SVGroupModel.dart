@@ -10,7 +10,9 @@ class Group {
   String Admin;
   String name;
   String profile;
+  String? date;
   int? memberCount;
+  bool? isMuted;
   List<User>? enreolledUsers = [];
   bool? isOfficial;
   Group({
@@ -19,7 +21,9 @@ class Group {
     required this.Admin,
     required this.name,
     required this.profile,
+    this.date,
     this.memberCount,
+    this.isMuted,
     this.enreolledUsers,
     this.isOfficial,
   });
@@ -30,7 +34,9 @@ class Group {
     String? Admin,
     String? name,
     String? profile,
+    String? date,
     int? memberCount,
+    bool? isMuted,
     List<User>? enreolledUsers,
     bool? isOfficial,
   }) {
@@ -40,7 +46,9 @@ class Group {
       Admin: Admin ?? this.Admin,
       name: name ?? this.name,
       profile: profile ?? this.profile,
+      date: date ?? this.date,
       memberCount: memberCount ?? this.memberCount,
+      isMuted: isMuted ?? this.isMuted,
       enreolledUsers: enreolledUsers ?? this.enreolledUsers,
       isOfficial: isOfficial ?? this.isOfficial,
     );
@@ -54,8 +62,14 @@ class Group {
     result.addAll({'Admin': Admin});
     result.addAll({'name': name});
     result.addAll({'profile': profile});
+    if (date != null) {
+      result.addAll({'date': date});
+    }
     if (memberCount != null) {
       result.addAll({'memberCount': memberCount});
+    }
+    if (isMuted != null) {
+      result.addAll({'isMuted': isMuted});
     }
     if (enreolledUsers != null) {
       result.addAll(
@@ -75,7 +89,9 @@ class Group {
       Admin: map['Admin'] ?? '',
       name: map['name'] ?? '',
       profile: map['profile'] ?? '',
+      date: map['date'],
       memberCount: map['memberCount']?.toInt(),
+      isMuted: map['isMuted'],
       enreolledUsers: map['enreolledUsers'] != null
           ? List<User>.from(map['enreolledUsers']?.map((x) => User.fromMap(x)))
           : null,
@@ -89,7 +105,7 @@ class Group {
 
   @override
   String toString() {
-    return 'Group(id: $id, description: $description, Admin: $Admin, name: $name, profile: $profile, memberCount: $memberCount, enreolledUsers: $enreolledUsers, isOfficial: $isOfficial)';
+    return 'Group(id: $id, description: $description, Admin: $Admin, name: $name, profile: $profile, date: $date, memberCount: $memberCount, isMuted: $isMuted, enreolledUsers: $enreolledUsers, isOfficial: $isOfficial)';
   }
 
   @override
@@ -102,7 +118,9 @@ class Group {
         other.Admin == Admin &&
         other.name == name &&
         other.profile == profile &&
+        other.date == date &&
         other.memberCount == memberCount &&
+        other.isMuted == isMuted &&
         listEquals(other.enreolledUsers, enreolledUsers) &&
         other.isOfficial == isOfficial;
   }
@@ -114,7 +132,9 @@ class Group {
         Admin.hashCode ^
         name.hashCode ^
         profile.hashCode ^
+        date.hashCode ^
         memberCount.hashCode ^
+        isMuted.hashCode ^
         enreolledUsers.hashCode ^
         isOfficial.hashCode;
   }
