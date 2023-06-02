@@ -9,8 +9,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import '../../../Controllers/AuthController.dart';
+import '../../../Controllers/SettingController.dart';
 import '../../../utils/IPHandleClass.dart';
 import '../../../utils/SVColors.dart';
+import '../../../utils/SVConstants.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
   const UpdateProfileScreen({super.key});
@@ -47,6 +49,25 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     authController = context.read<AuthController>();
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          bottom: context.watch<SettingController>().isConnected
+              ? null
+              : PreferredSize(
+                  preferredSize: Size(context.width(), context.width() * 0.01),
+                  child: Container(
+                    height: context.height() * 0.013,
+                    width: context.width(),
+                    color: Colors.red,
+                    child: FittedBox(
+                      child: Center(
+                          child: Text(
+                        'No internet connection!',
+                        style: TextStyle(
+                            fontFamily: svFontRoboto, color: Colors.white),
+                      )),
+                    ),
+                  )),
+        ),
         backgroundColor: context.scaffoldBackgroundColor,
         body: SingleChildScrollView(
           child: Column(
@@ -295,55 +316,82 @@ class GetProfileScreen extends StatefulWidget {
 class _GetProfileScreenState extends State<GetProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Stack(
-          children: [
-            Container(
-              height: context.height() * 0.15,
-              width: context.width() * 0.4,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: file != null
-                      ? DecorationImage(
-                          fit: BoxFit.cover, image: FileImage(File(file!.path)))
-                      : loggedInUser!.profileImage == ''
-                          ? const DecorationImage(
-                              fit: BoxFit.cover,
-                              image:
-                                  AssetImage('images/socialv/faces/face_4.png'))
-                          : DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(IPHandle.profileimageAddress +
-                                  loggedInUser!.profileImage))),
-            ),
-            Positioned(
-                bottom: 3,
-                right: 15,
-                child: IconButton(
-                    onPressed: () async {
-                      fromCamera = 0;
-
-                      await showAwesomeDialogue(context);
-                      if (fromCamera == 1) {
-                        file = await ImagePicker()
-                            .pickImage(source: ImageSource.camera);
-                      } else if (fromCamera == 2) {
-                        file = await ImagePicker()
-                            .pickImage(source: ImageSource.gallery);
-                      }
-                      if (file != null) {
-                        setState(() {});
-                      }
-                    },
-                    icon: Icon(
-                      Icons.camera,
-                      size: 30,
-                      color: context.cardColor,
-                    )))
-          ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Profile',
+          style: TextStyle(fontFamily: svFontRoboto, color: context.iconColor),
         ),
-      ],
+        bottom: context.watch<SettingController>().isConnected
+            ? null
+            : PreferredSize(
+                preferredSize: Size(context.width(), context.width() * 0.01),
+                child: Container(
+                  height: context.height() * 0.013,
+                  width: context.width(),
+                  color: Colors.red,
+                  child: FittedBox(
+                    child: Center(
+                        child: Text(
+                      'No internet connection!',
+                      style: TextStyle(
+                          fontFamily: svFontRoboto, color: Colors.white),
+                    )),
+                  ),
+                )),
+      ),
+      body: Column(
+        children: [
+          Stack(
+            children: [
+              Container(
+                height: context.height() * 0.15,
+                width: context.width() * 0.4,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: file != null
+                        ? DecorationImage(
+                            fit: BoxFit.cover,
+                            image: FileImage(File(file!.path)))
+                        : loggedInUser!.profileImage == ''
+                            ? const DecorationImage(
+                                fit: BoxFit.cover,
+                                image: AssetImage(
+                                    'images/socialv/faces/face_4.png'))
+                            : DecorationImage(
+                                fit: BoxFit.cover,
+                                image: NetworkImage(
+                                    IPHandle.profileimageAddress +
+                                        loggedInUser!.profileImage))),
+              ),
+              Positioned(
+                  bottom: 3,
+                  right: 15,
+                  child: IconButton(
+                      onPressed: () async {
+                        fromCamera = 0;
+
+                        await showAwesomeDialogue(context);
+                        if (fromCamera == 1) {
+                          file = await ImagePicker()
+                              .pickImage(source: ImageSource.camera);
+                        } else if (fromCamera == 2) {
+                          file = await ImagePicker()
+                              .pickImage(source: ImageSource.gallery);
+                        }
+                        if (file != null) {
+                          setState(() {});
+                        }
+                      },
+                      icon: Icon(
+                        Icons.camera,
+                        size: 30,
+                        color: context.cardColor,
+                      )))
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

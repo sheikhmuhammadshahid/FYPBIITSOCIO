@@ -7,6 +7,9 @@ import 'package:nb_utils/nb_utils.dart';
 import '../../Controllers/DropDowncontroler.dart';
 import 'package:provider/provider.dart';
 
+import '../../Controllers/SettingController.dart';
+import '../../utils/IPHandleClass.dart';
+import '../../utils/SVConstants.dart';
 import '../DropDown/CustomDropDown.dart';
 
 class SVGivePermission extends StatefulWidget {
@@ -26,6 +29,7 @@ class _SVGivePermissionState extends State<SVGivePermission> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    IPHandle.settingController = context.read<SettingController>();
     dropDownController ??= context.read<DropDownController>();
     dropDownController!.getTeachersAndStudents();
   }
@@ -71,6 +75,23 @@ class _SVGivePermissionState extends State<SVGivePermission> {
       ),
       appBar: AppBar(
         elevation: 0,
+        bottom: context.watch<SettingController>().isConnected
+            ? null
+            : PreferredSize(
+                preferredSize: Size(context.width(), context.width() * 0.01),
+                child: Container(
+                  height: context.height() * 0.013,
+                  width: context.width(),
+                  color: Colors.red,
+                  child: FittedBox(
+                    child: Center(
+                        child: Text(
+                      'No internet connection!',
+                      style: TextStyle(
+                          fontFamily: svFontRoboto, color: Colors.white),
+                    )),
+                  ),
+                )),
         title: Text(
           'Permissions',
           style: TextStyle(color: context.primaryColor),

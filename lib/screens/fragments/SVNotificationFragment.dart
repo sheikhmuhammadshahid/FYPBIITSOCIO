@@ -10,6 +10,9 @@ import 'package:biit_social/utils/SVCommon.dart';
 import 'package:biit_social/utils/SVConstants.dart';
 import 'package:provider/provider.dart';
 
+import '../../Controllers/SettingController.dart';
+import '../../utils/IPHandleClass.dart';
+
 class SVNotificationFragment extends StatefulWidget {
   const SVNotificationFragment({super.key});
 
@@ -41,6 +44,7 @@ class _SVNotificationFragmentState extends State<SVNotificationFragment> {
     afterBuildCreated(() {
       setStatusBarColor(svGetScaffoldColor());
     });
+    IPHandle.settingController = context.read<SettingController>();
     //init();
   }
 
@@ -58,6 +62,23 @@ class _SVNotificationFragmentState extends State<SVNotificationFragment> {
     return Scaffold(
         backgroundColor: svGetScaffoldColor(),
         appBar: AppBar(
+          bottom: context.watch<SettingController>().isConnected
+              ? null
+              : PreferredSize(
+                  preferredSize: Size(context.width(), context.width() * 0.01),
+                  child: Container(
+                    height: context.height() * 0.013,
+                    width: context.width(),
+                    color: Colors.red,
+                    child: FittedBox(
+                      child: Center(
+                          child: Text(
+                        'No internet connection!',
+                        style: TextStyle(
+                            fontFamily: svFontRoboto, color: Colors.white),
+                      )),
+                    ),
+                  )),
           backgroundColor: svGetScaffoldColor(),
           iconTheme: IconThemeData(color: context.iconColor),
           title: Text('Notification', style: boldTextStyle(size: 20)),

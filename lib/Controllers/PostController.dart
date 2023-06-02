@@ -37,6 +37,7 @@ class PostController with ChangeNotifier {
     try {
       isTimeTableLoading = true;
       setState();
+      checkConnection(IPHandle.settingController);
       var response = await Dio().get(
           '${IPHandle.ip}post/getTimeTable?section=${loggedInUser!.userType == "1" ? loggedInUser!.section : loggedInUser!.CNIC}&userType=${loggedInUser!.userType}');
       if (response.statusCode == 200) {
@@ -68,20 +69,21 @@ class PostController with ChangeNotifier {
             ? await MultipartFile.fromFile(post.text)
             : null,
       });
+      if (checkConnection(IPHandle.settingController)) {
+        String url = "${IPHandle.ip}Post/addPost";
+        var v = jsonEncode(post.toMap());
+        // post.user = "12";
+        var response = await Dio().post(url,
+            data: formData,
+            options: Options(headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json"
+            }));
 
-      String url = "${IPHandle.ip}Post/addPost";
-      var v = jsonEncode(post.toMap());
-      // post.user = "12";
-      var response = await Dio().post(url,
-          data: formData,
-          options: Options(headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-          }));
-
-      EasyLoading.dismiss();
-      EasyLoading.showToast(response.data,
-          toastPosition: EasyLoadingToastPosition.bottom);
+        EasyLoading.dismiss();
+        EasyLoading.showToast(response.data,
+            toastPosition: EasyLoadingToastPosition.bottom);
+      }
     } catch (e) {
       EasyLoading.dismiss();
       EasyLoading.showToast('Something gone wrong!');
@@ -104,7 +106,7 @@ class PostController with ChangeNotifier {
             ? await MultipartFile.fromFile(path.path)
             : null,
       });
-
+      checkConnection(IPHandle.settingController);
       String url = "${IPHandle.ip}Post/addStory";
       var v = jsonEncode(post.toMap());
       // post.user = "12";
@@ -132,7 +134,7 @@ class PostController with ChangeNotifier {
             'Hey Mr/Ms ${posts[index].userPosted!.name} your post is liked by ${loggedInUser!.name!}',
             posts[index].userPosted!.CNIC);
       }
-
+      checkConnection(IPHandle.settingController);
       http.Response response;
       var data = {
         'postId': posts[index].id,
@@ -169,21 +171,24 @@ class PostController with ChangeNotifier {
     try {
       isLoading = true;
       setState();
-      String url =
-          "${IPHandle.ip}post/getPinnedPosts?user_id=${loggedInUser!.CNIC}";
-      var response = await Dio().get(url);
-      //body: post.toJson(), headers: headers);
-      if (response.statusCode == 200) {
-        var data = response.data;
-        pinedPosts.clear();
-        for (var element in data) {
-          Post p = Post.fromMap(element["post"]);
-          p.isFriend = element["isFriend"];
-          p.isLiked = element["isLiked"];
-          p.isPinned = element["isPinned"];
-          pinedPosts.add(p);
+
+      if (checkConnection(IPHandle.settingController)) {
+        String url =
+            "${IPHandle.ip}post/getPinnedPosts?user_id=${loggedInUser!.CNIC}";
+        var response = await Dio().get(url);
+        //body: post.toJson(), headers: headers);
+        if (response.statusCode == 200) {
+          var data = response.data;
+          pinedPosts.clear();
+          for (var element in data) {
+            Post p = Post.fromMap(element["post"]);
+            p.isFriend = element["isFriend"];
+            p.isLiked = element["isLiked"];
+            p.isPinned = element["isPinned"];
+            pinedPosts.add(p);
+          }
         }
-      }
+      } else {}
     } catch (e) {
       print(e);
     }
@@ -232,9 +237,10 @@ class PostController with ChangeNotifier {
             // ScaffoldMessenger.of(context)
             //     .showSnackBar(const SnackBar(content: Text('No more posts')));
           }
+          HistoryController.savePosts(posts);
         } else {}
       } else {
-        if (pageNumber == 1) {
+        if (pageNumber == 0) {
           posts.clear();
           posts = await HistoryController.getPosts(context.selectedWall);
         }
@@ -250,6 +256,7 @@ class PostController with ChangeNotifier {
 
   uploadFile(path, context, toupload) async {
     try {
+      checkConnection(IPHandle.settingController);
       EasyLoading.show(status: 'Please wait...', dismissOnTap: false);
       var formData = FormData.fromMap(
           {'file': await MultipartFile.fromFile(path), 'toUpload': toupload});
@@ -274,6 +281,7 @@ class PostController with ChangeNotifier {
         'user_id': loggedInUser!.CNIC,
         'post_id': posts[index].id,
       });
+      checkConnection(IPHandle.settingController);
       var response = await Dio().post("${IPHandle.ip}Post/pinPost",
           data: data, options: Options(headers: headers));
       if (response.statusCode == 200) {
@@ -289,6 +297,7 @@ class PostController with ChangeNotifier {
 
   removeFromDiary(index) async {
     try {
+      checkConnection(IPHandle.settingController);
       var response = await Dio().get(
         "${IPHandle.ip}Post/unPinPosts?user_id=${loggedInUser!.CNIC}&&post_id=${pinedPosts[index].id}",
       );
@@ -319,6 +328,7 @@ class PostController with ChangeNotifier {
 
   deletePost(index) async {
     try {
+      checkConnection(IPHandle.settingController);
       int id = posts[index].id!;
       posts.remove(posts[index]);
       notifyListeners();

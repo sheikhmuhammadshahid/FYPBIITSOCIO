@@ -100,6 +100,7 @@ class SettingController extends ChangeNotifier {
 
   getUserProfile(frined) async {
     try {
+      checkConnection(IPHandle.settingController);
       var response = await Dio().get(
           "${IPHandle.ip}User/getUser?friendof=${loggedInUser!.CNIC}&&friend=$frined");
       if (response.statusCode == 200) {

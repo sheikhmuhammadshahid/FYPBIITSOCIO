@@ -8,7 +8,9 @@ import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../Controllers/SettingController.dart';
 import '../../models/EventModel.dart';
+import '../../utils/IPHandleClass.dart';
 import '../../utils/SVCommon.dart';
 
 class CalenderScreen extends StatefulWidget {
@@ -162,6 +164,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    IPHandle.settingController = context.read<SettingController>();
     eventsController ??= context.read<EventsController>();
     getEventss();
   }

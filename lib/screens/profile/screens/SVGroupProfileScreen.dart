@@ -5,6 +5,7 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:biit_social/utils/SVCommon.dart';
 import 'package:provider/provider.dart';
 
+import '../../../Controllers/SettingController.dart';
 import '../../../models/User/UserModel.dart';
 import '../../../utils/IPHandleClass.dart';
 import '../../fragments/SVProfileFragment.dart';
@@ -23,6 +24,7 @@ class _SVGroupProfileScreenState extends State<SVGroupProfileScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    IPHandle.settingController = context.read<SettingController>();
     getDetail();
   }
 

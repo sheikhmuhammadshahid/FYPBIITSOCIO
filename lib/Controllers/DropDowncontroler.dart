@@ -23,6 +23,7 @@ class DropDownController extends ChangeNotifier {
 
   saveTAs(FormData data) async {
     try {
+      checkConnection(IPHandle.settingController);
       var response = await Dio().post('${IPHandle.ip}User/saveTas',
           data: data,
           options: Options(headers: {
@@ -39,6 +40,7 @@ class DropDownController extends ChangeNotifier {
     try {
       clearItems();
       setIsgetting(true);
+      checkConnection(IPHandle.settingController);
       var response =
           await Dio().get('${IPHandle.ip}User/getTeachersAndStudents');
       if (response.statusCode == 200) {
@@ -81,6 +83,7 @@ class DropDownController extends ChangeNotifier {
     try {
       clearItems();
       setIsgetting(true);
+      checkConnection(IPHandle.settingController);
       print(settingController.selectedWall);
       var response = await Dio().get(
           '${IPHandle.ip}user/getDescipline?cnic=${loggedInUser!.CNIC}&fromWall=${settingController.selectedWall}');

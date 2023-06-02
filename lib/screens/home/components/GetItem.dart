@@ -31,47 +31,33 @@ Widget getItem(
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                post.userPosted!.profileImage == ""
-                    ? Image.asset(
-                        'images/socialv/faces/face_5.png'.validate(),
-                        height: 56,
-                        width: 56,
-                        fit: BoxFit.cover,
-                      ).cornerRadiusWithClipRRect(SVAppCommonRadius).onTap(() {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SVProfileFragment(
-                                user: post.userPosted!.CNIC.trim() ==
-                                        loggedInUser!.CNIC.trim()
-                                    ? true
-                                    : false,
-                                id: post.userPosted!.CNIC,
-                              ),
-                            ));
-                      })
-                    : Image.network(
-                        IPHandle.profileimageAddress +
-                            post.userPosted!.profileImage,
-                        // post
-                        //     .userPosted!.profileImage
-                        //     .validate(),
-                        height: 56,
-                        width: 56,
-                        fit: BoxFit.cover,
-                      ).cornerRadiusWithClipRRect(SVAppCommonRadius).onTap(() {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SVProfileFragment(
-                                user: post.userPosted!.CNIC.trim() ==
-                                        loggedInUser!.CNIC.trim()
-                                    ? true
-                                    : false,
-                                id: post.userPosted!.CNIC,
-                              ),
-                            ));
-                      }),
+                Image.network(
+                  IPHandle.profileimageAddress + post.userPosted!.profileImage,
+                  // post
+                  //     .userPosted!.profileImage
+                  //     .validate(),
+                  height: 56,
+                  width: 56,
+                  errorBuilder: (context, error, stackTrace) => Image.asset(
+                    'images/socialv/faces/face_5.png'.validate(),
+                    height: 56,
+                    width: 56,
+                    fit: BoxFit.cover,
+                  ),
+                  fit: BoxFit.cover,
+                ).cornerRadiusWithClipRRect(SVAppCommonRadius).onTap(() {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SVProfileFragment(
+                          user: post.userPosted!.CNIC.trim() ==
+                                  loggedInUser!.CNIC.trim()
+                              ? true
+                              : false,
+                          id: post.userPosted!.CNIC,
+                        ),
+                      ));
+                }),
                 12.width,
                 SizedBox(
                   width: context.width() * 0.35,

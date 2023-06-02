@@ -1,4 +1,6 @@
 import 'package:biit_social/Controllers/AuthController.dart';
+import 'package:biit_social/Controllers/SettingController.dart';
+import 'package:biit_social/utils/IPHandleClass.dart';
 import 'package:biit_social/utils/SVConstants.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -14,11 +16,12 @@ class SVSplashScreen extends StatefulWidget {
 class _SVSplashScreenState extends State<SVSplashScreen> {
   @override
   void initState() {
-    init();
     super.initState();
+    init();
   }
 
   Future<void> init() async {
+    IPHandle.settingController = context.read<SettingController>();
     setStatusBarColor(Colors.transparent);
     sharedPreferences = await SharedPreferences.getInstance();
     await 3.seconds.delay;

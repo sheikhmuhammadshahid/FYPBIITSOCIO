@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../Controllers/DateSheetAndCallender.dart';
+import '../Controllers/SettingController.dart';
+import '../utils/IPHandleClass.dart';
 import '../utils/SVCommon.dart';
 
 class DateSheetScreen extends StatefulWidget {
@@ -57,6 +59,7 @@ class _DateSheetScreenState extends State<DateSheetScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    IPHandle.settingController = context.read<SettingController>();
     dateSheetCallender ??= context.read<DateSheetCallender>();
     dateSheetCallender!.getDateSheet();
     dateSheetCallender!.getExamTypes();

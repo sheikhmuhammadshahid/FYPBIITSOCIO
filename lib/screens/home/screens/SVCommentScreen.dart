@@ -6,6 +6,8 @@ import 'package:biit_social/screens/home/components/SVCommentReplyComponent.dart
 import 'package:biit_social/utils/SVColors.dart';
 import 'package:provider/provider.dart';
 import '../../../../../main.dart';
+import '../../../Controllers/SettingController.dart';
+import '../../../utils/IPHandleClass.dart';
 
 class SVCommentScreen extends StatefulWidget {
   int postId;
@@ -22,6 +24,7 @@ class _SVCommentScreenState extends State<SVCommentScreen> {
     afterBuildCreated(() {
       setStatusBarColor(context.cardColor);
     });
+    IPHandle.settingController = context.read<SettingController>();
     init();
   }
 

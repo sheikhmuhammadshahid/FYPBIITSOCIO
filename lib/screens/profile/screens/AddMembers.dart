@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
+import '../../../Controllers/SettingController.dart';
+import '../../../utils/IPHandleClass.dart';
+
 class SVGroupMembers extends StatefulWidget {
   const SVGroupMembers({super.key});
 
@@ -14,6 +17,7 @@ class SVGroupMembers extends StatefulWidget {
 class _SVAddMembersState extends State<SVGroupMembers> {
   @override
   Widget build(BuildContext context) {
+    IPHandle.settingController = context.read<SettingController>();
     FriendsStoriesController friendsStoriesController =
         context.read<FriendsStoriesController>();
     return Scaffold(

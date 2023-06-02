@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
+import '../Controllers/SettingController.dart';
+import '../utils/IPHandleClass.dart';
 import '../utils/SVCommon.dart';
 import '../utils/SVConstants.dart';
 
@@ -20,6 +22,7 @@ class _ShowTimeTableScreenState extends State<ShowTimeTableScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    IPHandle.settingController = context.read<SettingController>();
     postController = context.read<DateSheetCallender>();
     postController.getAllTimeTable();
   }

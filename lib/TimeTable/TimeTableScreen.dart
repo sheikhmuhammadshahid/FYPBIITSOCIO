@@ -8,6 +8,9 @@ import 'package:pluto_grid/pluto_grid.dart';
 import 'package:provider/provider.dart';
 import 'package:biit_social/Controllers/PostController.dart';
 
+import '../Controllers/SettingController.dart';
+import '../utils/IPHandleClass.dart';
+
 class TimeTableScreen extends StatefulWidget {
   const TimeTableScreen({super.key});
 
@@ -43,6 +46,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
   void initState() {
     super.initState();
 
+    IPHandle.settingController = context.read<SettingController>();
     // _loadData();
   }
 

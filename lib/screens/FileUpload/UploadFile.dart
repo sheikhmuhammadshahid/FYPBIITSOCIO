@@ -5,6 +5,10 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
+import '../../Controllers/SettingController.dart';
+import '../../utils/IPHandleClass.dart';
+import '../../utils/SVConstants.dart';
+
 class UploadFile extends StatefulWidget {
   const UploadFile({super.key});
 
@@ -40,10 +44,28 @@ class _UploadFileState extends State<UploadFile> {
 
   @override
   Widget build(BuildContext context) {
+    IPHandle.settingController = context.read<SettingController>();
     var postController = context.read<PostController>();
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
+        bottom: context.watch<SettingController>().isConnected
+            ? null
+            : PreferredSize(
+                preferredSize: Size(context.width(), context.width() * 0.01),
+                child: Container(
+                  height: context.height() * 0.013,
+                  width: context.width(),
+                  color: Colors.red,
+                  child: FittedBox(
+                    child: Center(
+                        child: Text(
+                      'No internet connection!',
+                      style: TextStyle(
+                          fontFamily: svFontRoboto, color: Colors.white),
+                    )),
+                  ),
+                )),
         title: const Text(
           'Upload',
           style: TextStyle(color: Colors.black),

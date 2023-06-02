@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:biit_social/screens/home/components/SVPostComponent.dart';
 import 'package:biit_social/utils/SVCommon.dart';
+import '../../utils/IPHandleClass.dart';
 import '../DropDown/customSelectBottom.dart';
 import '../home/components/SVStoryComponent.dart';
 import 'package:provider/provider.dart';
@@ -29,6 +30,7 @@ class _SVHomeFragmentState extends State<SVHomeFragment> {
     afterBuildCreated(() {
       setStatusBarColor(svGetScaffoldColor());
     });
+    IPHandle.settingController = context.read<SettingController>();
   }
 
   TextEditingController controller = TextEditingController();
@@ -39,7 +41,6 @@ class _SVHomeFragmentState extends State<SVHomeFragment> {
   @override
   Widget build(BuildContext context) {
     postController = context.read<PostController>();
-
     settingController = context.read<SettingController>();
     postController.classWallFilter = '';
     return Scaffold(

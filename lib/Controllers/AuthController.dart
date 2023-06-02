@@ -50,6 +50,7 @@ class AuthController extends ChangeNotifier {
   bool isLoading = true;
   getUsers(SettingController settingController) async {
     try {
+      checkConnection(settingController);
       pageNo++;
       if (pageNo == 1) {
         isLoading = true;
@@ -160,6 +161,7 @@ class AuthController extends ChangeNotifier {
       var response = await Dio()
           .post(url, data: u.toJson(), options: Options(headers: headers));
       EasyLoading.dismiss();
+      checkConnection(IPHandle.settingController);
       if (response.statusCode == 200) {
         if (response.data["statusCode"] == 200) {
           print(response.data);

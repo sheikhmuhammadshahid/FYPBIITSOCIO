@@ -28,18 +28,19 @@ class _SVCommentComponentState extends State<SVCommentComponent> {
           children: [
             Row(
               children: [
-                widget.comment.profileImage == '' ||
-                        widget.comment.profileImage == null
-                    ? Image.asset('images/socialv/faces/face_5.png'.validate(),
-                            height: 48, width: 48, fit: BoxFit.cover)
-                        .cornerRadiusWithClipRRect(8)
-                    : Image.network(
-                            IPHandle.profileimageAddress +
-                                widget.comment.profileImage.validate(),
-                            height: 48,
-                            width: 48,
-                            fit: BoxFit.cover)
-                        .cornerRadiusWithClipRRect(8),
+                Image.network(
+                        IPHandle.profileimageAddress +
+                            widget.comment.profileImage.validate(),
+                        height: 48,
+                        width: 48,
+                        errorBuilder: (context, error, stackTrace) =>
+                            Image.asset(
+                                'images/socialv/faces/face_5.png'.validate(),
+                                height: 48,
+                                width: 48,
+                                fit: BoxFit.cover),
+                        fit: BoxFit.cover)
+                    .cornerRadiusWithClipRRect(8),
                 16.width,
                 Text(widget.comment.name.validate(),
                     style: boldTextStyle(size: 14)),

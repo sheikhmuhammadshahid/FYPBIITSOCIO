@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:biit_social/utils/SVCommon.dart';
 import 'package:provider/provider.dart';
+import '../../../Controllers/SettingController.dart';
 import '../../../models/User/UserModel.dart';
 import '../../../utils/IPHandleClass.dart';
+import '../../../utils/SVConstants.dart';
 import '../../Chat/ChatScreen.dart';
 import '../../fragments/SVProfileFragment.dart';
 import '../../fragments/SVSearchFragment.dart';
@@ -45,6 +47,7 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
   @override
   void initState() {
     super.initState();
+    IPHandle.settingController = context.read<SettingController>();
     // init();
   }
 
@@ -95,32 +98,51 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
         ],
         bottom: PreferredSize(
           preferredSize: Size(MediaQuery.of(context).size.width, 100),
-          child: Container(
-            margin: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-                color: context.cardColor, borderRadius: radius(8)),
-            child: AppTextField(
-              onFieldSubmitted: (p0) {
-                friendsStoriesController.tofilter = p0;
-                friendsStoriesController.notifyListeners();
-              },
-              onChanged: (p0) {
-                friendsStoriesController.tofilter = p0;
-                friendsStoriesController.notifyListeners();
-              },
-              textFieldType: TextFieldType.NAME,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: 'Search Here',
-                hintStyle: secondaryTextStyle(color: svGetBodyColor()),
-                prefixIcon: Image.asset('images/socialv/icons/ic_Search.png',
-                        height: 16,
-                        width: 16,
-                        fit: BoxFit.cover,
-                        color: svGetBodyColor())
-                    .paddingAll(16),
+          child: Column(
+            children: [
+              if (!context.watch<SettingController>().isConnected)
+                Container(
+                  height: context.height() * 0.013,
+                  width: context.width(),
+                  color: Colors.red,
+                  child: FittedBox(
+                    child: Center(
+                        child: Text(
+                      'No internet connection!',
+                      style: TextStyle(
+                          fontFamily: svFontRoboto, color: Colors.white),
+                    )),
+                  ),
+                ),
+              Container(
+                margin: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                    color: context.cardColor, borderRadius: radius(8)),
+                child: AppTextField(
+                  onFieldSubmitted: (p0) {
+                    friendsStoriesController.tofilter = p0;
+                    friendsStoriesController.notifyListeners();
+                  },
+                  onChanged: (p0) {
+                    friendsStoriesController.tofilter = p0;
+                    friendsStoriesController.notifyListeners();
+                  },
+                  textFieldType: TextFieldType.NAME,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'Search Here',
+                    hintStyle: secondaryTextStyle(color: svGetBodyColor()),
+                    prefixIcon: Image.asset(
+                            'images/socialv/icons/ic_Search.png',
+                            height: 16,
+                            width: 16,
+                            fit: BoxFit.cover,
+                            color: svGetBodyColor())
+                        .paddingAll(16),
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
         ),
       ),

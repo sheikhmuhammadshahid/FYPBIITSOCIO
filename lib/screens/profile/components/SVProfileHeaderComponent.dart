@@ -26,28 +26,25 @@ class SVProfileHeaderComponent extends StatelessWidget {
                 alignment: Alignment.topCenter,
                 children: [
                   if (!controller.isGettingUser) ...{
-                    ((user! && loggedInUser!.profileImage == "") ||
-                            (!user! &&
-                                controller.userToShow!.profileImage == ""))
-                        ? Image.asset(
-                            'images/socialv/backgroundImage.png',
-                            width: context.width(),
-                            height: 130,
-                            fit: BoxFit.cover,
-                          ).cornerRadiusWithClipRRectOnly(
-                            topLeft: SVAppCommonRadius.toInt(),
-                            topRight: SVAppCommonRadius.toInt())
-                        : Image.network(
-                            IPHandle.profileimageAddress +
-                                (user!
-                                    ? loggedInUser!.profileImage
-                                    : controller.userToShow!.profileImage),
-                            width: context.width(),
-                            height: 130,
-                            fit: BoxFit.cover,
-                          ).cornerRadiusWithClipRRectOnly(
-                            topLeft: SVAppCommonRadius.toInt(),
-                            topRight: SVAppCommonRadius.toInt()),
+                    Image.network(
+                      IPHandle.profileimageAddress +
+                          (user!
+                              ? loggedInUser!.profileImage
+                              : controller.userToShow == null
+                                  ? ''
+                                  : controller.userToShow!.profileImage),
+                      width: context.width(),
+                      height: 130,
+                      errorBuilder: (context, error, stackTrace) => Image.asset(
+                        'images/socialv/backgroundImage.png',
+                        width: context.width(),
+                        height: 130,
+                        fit: BoxFit.cover,
+                      ),
+                      fit: BoxFit.cover,
+                    ).cornerRadiusWithClipRRectOnly(
+                        topLeft: SVAppCommonRadius.toInt(),
+                        topRight: SVAppCommonRadius.toInt()),
                   } else
                     Shimmer.fromColors(
                         //period: const Duration(microseconds: 10),
@@ -105,19 +102,21 @@ class SVProfileHeaderComponent extends StatelessWidget {
   }
 
   Widget getProfileImage(controller) {
-    return ((user! && loggedInUser!.profileImage == "") ||
-            (!user! && controller.userToShow!.profileImage == ""))
-        ? Image.asset('images/socialv/faces/face_5.png',
-                height: 88, width: 88, fit: BoxFit.cover)
-            .cornerRadiusWithClipRRect(SVAppCommonRadius)
-        : Image.network(
-                IPHandle.profileimageAddress +
-                    (user!
-                        ? loggedInUser!.profileImage
+    return Image.network(
+            IPHandle.profileimageAddress +
+                (user!
+                    ? loggedInUser!.profileImage
+                    : controller.userToShow == null
+                        ? ''
                         : controller.userToShow!.profileImage),
+            height: 88,
+            width: 88,
+            errorBuilder: (context, error, stackTrace) => Image.asset(
+                'images/socialv/faces/face_5.png',
                 height: 88,
                 width: 88,
-                fit: BoxFit.cover)
-            .cornerRadiusWithClipRRect(SVAppCommonRadius);
+                fit: BoxFit.cover),
+            fit: BoxFit.cover)
+        .cornerRadiusWithClipRRect(SVAppCommonRadius);
   }
 }

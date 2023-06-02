@@ -17,6 +17,7 @@ import 'package:biit_social/utils/SVColors.dart';
 import 'package:biit_social/utils/SVCommon.dart';
 import '../../Controllers/FriendsStoriesController.dart';
 import '../../utils/FilesPicker.dart';
+import '../../utils/IPHandleClass.dart';
 import '../../utils/SVConstants.dart';
 import 'package:provider/provider.dart';
 
@@ -40,6 +41,7 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
     afterBuildCreated(() {
       setStatusBarColor(context.cardColor);
     });
+    IPHandle.settingController = context.read<SettingController>();
     dropDownController ??= context.read<DropDownController>();
     dropDownController!.getData(context.read<SettingController>());
     //context.read<FriendsStoriesController>().getSectionAndDesciplines();
@@ -67,9 +69,27 @@ class _SVAddPostFragmentState extends State<SVAddPostFragment> {
     postController = context.read<PostController>();
     dropDownController ??= context.read<DropDownController>();
     settingController = context.read<SettingController>();
+
     return Scaffold(
       backgroundColor: context.cardColor,
       appBar: AppBar(
+        bottom: context.watch<SettingController>().isConnected
+            ? null
+            : PreferredSize(
+                preferredSize: Size(context.width(), context.width() * 0.01),
+                child: Container(
+                  height: context.height() * 0.013,
+                  width: context.width(),
+                  color: Colors.red,
+                  child: FittedBox(
+                    child: Center(
+                        child: Text(
+                      'No internet connection!',
+                      style: TextStyle(
+                          fontFamily: svFontRoboto, color: Colors.white),
+                    )),
+                  ),
+                )),
         iconTheme: IconThemeData(color: context.iconColor),
         backgroundColor: context.cardColor,
         title: Text(widget.isStatus ? 'New Story' : 'New Post',

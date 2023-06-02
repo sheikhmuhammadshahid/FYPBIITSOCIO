@@ -1,33 +1,32 @@
-import 'package:dio/dio.dart';
 import 'package:hive/hive.dart';
 
 import '../models/Post/PostModel.dart';
-import '../utils/IPHandleClass.dart';
-import '../utils/SVCommon.dart';
 
 class HistoryController {
-  static savePosts() async {
+  static savePosts(List<Post> posts) async {
     try {
-      String url =
-          "${IPHandle.ip}post/getPostsForHistory?userCnic=${loggedInUser!.CNIC}&lastSavedPostId=1";
-      //var v = jsonEncode(post.toMap());
+      // String url =
+      //     "${IPHandle.ip}post/getPostsForHistory?userCnic=${loggedInUser!.CNIC}&lastSavedPostId=1";
+      // //var v = jsonEncode(post.toMap());
 
-      print(url);
+      // print(url);
 
       Box postsBox = Hive.box('Posts');
-      var response = await Dio().get(url);
+      // var response = await Dio().get(url);
       //body: post.toJson(), headers: headers);
-      if (response.statusCode == 200) {
-        postsBox.clear();
-        var data = response.data;
-        for (var element in data) {
-          Post p = Post.fromMap(element["post"]);
-          p.isFriend = element["isFriend"];
-          p.isLiked = element["isLiked"];
-          p.isPinned = element["isPinned"];
-          await postsBox.add(p.toMap());
+      // if (response.statusCode == 200) {
+      //   postsBox.clear();
+      //var data = response.data;
+      for (var element in posts) {
+        if (!postsBox.containsKey(element.id.toString())) {
+          await postsBox.put(element.id.toString(), element.toMap());
+          print('${element.id} added');
+        } else {
+          print('${element.id} already');
         }
+        //await postsBox.put(p.id, p.toMap());
       }
+      //  }
       print("PostBox${postsBox.length}");
     } catch (e) {
       print(e);
@@ -46,8 +45,8 @@ class HistoryController {
           .where((element) => element['fromWall'] == fromWall)
           .toList();
       print(data.length);
-      for (var element in data) {
-        posts.add(Post.fromMap(element));
+      for (int i = 0; i < data.length; i++) {
+        posts.add(Post.fromMap(data[i].cast<String, dynamic>()));
       }
     } catch (e) {
       print(e);

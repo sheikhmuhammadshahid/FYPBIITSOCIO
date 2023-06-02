@@ -30,17 +30,19 @@ class SVCommentReplyComponent extends StatelessWidget {
             child: Row(
               children: [
                 16.width,
-                loggedInUser!.profileImage == ''
-                    ? Image.asset('images/socialv/faces/face_5.png',
-                            height: 48, width: 48, fit: BoxFit.cover)
-                        .cornerRadiusWithClipRRect(8)
-                    : Image.network(
-                            IPHandle.profileimageAddress +
-                                loggedInUser!.profileImage,
-                            height: 48,
-                            width: 48,
-                            fit: BoxFit.cover)
-                        .cornerRadiusWithClipRRect(8),
+                Image.network(
+                        IPHandle.profileimageAddress +
+                            loggedInUser!.profileImage,
+                        height: 48,
+                        width: 48,
+                        errorBuilder: (context, error, stackTrace) =>
+                            Image.asset(
+                                'images/socialv/faces/face_5.png'.validate(),
+                                height: 48,
+                                width: 48,
+                                fit: BoxFit.cover),
+                        fit: BoxFit.cover)
+                    .cornerRadiusWithClipRRect(8),
                 10.width,
                 SizedBox(
                   width: context.width() * 0.6,

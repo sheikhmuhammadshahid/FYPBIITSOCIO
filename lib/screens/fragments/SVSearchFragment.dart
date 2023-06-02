@@ -9,6 +9,9 @@ import 'package:biit_social/screens/search/components/SVSearchCardComponent.dart
 import 'package:biit_social/utils/SVCommon.dart';
 import 'package:provider/provider.dart';
 
+import '../../utils/IPHandleClass.dart';
+import '../../utils/SVConstants.dart';
+
 class SVSearchFragment extends StatefulWidget {
   const SVSearchFragment({super.key});
 
@@ -26,6 +29,7 @@ class _SVSearchFragmentState extends State<SVSearchFragment> {
     afterBuildCreated(() {
       setStatusBarColor(svGetScaffoldColor());
     });
+    IPHandle.settingController = context.read<SettingController>();
     init();
   }
 
@@ -48,12 +52,23 @@ class _SVSearchFragmentState extends State<SVSearchFragment> {
         backgroundColor: svGetScaffoldColor(),
         iconTheme: IconThemeData(color: context.iconColor),
         leadingWidth: 30,
-        bottom: PreferredSize(
-            preferredSize: Size.fromHeight(
-                authController.userToShow.isEmpty ? context.height() * 0.1 : 0),
-            child: context.watch<AuthController>().userToShow.isEmpty
-                ? Text('RECENT', style: boldTextStyle()).paddingAll(16)
-                : const SizedBox()),
+        bottom: context.watch<SettingController>().isConnected
+            ? null
+            : PreferredSize(
+                preferredSize: Size(context.width(), context.width() * 0.01),
+                child: Container(
+                  height: context.height() * 0.013,
+                  width: context.width(),
+                  color: Colors.red,
+                  child: FittedBox(
+                    child: Center(
+                        child: Text(
+                      'No internet connection!',
+                      style: TextStyle(
+                          fontFamily: svFontRoboto, color: Colors.white),
+                    )),
+                  ),
+                )),
         title: Container(
           decoration:
               BoxDecoration(color: context.cardColor, borderRadius: radius(8)),

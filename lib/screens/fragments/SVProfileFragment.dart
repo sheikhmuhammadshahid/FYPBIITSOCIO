@@ -7,6 +7,7 @@ import 'package:biit_social/main.dart';
 import 'package:biit_social/screens/profile/components/SVProfileHeaderComponent.dart';
 import 'package:biit_social/utils/SVCommon.dart';
 
+import '../../utils/IPHandleClass.dart';
 import '../../utils/SVColors.dart';
 import 'package:provider/provider.dart';
 
@@ -28,6 +29,7 @@ class _SVProfileFragmentState extends State<SVProfileFragment> {
   void initState() {
     setStatusBarColor(Colors.transparent);
     super.initState();
+    IPHandle.settingController = context.read<SettingController>();
     init();
   }
 
@@ -62,6 +64,24 @@ class _SVProfileFragmentState extends State<SVProfileFragment> {
             title: Text('Profile', style: boldTextStyle(size: 20)),
             elevation: 0,
             centerTitle: true,
+            bottom: context.watch<SettingController>().isConnected
+                ? null
+                : PreferredSize(
+                    preferredSize:
+                        Size(context.width(), context.width() * 0.01),
+                    child: Container(
+                      height: context.height() * 0.013,
+                      width: context.width(),
+                      color: Colors.red,
+                      child: FittedBox(
+                        child: Center(
+                            child: Text(
+                          'No internet connection!',
+                          style: TextStyle(
+                              fontFamily: svFontRoboto, color: Colors.white),
+                        )),
+                      ),
+                    )),
             iconTheme: IconThemeData(color: context.iconColor),
             actions: [
               Switch(
@@ -88,9 +108,9 @@ class _SVProfileFragmentState extends State<SVProfileFragment> {
                     children: [
                       Text(
                           widget.user!
-                              ? loggedInUser!.name!
+                              ? loggedInUser!.name ?? ''
                               : controller.userToShow != null
-                                  ? controller.userToShow!.name!
+                                  ? controller.userToShow!.name ?? ''
                                   : '',
                           style: boldTextStyle(size: 20)),
                       4.width,
@@ -100,16 +120,16 @@ class _SVProfileFragmentState extends State<SVProfileFragment> {
                   ),
                   Text(
                       widget.user!
-                          ? loggedInUser!.email!
+                          ? loggedInUser!.email ?? ''
                           : controller.userToShow != null
-                              ? controller.userToShow!.email!
+                              ? controller.userToShow!.email ?? ''
                               : "",
                       style: secondaryTextStyle(color: svGetBodyColor())),
                   24.height,
                   if (controller.userToShow != null &&
                       !widget.user! &&
                       !controller.isGettingUser)
-                    if (controller.userToShow!.isFriend!) ...{
+                    if (controller.userToShow!.isFriend ?? false) ...{
                       AppButton(
                         shapeBorder:
                             RoundedRectangleBorder(borderRadius: radius(4)),
@@ -154,7 +174,7 @@ class _SVProfileFragmentState extends State<SVProfileFragment> {
                               widget.user!
                                   ? loggedInUser!.postsCount.toString()
                                   : controller.userToShow != null
-                                      ? controller.userToShow!.postsCount!
+                                      ? controller.userToShow!.postsCount
                                           .toString()
                                       : "0",
                               style: boldTextStyle(size: 18)),

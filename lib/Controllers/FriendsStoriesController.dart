@@ -69,6 +69,7 @@ class FriendsStoriesController extends ChangeNotifier {
 
   sendFriendReques(to, context) async {
     try {
+      checkConnection(IPHandle.settingController);
       FriendRequest f = FriendRequest(
           id: int.parse(loggedInUser!.userType!),
           RequestedBy: loggedInUser!.CNIC,
@@ -93,6 +94,7 @@ class FriendsStoriesController extends ChangeNotifier {
 
   acceptFriendReques({to, context, status, not_id}) async {
     try {
+      checkConnection(IPHandle.settingController);
       var response = await Dio().get(
         '${IPHandle.ip}Friends/acceptFriendRequest?reques_id=$to&&status=$status&&noti_id=$not_id',
       );
@@ -102,6 +104,7 @@ class FriendsStoriesController extends ChangeNotifier {
 
   unFriend({to, context}) async {
     try {
+      checkConnection(IPHandle.settingController);
       var response = await Dio().get(
         '${IPHandle.ip}Friends/unfriend?sentBy=${loggedInUser!.CNIC}&&sentTo=$to',
       );
@@ -119,7 +122,7 @@ class FriendsStoriesController extends ChangeNotifier {
   getNotifications(BuildContext context) async {
     try {
       isGettingNotifications = true;
-
+      checkConnection(IPHandle.settingController);
       var controller = context.read<SettingController>();
       var response = await Dio().get(
           "${IPHandle.ip}Notification/getNotification?userId=${loggedInUser!.CNIC}&fromWall=${controller.selectedWall}");
@@ -189,6 +192,7 @@ class FriendsStoriesController extends ChangeNotifier {
       //  setStoriesLoading(true);
       isStoriesLoading = true;
       setState();
+      checkConnection(IPHandle.settingController);
       var response = await Dio().get(
           '${IPHandle.ip}Post/getSocietiesDetail?cnic=${loggedInUser!.CNIC}');
       if (response.statusCode == 200) {
@@ -217,6 +221,7 @@ class FriendsStoriesController extends ChangeNotifier {
 
   sendOfficialNotification(var data) async {
     try {
+      checkConnection(IPHandle.settingController);
       var response = await Dio().post(
           '${IPHandle.ip}Notification/addNotification',
           data: data,
@@ -233,6 +238,7 @@ class FriendsStoriesController extends ChangeNotifier {
   bool isSectionsLoading = true;
   getSectionAndDesciplines() async {
     try {
+      checkConnection(IPHandle.settingController);
       var response = await Dio()
           .get('${IPHandle.ip}user/getDescipline?cnic=${loggedInUser!.CNIC}');
       isSectionsLoading = true;
@@ -339,6 +345,7 @@ class FriendsStoriesController extends ChangeNotifier {
       isStoriesLoading = true;
       setState();
       String url = '';
+      checkConnection(IPHandle.settingController);
       if (fromGroup) {
         url =
             '${IPHandle.ip}groups/getChatOfGroup?id=$id&loggedInUserId=${loggedInUser!.CNIC}';
@@ -374,6 +381,7 @@ class FriendsStoriesController extends ChangeNotifier {
             : null,
         'type': ch.type
       });
+      checkConnection(IPHandle.settingController);
       var response = await Dio().post('${IPHandle.ip}chat/addChat',
           data: data, options: Options(headers: headers));
       if (response.statusCode == 200) {
@@ -392,6 +400,7 @@ class FriendsStoriesController extends ChangeNotifier {
     try {
       isStoriesLoading = true;
       setState();
+      checkConnection(IPHandle.settingController);
       var response = await Dio().get(
           '${IPHandle.ip}Friends/getFriends?user_id=${loggedInUser!.CNIC}');
       if (response.statusCode == 200) {
@@ -412,6 +421,7 @@ class FriendsStoriesController extends ChangeNotifier {
     try {
       isStoriesLoading = true;
       setState();
+      checkConnection(IPHandle.settingController);
       var res = await Dio().get(
           '${IPHandle.ip}groups/getGroups?cnic=${loggedInUser!.CNIC}&userType=${loggedInUser!.userType}');
       if (res.statusCode == 200) {
@@ -430,6 +440,7 @@ class FriendsStoriesController extends ChangeNotifier {
     required bool todo,
   }) async {
     try {
+      checkConnection(IPHandle.settingController);
       String url =
           '${IPHandle.ip}Friends/muteOrUnmuteGroup?groupId=$groupId&userId=${loggedInUser!.CNIC}&todo=$todo';
       var res = await Dio().get(url);
@@ -444,6 +455,7 @@ class FriendsStoriesController extends ChangeNotifier {
 
   leaveGroup(int groupId) async {
     try {
+      checkConnection(IPHandle.settingController);
       String url =
           '${IPHandle.ip}Friends/leaveGroup?groupId=$groupId&userId=${loggedInUser!.CNIC}';
       var res = await Dio().get(url);
@@ -474,6 +486,7 @@ class FriendsStoriesController extends ChangeNotifier {
         'users': users
       });
       print(body);
+      checkConnection(IPHandle.settingController);
       var response = await Dio().post('${IPHandle.ip}Groups/addGroup',
           data: body, options: Options(headers: headers));
       if (response.statusCode == 200) {
@@ -492,6 +505,7 @@ class FriendsStoriesController extends ChangeNotifier {
       isStoriesLoading = true;
       comments.clear();
       setState();
+      checkConnection(IPHandle.settingController);
       var response =
           await Dio().get('${IPHandle.ip}comments/getComment?post_id=$postId');
       if (response.statusCode == 200) {
@@ -509,7 +523,7 @@ class FriendsStoriesController extends ChangeNotifier {
       isStoriesLoading = true;
       groupUsers.clear();
       setState();
-
+      checkConnection(IPHandle.settingController);
       var response =
           await Dio().get('${IPHandle.ip}Groups/getGroupDetail?id=$id');
       if (response.statusCode == 200) {
@@ -535,6 +549,7 @@ class FriendsStoriesController extends ChangeNotifier {
         'repliedOn': repLiedOn,
         'text': v.comment,
       });
+      checkConnection(IPHandle.settingController);
       var response = await Dio().post('${IPHandle.ip}comments/addComment',
           data: data, options: Options(headers: headers));
       if (response.statusCode == 200) {

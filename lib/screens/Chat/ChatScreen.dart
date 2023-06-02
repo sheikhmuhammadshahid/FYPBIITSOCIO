@@ -7,12 +7,14 @@ import 'package:biit_social/utils/getVideoItem.dart';
 import 'package:chat_bubbles/date_chips/date_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
+import '../../Controllers/SettingController.dart';
 import '../../models/SVGroupModel.dart';
 import '../../utils/IPHandleClass.dart';
 import '../../utils/SVCommon.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:provider/provider.dart';
 
+import '../../utils/SVConstants.dart';
 import 'ChatModel/ChatModel.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -47,6 +49,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    IPHandle.settingController = context.read<SettingController>();
     init();
   }
 
@@ -77,6 +80,23 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       backgroundColor: svGetScaffoldColor(),
       appBar: AppBar(
+        bottom: context.watch<SettingController>().isConnected
+            ? null
+            : PreferredSize(
+                preferredSize: Size(context.width(), context.width() * 0.01),
+                child: Container(
+                  height: context.height() * 0.013,
+                  width: context.width(),
+                  color: Colors.red,
+                  child: FittedBox(
+                    child: Center(
+                        child: Text(
+                      'No internet connection!',
+                      style: TextStyle(
+                          fontFamily: svFontRoboto, color: Colors.white),
+                    )),
+                  ),
+                )),
         elevation: 0,
         backgroundColor: svGetScaffoldColor(),
         iconTheme: IconThemeData(color: context.iconColor),

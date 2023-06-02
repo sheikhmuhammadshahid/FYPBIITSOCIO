@@ -26,6 +26,7 @@ class DateSheetCallender extends ChangeNotifier {
     try {
       isDateLoading = true;
       setstate();
+      checkConnection(IPHandle.settingController);
       var response = await Dio().get(
           "${IPHandle.ip}User/getDateSheet?cnic=${loggedInUser!.CNIC}&examType=$dateSheettoGet");
       if (response.statusCode == 200) {
@@ -67,6 +68,7 @@ class DateSheetCallender extends ChangeNotifier {
     try {
       isTimeTableLoading = true;
       notifyListeners();
+      checkConnection(IPHandle.settingController);
       var response = await Dio().get('${IPHandle.ip}User/getDateSheetsTypes');
       if (response.statusCode == 200) {
         dateSheetTypes.clear();
@@ -83,6 +85,7 @@ class DateSheetCallender extends ChangeNotifier {
     try {
       isTimeTableLoading = true;
       setState();
+      checkConnection(IPHandle.settingController);
       var response = await Dio().get('${IPHandle.ip}post/getAllTimeTable');
       if (response.statusCode == 200) {
         timeTable = TimeTableModel.fromMap(response.data);

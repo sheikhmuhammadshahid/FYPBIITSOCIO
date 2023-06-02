@@ -29,6 +29,7 @@ class EventsController extends ChangeNotifier {
     try {
       gettingEvents = true;
       setState();
+      checkConnection(IPHandle.settingController);
       var response = await Dio().get('${IPHandle.ip}Event/getEvent');
       print(response.data);
       if (response.statusCode == 200) {
@@ -70,6 +71,7 @@ class EventsController extends ChangeNotifier {
 
   addEvent(EventModel ev) async {
     try {
+      checkConnection(IPHandle.settingController);
       var response = await Dio().post('${IPHandle.ip}Event/addEvent',
           data: ev.toJson(), options: Options(headers: headers));
       if (response.statusCode == 200) {
@@ -104,6 +106,7 @@ class EventsController extends ChangeNotifier {
       var response = await Dio().get(
         '${IPHandle.ip}Event/deleteEvent?id=$id',
       );
+      checkConnection(IPHandle.settingController);
       if (response.statusCode == 200) {
         EventModel ev = EventModel.fromMap(response.data);
         events.remove(ev);
@@ -119,6 +122,7 @@ class EventsController extends ChangeNotifier {
 
   updateEvent(EventModel event) async {
     try {
+      checkConnection(IPHandle.settingController);
       var response = await Dio().post('${IPHandle.ip}Event/updateEvent',
           data: event.toJson(), options: Options(headers: headers));
       if (response.statusCode == 200) {

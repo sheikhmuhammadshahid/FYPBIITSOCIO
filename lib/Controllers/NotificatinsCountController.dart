@@ -17,6 +17,7 @@ class NotificationCountController extends ChangeNotifier {
 
   getData(SettingController settingController) async {
     try {
+      checkConnection(IPHandle.settingController);
       var response = await Dio().get(
           '${IPHandle.ip}User/getNotificatinosData?cnic=${loggedInUser!.CNIC}&fromWall=${settingController.selectedWall}');
       if (response.statusCode == 200) {

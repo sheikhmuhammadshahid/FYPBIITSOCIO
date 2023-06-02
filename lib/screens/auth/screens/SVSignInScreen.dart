@@ -58,6 +58,7 @@ class _SVSignInScreenState extends State<SVSignInScreen> {
   @override
   Widget build(BuildContext context) {
     SettingController settingController = context.read<SettingController>();
+    IPHandle.settingController = settingController;
     return Scaffold(
       backgroundColor: svGetScaffoldColor(),
       body: Column(
