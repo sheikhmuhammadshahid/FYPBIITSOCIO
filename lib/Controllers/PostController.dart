@@ -172,7 +172,7 @@ class PostController with ChangeNotifier {
       isLoading = true;
       setState();
 
-      if (checkConnection(IPHandle.settingController)) {
+      if (await checkConnection(IPHandle.settingController)) {
         String url =
             "${IPHandle.ip}post/getPinnedPosts?user_id=${loggedInUser!.CNIC}";
         var response = await Dio().get(url);
@@ -188,7 +188,9 @@ class PostController with ChangeNotifier {
             pinedPosts.add(p);
           }
         }
-      } else {}
+      } else {
+        pinedPosts = await HistoryController.getPosts("-1");
+      }
     } catch (e) {
       print(e);
     }
@@ -281,11 +283,13 @@ class PostController with ChangeNotifier {
         'user_id': loggedInUser!.CNIC,
         'post_id': posts[index].id,
       });
+
       checkConnection(IPHandle.settingController);
       var response = await Dio().post("${IPHandle.ip}Post/pinPost",
           data: data, options: Options(headers: headers));
       if (response.statusCode == 200) {
         posts[index].isPinned = true;
+        HistoryController.updateStatusPinned(posts[index].id ?? 0, true);
         setState();
         // var p = posts.removeAt(index);
         // posts.insert(0, p);
@@ -302,6 +306,8 @@ class PostController with ChangeNotifier {
         "${IPHandle.ip}Post/unPinPosts?user_id=${loggedInUser!.CNIC}&&post_id=${pinedPosts[index].id}",
       );
       if (response.statusCode == 200) {
+        HistoryController.updateStatusPinned(posts[index].id ?? 0, false);
+
         pinedPosts[index].isPinned = false;
         var p = pinedPosts.removeAt(index);
         var res = posts.indexWhere((element) => element.id == p.id);

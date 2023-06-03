@@ -17,6 +17,8 @@ class _SVSplashScreenState extends State<SVSplashScreen> {
   @override
   void initState() {
     super.initState();
+    // ServerClient controller = context.read<ServerClient>();
+    // controller.connectWithServer();
     init();
   }
 

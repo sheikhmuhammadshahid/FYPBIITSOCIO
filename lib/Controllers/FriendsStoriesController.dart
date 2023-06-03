@@ -388,7 +388,9 @@ class FriendsStoriesController extends ChangeNotifier {
         //EasyLoading.showToast('added');
         if (!fromGroup) {
           client.sendMessage(
-              message: '${loggedInUser!.CNIC}~${ch.senderImage}~${ch.message}');
+              message: '${loggedInUser!.CNIC}~$chatId~${ch.message}');
+        } else {
+          client.sendMessage(message: '$chatId~$chatId~${ch.message}');
         }
       }
     } catch (e) {

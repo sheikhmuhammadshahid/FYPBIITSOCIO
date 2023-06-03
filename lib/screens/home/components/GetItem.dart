@@ -37,6 +37,14 @@ Widget getItem(
                   //     .userPosted!.profileImage
                   //     .validate(),
                   height: 56,
+
+                  loadingBuilder: (context, child, loadingProgress) =>
+                      CircularProgressIndicator(
+                    color: Colors.grey,
+                    value: double.parse(loadingProgress != null
+                        ? loadingProgress.cumulativeBytesLoaded.toString()
+                        : "0"),
+                  ),
                   width: 56,
                   errorBuilder: (context, error, stackTrace) => Image.asset(
                     'images/socialv/faces/face_5.png'.validate(),

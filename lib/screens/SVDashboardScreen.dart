@@ -34,7 +34,8 @@ class _SVDashboardScreenState extends State<SVDashboardScreen>
     setStatusBarColor(Colors.transparent);
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    //ServerClient().connectWithServer();
+    ServerClient controller = context.read<ServerClient>();
+    controller.connectWithServer();
 
     init();
   }
@@ -45,14 +46,13 @@ class _SVDashboardScreenState extends State<SVDashboardScreen>
     friendsStoriesController = context.read<FriendsStoriesController>();
     //  HistoryController.savePosts();
     await friendsStoriesController!.getFriends();
+    await friendsStoriesController!.getGroups();
     // ignore: use_build_context_synchronously
-    controller = context.read<ServerClient>();
-    controller.connectWithServer();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    controller.appLifecycleState = state;
+    //controller.appLifecycleState = state;
   }
 
   @override

@@ -132,7 +132,9 @@ class _SVHomeFragmentState extends State<SVHomeFragment> {
             },
             SizedBox(
                 height: settingController.selectedWall == "6"
-                    ? MediaQuery.of(context).size.height * 0.77
+                    ? friendsStoriesController!.societies.isNotEmpty
+                        ? MediaQuery.of(context).size.height * 0.77
+                        : context.height() * 0.9
                     : context.watch<SettingController>().expansionChanged &&
                             settingController.selectedWall ==
                                 loggedInUser!.userType &&

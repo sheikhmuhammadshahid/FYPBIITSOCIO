@@ -220,15 +220,16 @@ class _ScrollHideNavigationBarState extends State<ScrollHideNavigationBar> {
             ),
             !context.watch<SettingController>().isConnected
                 ? Container(
-                    height: context.height() * 0.02,
+                    height: context.height() * 0.013,
                     width: context.width(),
                     color: Colors.red,
-                    child: Center(
-                        child: Text(
-                      'No internet connection!',
-                      style: TextStyle(
-                          fontFamily: svFontRoboto, color: Colors.white),
-                    )),
+                    child: FittedBox(
+                      child: Text(
+                        'No internet connection!',
+                        style: TextStyle(
+                            fontFamily: svFontRoboto, color: Colors.white),
+                      ),
+                    ),
                   )
                 : const SizedBox.shrink()
           ],

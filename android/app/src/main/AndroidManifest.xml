@@ -5,6 +5,7 @@
     <!-- Add this if you need to take videos. -->
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
    <application
         android:label="BIITSOCIO"
         android:name="${applicationName}"

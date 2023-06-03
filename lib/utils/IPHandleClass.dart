@@ -1,7 +1,20 @@
+import 'package:audioplayers/audioplayers.dart';
+
 import '../Controllers/SettingController.dart';
 
 class IPHandle {
-  static String ippp = '192.168.224.231';
+  static final AudioPlayer _player = AudioPlayer();
+  static playMessageGot() async {
+    try {
+      await _player.play(AssetSource('Sounds/messageGot.wav'), volume: 100);
+      print('played');
+    } catch (e) {
+      print("sound");
+      print(e);
+    }
+  }
+
+  static String ippp = '192.168.6.231';
   static String ip = "http://$ippp/BiitSocioApis/api/";
   static String imageAddress = "http://$ippp/BiitSocioApis/postImages/";
   static String profileimageAddress = "http://$ippp/BiitSocioApis/Images/";
